@@ -10,7 +10,7 @@ import UIKit
 import AVFoundation
 
 class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
-    AVAudioPlayerDelegate
+    AVAudioPlayerDelegate, UIPickerViewDelegate
 {
     // MARK: Local Variables
     var currentRecording = 1
@@ -18,6 +18,8 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     var curTrans: PetTranslation!
     var audioPath: String!
     var audioURL: NSURL!
+    var curLanguage: Language!
+    
     let audioSettings =
     [
             AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
@@ -26,9 +28,17 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
             AVEncoderAudioQualityKey: AVAudioQuality.High.rawValue
     ]
     
+    
+    
     // MARK: Properties
-    @IBOutlet weak var statusLabel: UILabel!
-    @IBOutlet weak var translationTextBox: UITextView!
+    @IBOutlet weak var languagePicker: UIPickerView!
+    @IBOutlet weak var translationLabel: UILabel!
+    @IBOutlet weak var recordImage: UIImageView!
+    @IBOutlet weak var playBackButton: UIButton!
+    @IBOutlet weak var historyButton: UIButton!
+    @IBOutlet weak var shareButton: UIButton!
+    @IBOutlet weak var translationHeadingLabel: UILabel!
+    @IBOutlet weak var languageLabel: UILabel!
 
     
     // MARK: Convenience Functions
@@ -43,6 +53,47 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     var recordingSession: AVAudioSession!
     var audioRecorder: AVAudioRecorder!
     var audioPlayer: AVAudioPlayer!
+    
+    // MARK: Functions
+    func cleanUpRecording(success success: Bool)
+    {
+        if audioRecorder != nil
+        {
+            audioRecorder.stop()
+        }
+        
+        audioRecorder = nil
+        
+        if(success)
+        {
+            curTrans = PetTranslation(audioURL: audioURL, transLanguage: curLanguage)
+            translationLabel.text = curTrans.translatedText
+            translations.append(curTrans)
+            startPlayback()
+        }
+        else
+        {
+            translationLabel.text = "ERROR! RECORDING FAILED!"
+            playBackButton.enabled = true
+        }
+    }
+    
+    func startPlayback()
+    {
+        do
+        {
+            let originalVoice = try AVAudioPlayer(contentsOfURL: curTrans.audioURL!)
+            audioPlayer = originalVoice
+            audioPlayer.delegate = self
+            audioPlayer.play()
+        }
+        catch
+        {
+            print("Playback failed")
+            playBackButton.enabled = true
+        }
+    }
+    
     
     // MARK: Actions
     @IBAction func startTranslationAction(sender: UITapGestureRecognizer)
@@ -59,7 +110,6 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         audioPath = getDocumentsDirectory().stringByAppendingString("/petBabel\(currentRecording).m4a")
         currentRecording += 1
         audioURL = NSURL(fileURLWithPath: audioPath)
-        curTrans = PetTranslation(audioURL: audioURL)
         
         do
         {
@@ -69,44 +119,33 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
             
             if !audioRecorder.record()
             {
-                print("Recording failed to start")
+                print("Recording failed to start...")
                 return
             }
             
-            statusLabel.text = "Recording..."
-            print("Recording started")
+            playBackButton.enabled = false
+            print("Recording started...")
             
         }
         catch
         {
-            print("Failure trying to make Audio Recorder")
+            print("Failure trying to make Audio Recorder!")
             cleanUpRecording(success: false)
         }
 
     }
     
-    
-    @IBAction func startPlaybackAction(sender: UITapGestureRecognizer)
+    @IBAction func backtoMainAction(sender: UIBarButtonItem)
     {
-        print("Playback started")
-        statusLabel.text = "Playing sound"
+        self.navigationController?.popToRootViewControllerAnimated(true)
     }
     
-    func startPlayback()
+    @IBAction func startPlaybackAction(sender: UIButton)
     {
-        do
-        {
-            let originalVoice = try AVAudioPlayer(contentsOfURL: curTrans.audioURL!)
-            audioPlayer = originalVoice
-            audioPlayer.delegate = self
-            audioPlayer.play()
-        }
-        catch
-        {
-            print("Playback failed")
-        }
+        print("Playback started....")
+        playBackButton.enabled = false
+        startPlayback()
     }
-
     
     override func viewDidLoad()
     {
@@ -119,7 +158,7 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         {
             try recordingSession.setCategory(AVAudioSessionCategoryPlayAndRecord)
             try recordingSession.setActive(true)
-            recordingSession.requestRecordPermission() { [unowned self] (allowed: Bool) -> Void in
+            recordingSession.requestRecordPermission() { (allowed: Bool) -> Void in
                 dispatch_async(dispatch_get_main_queue())
                 {
                     if allowed
@@ -136,6 +175,14 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
            print("Failed to get permissions for recording")
         }
         
+        /* Setting up Delegates  and default values */
+        languagePicker.delegate = self
+        curLanguage = Language.English
+        
+        playBackButton.setTitle("Play", forState: .Normal)
+        playBackButton.setTitle("...", forState: .Disabled)
+        
+        
     }
 
     override func didReceiveMemoryWarning()
@@ -145,41 +192,22 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     }
     
     // MARK: AVAudioRecorderDelegate
-    func cleanUpRecording(success success: Bool)
-    {
-        if audioRecorder != nil
-        {
-            audioRecorder.stop()
-        }
-        
-        audioRecorder = nil
-        
-        if(success)
-        {
-            statusLabel.text = "Recording Finished Sucessfully"
-            translationTextBox.text = curTrans.translatedText
-            startPlayback()
-        }
-        else
-        {
-            statusLabel.text = "Recording Failed!"
-        }
-    }
-    
     func audioRecorderDidFinishRecording(recorder: AVAudioRecorder, successfully flag: Bool)
     {
+        
         if !flag
         {
             print("Audio did not finish recording!")
             cleanUpRecording(success: false)
         }
+
     }
     
     // MARK: AVAudioPlayerDelegate
     func audioPlayerDidFinishPlaying(player: AVAudioPlayer, successfully flag: Bool)
     {
-        statusLabel.text = "Playback finished!"
-        
+        playBackButton.enabled = true
+       
         if flag
         {
             print("Playback finished!")
@@ -187,6 +215,49 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         else
         {
             print("Error with playback")
+        }
+    }
+    
+    // MARK: UIPickerViewDelegate
+    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String?
+    {
+        return Language(rawValue: row)?.description
+    }
+    
+    // The number of columns of data
+    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int
+    {
+        return 1
+    }
+    
+    // The number of rows of data
+    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int
+    {
+        return Language.count
+    }
+    
+    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
+    {
+        curLanguage = Language(rawValue: row)
+        print("Language changed to \(curLanguage.description)")
+        
+        /* If the user picked Japanese... */
+        if curLanguage == Language.日本語
+        {
+            languageLabel.text = "言語"
+            playBackButton.setTitle("再生", forState: .Normal)
+            shareButton.setTitle("シェア", forState: .Normal)
+            historyButton.setTitle("履歴", forState: .Normal)
+            translationHeadingLabel.text = "翻訳"
+        }
+        /* English */
+        else if curLanguage == Language.English
+        {
+            languageLabel.text = "Language"
+            playBackButton.setTitle("Play", forState: .Normal)
+            shareButton.setTitle("Share", forState: .Normal)
+            historyButton.setTitle("History", forState: .Normal)
+            translationHeadingLabel.text = "Translation"
         }
     }
 }
