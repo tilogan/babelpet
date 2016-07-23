@@ -10,6 +10,7 @@
 		0C0D467A1D3B2532008BF758 /* PetTranslation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C0D46791D3B2532008BF758 /* PetTranslation.swift */; };
 		0C0D467C1D3C1329008BF758 /* TranslationHistoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C0D467B1D3C1329008BF758 /* TranslationHistoryTableViewController.swift */; };
 		0C0D467E1D3C20BC008BF758 /* MainMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C0D467D1D3C20BC008BF758 /* MainMenuViewController.swift */; };
+		0C0D46801D42FA07008BF758 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C0D467F1D42FA07008BF758 /* iAd.framework */; };
 		0C1F54D91D334D590022AC65 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1F54D81D334D590022AC65 /* AppDelegate.swift */; };
 		0C1F54DB1D334D590022AC65 /* BabelPetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1F54DA1D334D590022AC65 /* BabelPetViewController.swift */; };
 		0C1F54DE1D334D590022AC65 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0C1F54DC1D334D590022AC65 /* Main.storyboard */; };
@@ -33,6 +34,7 @@
 		0C0D46791D3B2532008BF758 /* PetTranslation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PetTranslation.swift; sourceTree = "<group>"; };
 		0C0D467B1D3C1329008BF758 /* TranslationHistoryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TranslationHistoryTableViewController.swift; sourceTree = "<group>"; };
 		0C0D467D1D3C20BC008BF758 /* MainMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuViewController.swift; sourceTree = "<group>"; };
+		0C0D467F1D42FA07008BF758 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 		0C1F54D51D334D580022AC65 /* Babel Pet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Babel Pet.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C1F54D81D334D590022AC65 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0C1F54DA1D334D590022AC65 /* BabelPetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BabelPetViewController.swift; sourceTree = "<group>"; };
@@ -51,6 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C0D46801D42FA07008BF758 /* iAd.framework in Frameworks */,
 				0C1F54F91D371EEE0022AC65 /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -68,6 +71,7 @@
 		0C1F54CC1D334D580022AC65 = {
 			isa = PBXGroup;
 			children = (
+				0C0D467F1D42FA07008BF758 /* iAd.framework */,
 				0C1F54F81D371EEE0022AC65 /* AVFoundation.framework */,
 				0C1F54D71D334D590022AC65 /* babelpet */,
 				0C1F54EC1D334D590022AC65 /* babelpetTests */,

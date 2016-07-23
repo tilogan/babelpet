@@ -177,12 +177,8 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         
         /* Setting up Delegates  and default values */
         languagePicker.delegate = self
-        curLanguage = Language.English
-        
-        playBackButton.setTitle("Play", forState: .Normal)
-        playBackButton.setTitle("...", forState: .Disabled)
-        
-        
+    curLanguage = Language.English
+       
     }
 
     override func didReceiveMemoryWarning()
@@ -219,12 +215,6 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     }
     
     // MARK: UIPickerViewDelegate
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String?
-    {
-        return Language(rawValue: row)?.description
-    }
-    
-    // The number of columns of data
     func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int
     {
         return 1
@@ -234,6 +224,24 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int
     {
         return Language.count
+    }
+    
+    func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView?) -> UIView
+    {
+        var pickerLabel = view as? UILabel;
+        
+        if (pickerLabel == nil)
+        {
+            pickerLabel = UILabel()
+            
+            pickerLabel?.font = UIFont(name: "Chalkboard SE", size: 16)
+            pickerLabel?.textColor = UIColor.whiteColor()
+            pickerLabel?.textAlignment = NSTextAlignment.Center
+        }
+        
+        pickerLabel?.text = Language(rawValue: row)?.description
+        
+        return pickerLabel!;
     }
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
