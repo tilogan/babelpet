@@ -18,6 +18,7 @@
 		0C1F54E31D334D590022AC65 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0C1F54E11D334D590022AC65 /* LaunchScreen.storyboard */; };
 		0C1F54EE1D334D590022AC65 /* babelpetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1F54ED1D334D590022AC65 /* babelpetTests.swift */; };
 		0C1F54F91D371EEE0022AC65 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C1F54F81D371EEE0022AC65 /* AVFoundation.framework */; };
+		0C41CB2D1D43C1830001BEE9 /* HumanToPetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C41CB2C1D43C1830001BEE9 /* HumanToPetViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +47,7 @@
 		0C1F54ED1D334D590022AC65 /* babelpetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = babelpetTests.swift; sourceTree = "<group>"; };
 		0C1F54EF1D334D590022AC65 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0C1F54F81D371EEE0022AC65 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		0C41CB2C1D43C1830001BEE9 /* HumanToPetViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HumanToPetViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +102,7 @@
 				0C1F54DF1D334D590022AC65 /* Assets.xcassets */,
 				0C1F54E11D334D590022AC65 /* LaunchScreen.storyboard */,
 				0C1F54E41D334D590022AC65 /* Info.plist */,
+				0C41CB2C1D43C1830001BEE9 /* HumanToPetViewController.swift */,
 			);
 			path = babelpet;
 			sourceTree = "<group>";
@@ -216,6 +219,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C1F54DB1D334D590022AC65 /* BabelPetViewController.swift in Sources */,
+				0C41CB2D1D43C1830001BEE9 /* HumanToPetViewController.swift in Sources */,
 				0C0D467E1D3C20BC008BF758 /* MainMenuViewController.swift in Sources */,
 				0C1F54D91D334D590022AC65 /* AppDelegate.swift in Sources */,
 				0C0D467C1D3C1329008BF758 /* TranslationHistoryTableViewController.swift in Sources */,

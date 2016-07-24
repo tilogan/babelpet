@@ -11,14 +11,10 @@ import iAd
 
 class MainMenuViewController: UIViewController
 {
-    // MARK: Properties
-    @IBOutlet weak var petToHumanImage: UIImageView!
-    @IBOutlet weak var humanToPetImage: UIImageView!
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        self.canDisplayBannerAds = true
     }
 
     override func didReceiveMemoryWarning()
@@ -26,7 +22,7 @@ class MainMenuViewController: UIViewController
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    /*
+
     override func viewWillAppear(animated: Bool)
     {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
@@ -37,6 +33,6 @@ class MainMenuViewController: UIViewController
     {
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         super.viewWillDisappear(animated)
-    }*/
+    }
     
 }

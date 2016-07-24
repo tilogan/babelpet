@@ -19,6 +19,9 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     var audioPath: String!
     var audioURL: NSURL!
     var curLanguage: Language!
+    var curPower = Float(0)
+    let powerThreshold = Float(-20.0)
+    var curRecordingLength = Double(0)
     
     let audioSettings =
     [
@@ -28,16 +31,14 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
             AVEncoderAudioQualityKey: AVAudioQuality.High.rawValue
     ]
     
-    
-    
     // MARK: Properties
     @IBOutlet weak var languagePicker: UIPickerView!
     @IBOutlet weak var translationLabel: UILabel!
-    @IBOutlet weak var recordImage: UIImageView!
     @IBOutlet weak var playBackButton: UIButton!
     @IBOutlet weak var historyButton: UIButton!
     @IBOutlet weak var shareButton: UIButton!
     @IBOutlet weak var translationHeadingLabel: UILabel!
+    @IBOutlet weak var recordButton: UIButton!
     @IBOutlet weak var languageLabel: UILabel!
 
     
@@ -57,6 +58,15 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     // MARK: Functions
     func cleanUpRecording(success success: Bool)
     {
+        if curLanguage == Language.日本語
+        {
+            recordButton.setTitle("Tap to Record", forState: .Normal)
+        }
+        else if curLanguage == Language.English
+        {
+            recordButton.setTitle("Tap to Record", forState: .Normal)
+        }
+        
         if audioRecorder != nil
         {
             audioRecorder.stop()
@@ -64,25 +74,26 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         
         audioRecorder = nil
         
-        if(success)
+        if curPower < powerThreshold
         {
-            curTrans = PetTranslation(audioURL: audioURL, transLanguage: curLanguage)
-            translationLabel.text = curTrans.translatedText
-            translations.append(curTrans)
-            startPlayback()
+            translationLabel.text = "Pet was too quiet. Could not detect animal voice!"
+            return
         }
-        else
-        {
-            translationLabel.text = "ERROR! RECORDING FAILED!"
-            playBackButton.enabled = true
-        }
-    }
-    
-    func startPlayback()
-    {
+        
         do
         {
-            let originalVoice = try AVAudioPlayer(contentsOfURL: curTrans.audioURL!)
+            let originalVoice = try AVAudioPlayer(contentsOfURL: audioURL!)
+            
+            print("Duration is \(originalVoice.duration)")
+            
+            /* Making sure we have at least one second of sampling */
+            if originalVoice.duration < 1.5
+            {
+                translationLabel.text = "Recording not long enough! Try again!"
+                return
+            }
+            
+            recordButton.enabled = false
             audioPlayer = originalVoice
             audioPlayer.delegate = self
             audioPlayer.play()
@@ -92,15 +103,34 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
             print("Playback failed")
             playBackButton.enabled = true
         }
+        
+        
+        if(success)
+        {
+            curTrans = PetTranslation(audioURL: audioURL, transLanguage: curLanguage)
+            translationLabel.text = curTrans.translatedText
+            translations.append(curTrans)
+        }
+        else
+        {
+            translationLabel.text = "ERROR! RECORDING FAILED!"
+            playBackButton.enabled = true
+        }
     }
-    
+   
     
     // MARK: Actions
-    @IBAction func startTranslationAction(sender: UITapGestureRecognizer)
+    @IBAction func recordStarted(sender: UIButton)
     {
         /* If we are in the middle of the recording, clean it up */
         if audioRecorder != nil
         {
+            /* Updating the meter and discarding any recording which is too 
+                quiet */
+            audioRecorder.updateMeters()
+            curPower = audioRecorder.peakPowerForChannel(0)
+            print("Peak power is \(curPower)")
+            
             cleanUpRecording(success: true)
             print("Recording finished without issue")
             return
@@ -111,11 +141,20 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         currentRecording += 1
         audioURL = NSURL(fileURLWithPath: audioPath)
         
+        if curLanguage == Language.日本語
+        {
+            recordButton.setTitle("Tap to Stop", forState: .Normal)
+        }
+        else if curLanguage == Language.English
+        {
+            recordButton.setTitle("Tap to Stop", forState: .Normal)
+        }
+        
         do
         {
-            
             audioRecorder = try AVAudioRecorder(URL: audioURL, settings: audioSettings)
             audioRecorder.delegate = self
+            audioRecorder.meteringEnabled = true
             
             if !audioRecorder.record()
             {
@@ -132,7 +171,6 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
             print("Failure trying to make Audio Recorder!")
             cleanUpRecording(success: false)
         }
-
     }
     
     @IBAction func backtoMainAction(sender: UIBarButtonItem)
@@ -144,7 +182,31 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     {
         print("Playback started....")
         playBackButton.enabled = false
-        startPlayback()
+        recordButton.enabled = false
+        
+        if curTrans == nil
+        {
+            print("Tried to play a nil recording")
+            return
+        }
+        
+        do
+        {
+            
+            let originalVoice = try AVAudioPlayer(contentsOfURL: curTrans.audioURL!)
+            
+            audioPlayer = originalVoice
+            audioPlayer.delegate = self
+            audioPlayer.play()
+        }
+        catch
+        {
+            print("Playback failed")
+            playBackButton.enabled = true
+        }
+        
+        
+        
     }
     
     override func viewDidLoad()
@@ -157,6 +219,7 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         do
         {
             try recordingSession.setCategory(AVAudioSessionCategoryPlayAndRecord)
+            try recordingSession.overrideOutputAudioPort(AVAudioSessionPortOverride.Speaker)
             try recordingSession.setActive(true)
             recordingSession.requestRecordPermission() { (allowed: Bool) -> Void in
                 dispatch_async(dispatch_get_main_queue())
@@ -190,20 +253,20 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     // MARK: AVAudioRecorderDelegate
     func audioRecorderDidFinishRecording(recorder: AVAudioRecorder, successfully flag: Bool)
     {
-        
         if !flag
         {
             print("Audio did not finish recording!")
             cleanUpRecording(success: false)
         }
-
+       
     }
     
     // MARK: AVAudioPlayerDelegate
     func audioPlayerDidFinishPlaying(player: AVAudioPlayer, successfully flag: Bool)
     {
         playBackButton.enabled = true
-       
+        recordButton.enabled = true
+        
         if flag
         {
             print("Playback finished!")
