@@ -70,16 +70,35 @@ enum Language: Int, CustomStringConvertible
 class PetTranslation
 {
     // MARK: Properties
-    var translatedText: String = ""
+    var translatedText: String!
     var audioURL: NSURL?
     var transLanguage: Language!
+    var dateRecorded: NSDate!
+    var duration: Float!
+    var description: String
+    {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "MM-dd-yyyy HH:mm"
+        let dateRecordedString = dateFormatter.stringFromDate(self.dateRecorded)
+        return "\(dateRecordedString): \(self.duration)s - \(translatedText)"
+    }
     
     // MARK: Initialization
-    init?(audioURL: NSURL, transLanguage: Language)
+    init?(audioURL: NSURL, transLanguage: Language, duration: Float,
+          dateRecorded: NSDate)
     {
         self.audioURL = audioURL
         self.transLanguage = transLanguage
         self.translatedText = getRandomTranslation()
+        self.dateRecorded = dateRecorded
+        self.duration = duration
+    }
+    
+    init?()
+    {
+        self.audioURL = nil
+        self.transLanguage = Language.English
+        self.translatedText = ""
     }
     
     // MARK: Functions

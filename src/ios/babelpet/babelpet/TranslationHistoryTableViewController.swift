@@ -10,8 +10,11 @@ import UIKit
 
 class TranslationHistoryTableViewController: UITableViewController
 {
-
-    override func viewDidLoad() {
+    // MARK: Variables
+    var translations = [PetTranslation]()
+   
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
 
         // Uncomment the following line to preserve selection between presentations
@@ -21,32 +24,36 @@ class TranslationHistoryTableViewController: UITableViewController
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
 
-    override func didReceiveMemoryWarning() {
+    override func didReceiveMemoryWarning()
+    {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int
+    {
+         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    {
+        return translations.count
     }
 
-    /*
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    {
+        let cellIdentifier = "TranslationTableViewCell"
+        
+        let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier,
+                         forIndexPath: indexPath) as! TranslationTableViewCell
+        let translation = translations[indexPath.row]
 
-        // Configure the cell...
+        cell.translationHeading.text = translation.description
 
         return cell
     }
-    */
 
     /*
     // Override to support conditional editing of the table view.

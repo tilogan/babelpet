@@ -99,7 +99,7 @@
                                                 <fontDescription key="fontDescription" name="ChalkboardSE-Bold" family="Chalkboard SE" pointSize="26"/>
                                                 <state key="normal" title="History" backgroundImage="gradientPurple"/>
                                                 <connections>
-                                                    <segue destination="RuQ-eU-ogK" kind="show" id="HBe-VL-O21"/>
+                                                    <segue destination="3Is-Fq-2xN" kind="show" identifier="gotoTable" id="lFa-gt-1nE"/>
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" placeholderIntrinsicWidth="46" placeholderIntrinsicHeight="55" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="odO-a2-8v9">
@@ -289,25 +289,51 @@
             <point key="canvasLocation" x="1480" y="1248"/>
         </scene>
         <!--Translation History Table View Controller-->
-        <scene sceneID="Isa-kh-Rt9">
+        <scene sceneID="iz2-RH-Enl">
             <objects>
-                <viewController id="RuQ-eU-ogK" customClass="TranslationHistoryTableViewController" customModule="Babel_Pet" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="t5Z-pm-BEQ"/>
-                        <viewControllerLayoutGuide type="bottom" id="dof-Tv-R6u"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="1nV-0y-PWG">
+                <tableViewController id="3Is-Fq-2xN" customClass="TranslationHistoryTableViewController" customModule="Babel_Pet" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" sectionHeaderHeight="28" sectionFooterHeight="28" id="Pqk-Ha-MiG">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="0.33725490200000002" green="0.75294117650000003" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="lZW-kM-ZoF">
-                        <barButtonItem key="leftBarButtonItem" title="Back" id="rn7-8O-qmc"/>
-                    </navigationItem>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="VCd-Tu-KBX" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="sectionIndexBackgroundColor" red="0.28235294119999998" green="0.69411764710000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="TranslationTableViewCell" rowHeight="60" id="5G1-AS-VPV" customClass="TranslationTableViewCell" customModule="Babel_Pet" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="600" height="60"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5G1-AS-VPV" id="lpq-4F-rof">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="59"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VJI-vP-uae">
+                                            <rect key="frame" x="8" y="19" width="584" height="21"/>
+                                            <fontDescription key="fontDescription" name="ChalkboardSE-Regular" family="Chalkboard SE" pointSize="17"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottomMargin" secondItem="VJI-vP-uae" secondAttribute="bottom" constant="11" id="OIj-K8-Sa8"/>
+                                        <constraint firstItem="VJI-vP-uae" firstAttribute="trailing" secondItem="lpq-4F-rof" secondAttribute="trailingMargin" id="UYH-Wa-2AK"/>
+                                        <constraint firstItem="VJI-vP-uae" firstAttribute="top" secondItem="lpq-4F-rof" secondAttribute="topMargin" constant="11" id="c8H-iw-rrH"/>
+                                        <constraint firstItem="VJI-vP-uae" firstAttribute="leading" secondItem="lpq-4F-rof" secondAttribute="leadingMargin" id="eMZ-dg-XHB"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <color key="backgroundColor" red="0.28235294119999998" green="0.69411764710000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <outlet property="translationHeading" destination="VJI-vP-uae" id="fpl-fK-2hi"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="3Is-Fq-2xN" id="VqG-AF-Pth"/>
+                            <outlet property="delegate" destination="3Is-Fq-2xN" id="Iuw-Zb-uZH"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aCj-NZ-buh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3034" y="26"/>
+            <point key="canvasLocation" x="3143" y="44"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="xx9-7L-oz0">

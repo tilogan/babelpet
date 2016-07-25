@@ -107,7 +107,9 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         
         if(success)
         {
-            curTrans = PetTranslation(audioURL: audioURL, transLanguage: curLanguage)
+            let myDate = NSDate()
+            curTrans = PetTranslation(audioURL: audioURL, transLanguage: curLanguage,
+                                        duration: Float((audioPlayer?.duration)!), dateRecorded: myDate)
             translationLabel.text = curTrans.translatedText
             translations.append(curTrans)
         }
@@ -331,5 +333,18 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
             translationHeadingLabel.text = "Translation"
         }
     }
+    
+    //MARK: Navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+    {
+        if segue.identifier == "gotoTable"
+        {
+            let translationViewTable:TranslationHistoryTableViewController = segue.destinationViewController as! TranslationHistoryTableViewController
+            translationViewTable.translations = self.translations
+        }
+    }
+    
+    
+    
 }
 
