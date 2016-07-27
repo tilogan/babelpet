@@ -312,6 +312,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
+                                    <color key="backgroundColor" red="0.28235294119999998" green="0.69411764710000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="bottomMargin" secondItem="VJI-vP-uae" secondAttribute="bottom" constant="11" id="OIj-K8-Sa8"/>
                                         <constraint firstItem="VJI-vP-uae" firstAttribute="trailing" secondItem="lpq-4F-rof" secondAttribute="trailingMargin" id="UYH-Wa-2AK"/>
@@ -320,6 +321,7 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <color key="backgroundColor" red="0.28235294119999998" green="0.69411764710000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <gestureRecognizers/>
                                 <connections>
                                     <outlet property="translationHeading" destination="VJI-vP-uae" id="fpl-fK-2hi"/>
                                 </connections>

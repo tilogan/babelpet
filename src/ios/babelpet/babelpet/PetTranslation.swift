@@ -67,7 +67,7 @@ enum Language: Int, CustomStringConvertible
     }
 }
 
-class PetTranslation
+class PetTranslation: NSObject, NSCoding
 {
     // MARK: Properties
     var translatedText: String!
@@ -75,27 +75,41 @@ class PetTranslation
     var transLanguage: Language!
     var dateRecorded: NSDate!
     var duration: Float!
-    var description: String
+    override var description: String
     {
         let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = "MM-dd-yyyy HH:mm"
+        dateFormatter.dateFormat = "MM-dd-yyyy"
         let dateRecordedString = dateFormatter.stringFromDate(self.dateRecorded)
-        return "\(dateRecordedString): \(self.duration)s - \(translatedText)"
+        return "\(dateRecordedString): \(translatedText)"
     }
+    
+    // MARK: Types
+    struct PropertyKey
+    {
+        static let translatedText = "translationText"
+        static let audioURLText = "audioURLText"
+        static let transLanguageText = "transLanguageText"
+        static let dateRecordedText = "dateRecordedText"
+        static let durationText = "durationText"
+    }
+    
     
     // MARK: Initialization
     init?(audioURL: NSURL, transLanguage: Language, duration: Float,
           dateRecorded: NSDate)
     {
+        super.init()
+        
         self.audioURL = audioURL
         self.transLanguage = transLanguage
-        self.translatedText = getRandomTranslation()
         self.dateRecorded = dateRecorded
         self.duration = duration
     }
     
-    init?()
+    override init()
     {
+        super.init()
+        
         self.audioURL = nil
         self.transLanguage = Language.English
         self.translatedText = ""
@@ -126,4 +140,38 @@ class PetTranslation
         /* Return some random number */
         return translationBank[Int(arc4random_uniform(UInt32(translationCount)))]
     }
+    
+    func assignRandomTranslation()
+    {
+        self.translatedText = getRandomTranslation()
+    }
+    
+    //MARK: NSCoding
+    func encodeWithCoder(aCoder: NSCoder)
+    {
+        aCoder.encodeObject(audioURL, forKey: PropertyKey.audioURLText)
+        aCoder.encodeInteger(transLanguage.rawValue, forKey: PropertyKey.transLanguageText)
+        aCoder.encodeObject(translatedText, forKey: PropertyKey.translatedText)
+        aCoder.encodeFloat(duration, forKey: PropertyKey.durationText)
+        aCoder.encodeObject(dateRecorded, forKey: PropertyKey.dateRecordedText)
+    }
+    
+    required convenience init?(coder aDecoder: NSCoder)
+    {
+        let decodedURL = aDecoder.decodeObjectForKey(PropertyKey.audioURLText) as! NSURL
+        let decodedLanguage = aDecoder.decodeIntegerForKey(PropertyKey.transLanguageText)
+        let decodededText = aDecoder.decodeObjectForKey(PropertyKey.translatedText) as! String
+        let decodedDuration = aDecoder.decodeFloatForKey(PropertyKey.durationText)
+        let decodedDate = aDecoder.decodeObjectForKey(PropertyKey.dateRecordedText) as! NSDate
+        
+        self.init(audioURL: decodedURL, transLanguage: Language.init(rawValue: decodedLanguage)!,
+                  duration: decodedDuration, dateRecorded: decodedDate)
+        
+        self.translatedText = decodededText
+    }
+    
+    // MARK: Archiving Paths:
+    static let DocumentsDirectory = NSFileManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
+    static let ArchiveURL = DocumentsDirectory.URLByAppendingPathComponent("petTranslations")
+    
 }

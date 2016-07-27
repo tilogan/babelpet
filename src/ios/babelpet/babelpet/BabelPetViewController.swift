@@ -13,7 +13,6 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     AVAudioPlayerDelegate, UIPickerViewDelegate
 {
     // MARK: Local Variables
-    var currentRecording = 1
     var translations = [PetTranslation]()
     var curTrans: PetTranslation!
     var audioPath: String!
@@ -40,7 +39,25 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     @IBOutlet weak var translationHeadingLabel: UILabel!
     @IBOutlet weak var recordButton: UIButton!
     @IBOutlet weak var languageLabel: UILabel!
-
+    
+    // MARK: NSCoding
+    func saveTranslations()
+    {
+        if NSKeyedArchiver.archiveRootObject(translations,
+                                        toFile: PetTranslation.ArchiveURL.path!)
+        {
+            print("Pet translations saved without issue!")
+        }
+        else
+        {
+            print("Something happened and translations could not be saved")
+        }
+    }
+    
+    func loadTranslations() -> [PetTranslation]?
+    {
+        return NSKeyedUnarchiver.unarchiveObjectWithFile(PetTranslation.ArchiveURL.path!) as? [PetTranslation]
+    }
     
     // MARK: Convenience Functions
     func getDocumentsDirectory() -> String
@@ -110,8 +127,11 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
             let myDate = NSDate()
             curTrans = PetTranslation(audioURL: audioURL, transLanguage: curLanguage,
                                         duration: Float((audioPlayer?.duration)!), dateRecorded: myDate)
-            translationLabel.text = curTrans.translatedText
+            curTrans.assignRandomTranslation()
             translations.append(curTrans)
+            saveTranslations()
+            translationLabel.text = curTrans.translatedText
+
         }
         else
         {
@@ -139,8 +159,7 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         }
         
         /* Otherwise we are a new recording */
-        audioPath = getDocumentsDirectory().stringByAppendingString("/petBabel\(currentRecording).m4a")
-        currentRecording += 1
+        audioPath = getDocumentsDirectory().stringByAppendingString("/petBabel\(translations.count).m4a")
         audioURL = NSURL(fileURLWithPath: audioPath)
         
         if curLanguage == Language.日本語
@@ -194,9 +213,7 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         
         do
         {
-            
             let originalVoice = try AVAudioPlayer(contentsOfURL: curTrans.audioURL!)
-            
             audioPlayer = originalVoice
             audioPlayer.delegate = self
             audioPlayer.play()
@@ -206,14 +223,16 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
             print("Playback failed")
             playBackButton.enabled = true
         }
-        
-        
-        
     }
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
+        if let savedTranslations = loadTranslations()
+        {
+            translations += savedTranslations
+        }
         
         /* We need the user to grant permission to use the microphone */
         recordingSession = AVAudioSession.sharedInstance()
@@ -340,11 +359,8 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         if segue.identifier == "gotoTable"
         {
             let translationViewTable:TranslationHistoryTableViewController = segue.destinationViewController as! TranslationHistoryTableViewController
-            translationViewTable.translations = self.translations
+            translationViewTable.referencedController = self
         }
     }
-    
-    
-    
 }
 
