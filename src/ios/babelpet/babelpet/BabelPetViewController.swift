@@ -94,6 +94,7 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         if curPower < powerThreshold
         {
             translationLabel.text = "Pet was too quiet. Could not detect animal voice!"
+            shareButton.enabled = false
             return
         }
         
@@ -107,6 +108,7 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
             if originalVoice.duration < 1.5
             {
                 translationLabel.text = "Recording not long enough! Try again!"
+                shareButton.enabled = false
                 return
             }
             
@@ -131,7 +133,7 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
             translations.append(curTrans)
             saveTranslations()
             translationLabel.text = curTrans.translatedText
-
+            shareButton.enabled = true
         }
         else
         {
@@ -360,6 +362,11 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         {
             let translationViewTable:TranslationHistoryTableViewController = segue.destinationViewController as! TranslationHistoryTableViewController
             translationViewTable.referencedController = self
+        }
+        else if(segue.identifier == "shareImage")
+        {
+            let imageViewController:ImageShareViewController = segue.destinationViewController as! ImageShareViewController
+            imageViewController.referencedController = self
         }
     }
 }

@@ -15,6 +15,8 @@ class MainMenuViewController: UIViewController
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        self.canDisplayBannerAds = true
+        super.canDisplayBannerAds = true
     }
 
     override func didReceiveMemoryWarning()

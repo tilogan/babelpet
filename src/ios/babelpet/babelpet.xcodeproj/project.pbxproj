@@ -20,6 +20,8 @@
 		0C1F54EE1D334D590022AC65 /* babelpetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1F54ED1D334D590022AC65 /* babelpetTests.swift */; };
 		0C1F54F91D371EEE0022AC65 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C1F54F81D371EEE0022AC65 /* AVFoundation.framework */; };
 		0C41CB2D1D43C1830001BEE9 /* HumanToPetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C41CB2C1D43C1830001BEE9 /* HumanToPetViewController.swift */; };
+		0C69C7191D4AE98B00E331AF /* ImageShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C69C7181D4AE98B00E331AF /* ImageShareViewController.swift */; };
+		0C69C71B1D4AFF1000E331AF /* VideoPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C69C71A1D4AFF1000E331AF /* VideoPreviewViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +52,8 @@
 		0C1F54EF1D334D590022AC65 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0C1F54F81D371EEE0022AC65 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		0C41CB2C1D43C1830001BEE9 /* HumanToPetViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HumanToPetViewController.swift; sourceTree = "<group>"; };
+		0C69C7181D4AE98B00E331AF /* ImageShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageShareViewController.swift; sourceTree = "<group>"; };
+		0C69C71A1D4AFF1000E331AF /* VideoPreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPreviewViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +102,7 @@
 				0C1F54D81D334D590022AC65 /* AppDelegate.swift */,
 				0C1F54DA1D334D590022AC65 /* BabelPetViewController.swift */,
 				0C1F54DC1D334D590022AC65 /* Main.storyboard */,
+				0C69C7181D4AE98B00E331AF /* ImageShareViewController.swift */,
 				0C0D467D1D3C20BC008BF758 /* MainMenuViewController.swift */,
 				0C0D467B1D3C1329008BF758 /* TranslationHistoryTableViewController.swift */,
 				0C0D46791D3B2532008BF758 /* PetTranslation.swift */,
@@ -106,6 +111,7 @@
 				0C1F54E41D334D590022AC65 /* Info.plist */,
 				0C41CB2C1D43C1830001BEE9 /* HumanToPetViewController.swift */,
 				0C1651981D45C76200376AF0 /* TranslationTableViewCell.swift */,
+				0C69C71A1D4AFF1000E331AF /* VideoPreviewViewController.swift */,
 			);
 			path = babelpet;
 			sourceTree = "<group>";
@@ -221,12 +227,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C69C71B1D4AFF1000E331AF /* VideoPreviewViewController.swift in Sources */,
 				0C1F54DB1D334D590022AC65 /* BabelPetViewController.swift in Sources */,
 				0C41CB2D1D43C1830001BEE9 /* HumanToPetViewController.swift in Sources */,
 				0C0D467E1D3C20BC008BF758 /* MainMenuViewController.swift in Sources */,
 				0C1F54D91D334D590022AC65 /* AppDelegate.swift in Sources */,
 				0C0D467C1D3C1329008BF758 /* TranslationHistoryTableViewController.swift in Sources */,
 				0C1651991D45C76200376AF0 /* TranslationTableViewCell.swift in Sources */,
+				0C69C7191D4AE98B00E331AF /* ImageShareViewController.swift in Sources */,
 				0C0D467A1D3B2532008BF758 /* PetTranslation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
