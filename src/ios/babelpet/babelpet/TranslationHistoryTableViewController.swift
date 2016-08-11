@@ -78,6 +78,7 @@ class TranslationHistoryTableViewController: UITableViewController
         referencedController.curTrans = referencedController.translations[indexPath.row]
         referencedController.translationLabel.text = referencedController.curTrans.translatedText
         referencedController.playBackButton.enabled = true
+        referencedController.shareButton.enabled = true
         navigationController?.popViewControllerAnimated(true)
     }
     

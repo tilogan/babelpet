@@ -24,6 +24,11 @@ class ImageShareViewController: UIViewController,
         
     }
     
+    @IBAction func playTranslationOption(sender: UIButton)
+    {
+        referencedController.startPlaybackAction(sender)
+    }
+    
     @IBAction func takePictureAction(sender: UIButton)
     {
         let imagePicker = UIImagePickerController()
