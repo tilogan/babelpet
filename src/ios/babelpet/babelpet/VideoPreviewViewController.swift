@@ -21,6 +21,19 @@ class VideoPreviewViewController: UIViewController
     
     // MARK: Properties
     @IBOutlet weak var imagePreview: UIImageView!
+    @IBOutlet var playGesture: UITapGestureRecognizer!
+    
+    // MARK: Actions
+    @IBAction func playVideoAction(sender: UITapGestureRecognizer)
+    {
+        let player = AVPlayer(URL: self.savedVideo)
+        let playerViewController = AVPlayerViewController()
+        playerViewController.player = player
+        self.presentViewController(playerViewController, animated: true)
+        {
+            playerViewController.player!.play()
+        }
+    }
     
     
     // MARK: Functions
@@ -327,18 +340,14 @@ class VideoPreviewViewController: UIViewController
                                   duration: curTrans.duration,
                                   audioURL: curTrans.audioURL!)
         
+        
         if completeVideoURL == nil
         {
             return
         }
         
-        let player = AVPlayer(URL: completeVideoURL!)
-        let playerViewController = AVPlayerViewController()
-        playerViewController.player = player
-        self.presentViewController(playerViewController, animated: true)
-        {
-            playerViewController.player!.play()
-        }
+        self.savedVideo = completeVideoURL!
+        playVideoAction(playGesture)
         
     }
 
