@@ -504,6 +504,9 @@ CQ
                                         <state key="normal" title="Instagram" backgroundImage="gradientPurple">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="shareInstagram:" destination="ykV-RG-FdJ" eventType="touchUpInside" id="w3Q-Yd-4TO"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <constraints>

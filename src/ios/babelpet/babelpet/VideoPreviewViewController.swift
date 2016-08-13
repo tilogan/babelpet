@@ -42,6 +42,29 @@ class VideoPreviewViewController: UIViewController
         }
     }
     
+    @IBAction func shareInstagram(sender: AnyObject)
+    {
+        /* Instagram is easier than Facebook. Just save the asset, and then 
+            construct/escape the string into the Instagram application */
+        if self.assetURL.isEmpty
+        {
+            saveVideoToLibrary()
+        }
+        
+        if self.assetURL.isEmpty
+        {
+            print("INSTAGRAM: Error saving to instagram")
+            return
+        }
+        let escapedPath = self.assetURL.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.alphanumericCharacterSet())
+        let instaString = String.localizedStringWithFormat("instagram://library?AssetPath=%@", escapedPath!)
+       
+        let instagramURL: NSURL = NSURL(string: instaString)!
+        
+        UIApplication.sharedApplication().openURL(instagramURL)
+    }
+    
+    
     @IBAction func shareFacebookButton(sender: UIButton)
     {
         /* If the user is not already logged in to Facebook, login */
