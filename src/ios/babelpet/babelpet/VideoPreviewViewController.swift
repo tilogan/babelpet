@@ -9,12 +9,17 @@
 import UIKit
 import AVFoundation
 import AVKit
+import Photos
+import FBSDKLoginKit
+import FBSDKShareKit
 
 class VideoPreviewViewController: UIViewController
 {
     // MARK: Variables
     var referencedController: ImageShareViewController!
     var savedVideo: NSURL!
+    var assetURL: String!
+    var myDialog: FBSDKShareDialog!
     
     // MARK: Video generation
     var writer: AVAssetWriter!
@@ -22,6 +27,8 @@ class VideoPreviewViewController: UIViewController
     // MARK: Properties
     @IBOutlet weak var imagePreview: UIImageView!
     @IBOutlet var playGesture: UITapGestureRecognizer!
+    
+    // MARK: Share Dialog
     
     // MARK: Actions
     @IBAction func playVideoAction(sender: UITapGestureRecognizer)
@@ -35,8 +42,97 @@ class VideoPreviewViewController: UIViewController
         }
     }
     
+    @IBAction func shareFacebookButton(sender: UIButton)
+    {
+        /* If the user is not already logged in to Facebook, login */
+        if FBSDKAccessToken.currentAccessToken() == nil
+        {
+            let loginManager: FBSDKLoginManager = FBSDKLoginManager()
+            loginManager.loginBehavior = FBSDKLoginBehavior.Native
+            loginManager.logInWithPublishPermissions (["publish_actions"],
+                                                      fromViewController:  self,
+                                                      handler:
+                { (response:FBSDKLoginManagerLoginResult!, error: NSError!) in
+                if(error != nil)
+                {
+                    print("FACEBOOK: Login Error Happened")
+                    return
+                }
+                else if(response.isCancelled)
+                {
+                    print("FACEBOOK: Login canceled")
+                    return
+                }
+                else
+                {
+                    print("FACEBOOK: Login worked")
+                }
+            })
+        }
+        
+        /* The Facebook share dialog only accepts an asset link. To get this    
+            we have to first save it to the user's local library and then
+            convert the rsulting URL to an asset URL */
+        if(self.assetURL.isEmpty)
+        {
+            saveVideoToLibrary()
+        }
+        
+        if(self.assetURL.isEmpty)
+        {
+            print("ERROR: Saving video to library!")
+        }
+        
+        /* Now we need to share. Create the asset URL and open the dialog */
+        let avURL = AVURLAsset(URL: NSURL(string: self.assetURL)!)
+        let fbShareVideo: FBSDKShareVideo = FBSDKShareVideo(videoURL: avURL.URL)
+        let fbShareContent: FBSDKShareVideoContent = FBSDKShareVideoContent()
+        fbShareContent.video = fbShareVideo
+    
+        /* Displaying the dialog */
+        myDialog = FBSDKShareDialog()
+        myDialog.fromViewController = self
+        myDialog.shareContent = fbShareContent
+        myDialog.mode = FBSDKShareDialogMode.ShareSheet
+        myDialog.show()
+
+    }
     
     // MARK: Functions
+    func saveVideoToLibrary() -> String
+    {
+        var videoAssetPlaceholder:PHObjectPlaceholder!
+        var completionInt = 0
+        
+        PHPhotoLibrary.sharedPhotoLibrary().performChanges(
+            {
+                let request = PHAssetChangeRequest.creationRequestForAssetFromVideoAtFileURL(self.savedVideo)
+                videoAssetPlaceholder = request!.placeholderForCreatedAsset
+            })
+        { saved, error in
+            if saved
+            {
+                let localID = videoAssetPlaceholder.localIdentifier
+                let assetID = localID.stringByReplacingOccurrencesOfString("/.*", withString: "",
+                                                                           options: NSStringCompareOptions.RegularExpressionSearch, range: nil)
+                let ext = "mov"
+                self.assetURL =
+                    "assets-library://asset/asset.\(ext)?id=\(assetID)&ext=\(ext)"
+                print("Video saved to library")
+            }
+            
+            completionInt = 1
+        }
+        
+        /* Poll for completion */
+        while completionInt == 0
+        {
+            
+        }
+        
+        return self.assetURL
+    }
+    
     func convertImagetoPetMovie(petImage: UIImage, videoPath: String,
                                 duration: Float, audioURL: NSURL) -> NSURL?
     {
@@ -67,7 +163,6 @@ class VideoPreviewViewController: UIViewController
             return nil
         }
         
-        // -- Set video parameters
         var frameDuration = kCMTimeZero
         var completionFlag = 0
 
@@ -347,7 +442,7 @@ class VideoPreviewViewController: UIViewController
         }
         
         self.savedVideo = completeVideoURL!
-        playVideoAction(playGesture)
+        playVideoAction(playGesture                                     )
         
     }
 
@@ -355,6 +450,7 @@ class VideoPreviewViewController: UIViewController
     {
         super.viewDidLoad()
 
+        self.assetURL = ""
         createVideoFromImage(referencedController.petImage.image,
                              translation: referencedController.translationTextField.text)
     }
@@ -364,7 +460,6 @@ class VideoPreviewViewController: UIViewController
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
 
     /*
     // MARK: - Navigation

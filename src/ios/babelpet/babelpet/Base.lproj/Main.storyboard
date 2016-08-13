@@ -494,6 +494,9 @@ CQ
                                         <state key="normal" title="Facebook" backgroundImage="gradientBlue">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="shareFacebookButton:" destination="ykV-RG-FdJ" eventType="touchUpInside" id="jFT-r4-Eoc"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bNW-vq-N5U">
                                         <rect key="frame" x="0.0" y="510" width="560" height="50"/>
