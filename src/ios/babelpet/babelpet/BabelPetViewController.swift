@@ -110,7 +110,6 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         catch
         {
             print("Playback failed")
-            playBackButton.enabled = true
         }
         
         
@@ -221,8 +220,6 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     {
         super.viewDidLoad()
         
-        self.audioPlayer = referencedController.audioPlayer
-        
         if let savedTranslations = loadTranslations()
         {
             translations += savedTranslations
@@ -279,7 +276,8 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         return Language.count
     }
     
-    func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView?) -> UIView
+    func pickerView(pickerView: UIPickerView, viewForRow row: Int,
+                    forComponent component: Int, reusingView view: UIView?) -> UIView
     {
         var pickerLabel = view as? UILabel;
         
@@ -297,7 +295,8 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         return pickerLabel!;
     }
     
-    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
+    func pickerView(pickerView: UIPickerView, didSelectRow row: Int,
+                    inComponent component: Int)
     {
         curLanguage = Language(rawValue: row)
         print("Language changed to \(curLanguage.description)")
@@ -327,12 +326,14 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     {
         if segue.identifier == "gotoTable"
         {
-            let translationViewTable:TranslationHistoryTableViewController = segue.destinationViewController as! TranslationHistoryTableViewController
+            let translationViewTable:TranslationHistoryTableViewController =
+                segue.destinationViewController as! TranslationHistoryTableViewController
             translationViewTable.referencedController = self
         }
         else if(segue.identifier == "shareImage")
         {
-            let imageViewController:ImageShareViewController = segue.destinationViewController as! ImageShareViewController
+            let imageViewController:ImageShareViewController =
+                segue.destinationViewController as! ImageShareViewController
             imageViewController.referencedController = self
         }
     }

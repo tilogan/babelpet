@@ -9,10 +9,13 @@
 import UIKit
 
 class ImageShareViewController: UIViewController,
-                        UIImagePickerControllerDelegate, UINavigationControllerDelegate
+                        UIImagePickerControllerDelegate,
+                        UINavigationControllerDelegate,
+                        UITextFieldDelegate
 {
     // MARK: Properties
     @IBOutlet weak var translationTextField: UITextField!
+    @IBOutlet weak var textScroller: UIScrollView!
     @IBOutlet weak var petImage: UIImageView!
     
     // MARK: Variables
@@ -49,6 +52,10 @@ class ImageShareViewController: UIViewController,
     {
         super.viewDidLoad()
         translationTextField.text = referencedController.curTrans.translatedText
+        translationTextField.delegate = self
+        let notificationCenter = NSNotificationCenter.defaultCenter()
+        notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIKeyboardWillHideNotification, object: nil)
+        notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIKeyboardWillChangeFrameNotification, object: nil)
 
     }
 
@@ -82,5 +89,46 @@ class ImageShareViewController: UIViewController,
             videoPreviewController.referencedController = self
         }
     }
-
+    
+    // MARK: UITextFieldDelegate
+    func textFieldShouldReturn(textField: UITextField) -> Bool
+    {
+        translationTextField.resignFirstResponder()
+        return true
+    }
+    
+    func textFieldDidEndEditing(textField: UITextField)
+    {
+        let curTrans = referencedController.curTrans
+        
+        if !textField.text!.isEmpty && curTrans.translatedText != textField.text
+        {
+            let indexOfTrans = referencedController.translations.indexOf(curTrans)
+            curTrans.translatedText = textField.text
+            
+            if(indexOfTrans != nil)
+            {
+                referencedController.translations.removeAtIndex(indexOfTrans!)
+                referencedController.translations.append(curTrans)
+                referencedController.curTrans = curTrans
+                referencedController.translationLabel.text = curTrans.translatedText
+            }
+        }
+    }
+    
+    func adjustForKeyboard(notification: NSNotification)
+    {
+        let userInfo = notification.userInfo!
+        
+        let keyboardScreenEndFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
+        let keyboardViewEndFrame = view.convertRect(keyboardScreenEndFrame, fromView: view.window)
+        
+        if notification.name == UIKeyboardWillHideNotification {
+            textScroller.contentInset = UIEdgeInsetsZero
+        } else {
+            textScroller.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardViewEndFrame.height, right: 0)
+        }
+        
+        textScroller.scrollIndicatorInsets = textScroller.contentInset
+    }
 }
