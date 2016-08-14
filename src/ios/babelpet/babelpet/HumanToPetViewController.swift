@@ -23,18 +23,9 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     var audioPath: String!
     var audioURL: NSURL!
     var curOriginalURL: NSURL!
-    
-    // MARK: Audio Engine
-    var recordingSession: AVAudioSession!
+    var referencedController: MainMenuViewController!
     var audioRecorder: AVAudioRecorder!
     var audioPlayer: AVAudioPlayer!
-    let audioSettings =
-        [
-            AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
-            AVSampleRateKey: 12000.0,
-            AVNumberOfChannelsKey: 1 as NSNumber,
-            AVEncoderAudioQualityKey: AVAudioQuality.High.rawValue
-    ]
     
     func startPlayback()
     {
@@ -82,29 +73,8 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     
     override func viewDidLoad()
     {
+        self.audioPlayer = referencedController.audioPlayer
         super.viewDidLoad()
-
-        do
-        {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord)
-            try recordingSession.setActive(true)
-            recordingSession.requestRecordPermission() { (allowed: Bool) -> Void in
-                dispatch_async(dispatch_get_main_queue())
-                {
-                    if allowed
-                    {
-                        print("Recording granted")
-                    } else
-                    {
-                        print("Permisison for microphone denied")
-                    }
-                }
-            }
-        } catch
-        {
-            print("Failed to get permissions for recording")
-        }
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -131,7 +101,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         do
         {
             
-            audioRecorder = try AVAudioRecorder(URL: audioURL, settings: audioSettings)
+            audioRecorder = try AVAudioRecorder(URL: audioURL, settings: referencedController.audioSettings)
             audioRecorder.delegate = self
             
             if !audioRecorder.record()
@@ -154,7 +124,9 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     
     @IBAction func playPressed(sender: UIButton)
     {
-        
+        recordButton.enabled = false
+        playButton.enabled = false
+        startPlayback()
     }
     
     // MARK: AVAudioRecorderDelegate
@@ -182,17 +154,8 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         {
             print("Error with playback")
         }
+        
+        recordButton.enabled = true
+        playButton.enabled = true
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

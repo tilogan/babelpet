@@ -11,12 +11,20 @@ import iAd
 
 class MainMenuViewController: UIViewController
 {
+    // MARK: Audio Engine
+    var recordingSession: AVAudioSession!
+    var audioPlayer: AVAudioPlayer!
+    let audioSettings =
+        [
+            AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
+            AVSampleRateKey: 12000.0,
+            AVNumberOfChannelsKey: 1 as NSNumber,
+            AVEncoderAudioQualityKey: AVAudioQuality.High.rawValue
+    ]
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        self.canDisplayBannerAds = true
-        super.canDisplayBannerAds = true
     }
 
     override func didReceiveMemoryWarning()
@@ -35,6 +43,46 @@ class MainMenuViewController: UIViewController
     {
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         super.viewWillDisappear(animated)
+    }
+    
+    //MARK: Navigation
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+    {
+        /* We need the user to grant permission to use the microphone */
+        recordingSession = AVAudioSession.sharedInstance()
+        
+        do
+        {
+            try recordingSession.setCategory(AVAudioSessionCategoryPlayAndRecord)
+            try recordingSession.overrideOutputAudioPort(AVAudioSessionPortOverride.Speaker)
+            try recordingSession.setActive(true)
+            recordingSession.requestRecordPermission() { (allowed: Bool) -> Void in
+                dispatch_async(dispatch_get_main_queue())
+                {
+                    if allowed
+                    {
+                        print("Recording granted")
+                    } else
+                    {
+                        print("Permisison for microphone denied")
+                    }
+                }
+            }
+        } catch
+        {
+            print("Failed to get permissions for recording")
+        }
+        
+        if segue.identifier == "petToHuman"
+        {
+            let petToHuman:BabelPetViewController = segue.destinationViewController as! BabelPetViewController
+            petToHuman.referencedController = self
+        }
+        else if(segue.identifier == "humanToPet")
+        {
+            let humanToPet:HumanToPetViewController = segue.destinationViewController as! HumanToPetViewController
+            humanToPet.referencedController = self
+        }
     }
     
 }

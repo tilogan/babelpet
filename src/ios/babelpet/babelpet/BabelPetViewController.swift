@@ -21,14 +21,9 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     var curPower = Float(0)
     let powerThreshold = Float(-20.0)
     var curRecordingLength = Double(0)
-    
-    let audioSettings =
-    [
-            AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
-            AVSampleRateKey: 12000.0,
-            AVNumberOfChannelsKey: 1 as NSNumber,
-            AVEncoderAudioQualityKey: AVAudioQuality.High.rawValue
-    ]
+    var referencedController: MainMenuViewController!
+    var audioRecorder: AVAudioRecorder!
+    var audioPlayer: AVAudioPlayer!
     
     // MARK: Properties
     @IBOutlet weak var languagePicker: UIPickerView!
@@ -66,11 +61,6 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         let documentsDirectory = paths[0]
         return documentsDirectory
     }
-    
-    // MARK: Audio Engine
-    var recordingSession: AVAudioSession!
-    var audioRecorder: AVAudioRecorder!
-    var audioPlayer: AVAudioPlayer!
     
     // MARK: Functions
     func cleanUpRecording(success success: Bool)
@@ -175,7 +165,7 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         
         do
         {
-            audioRecorder = try AVAudioRecorder(URL: audioURL, settings: audioSettings)
+            audioRecorder = try AVAudioRecorder(URL: audioURL, settings: referencedController.audioSettings)
             audioRecorder.delegate = self
             audioRecorder.meteringEnabled = true
             
@@ -231,39 +221,16 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     {
         super.viewDidLoad()
         
+        self.audioPlayer = referencedController.audioPlayer
+        
         if let savedTranslations = loadTranslations()
         {
             translations += savedTranslations
         }
         
-        /* We need the user to grant permission to use the microphone */
-        recordingSession = AVAudioSession.sharedInstance()
-        
-        do
-        {
-            try recordingSession.setCategory(AVAudioSessionCategoryPlayAndRecord)
-            try recordingSession.overrideOutputAudioPort(AVAudioSessionPortOverride.Speaker)
-            try recordingSession.setActive(true)
-            recordingSession.requestRecordPermission() { (allowed: Bool) -> Void in
-                dispatch_async(dispatch_get_main_queue())
-                {
-                    if allowed
-                    {
-                        print("Recording granted")
-                    } else
-                    {
-                        print("Permisison for microphone denied")
-                    }
-                }
-            }
-        } catch
-        {
-           print("Failed to get permissions for recording")
-        }
-        
         /* Setting up Delegates  and default values */
         languagePicker.delegate = self
-    curLanguage = Language.English
+        curLanguage = Language.English
        
     }
 
