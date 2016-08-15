@@ -51,20 +51,26 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     @IBOutlet weak var animalPicker: UIPickerView!
     @IBOutlet weak var genderPicker: UIPickerView!
     @IBOutlet weak var playButton: UIButton!
+
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var recordButton: UIButton!
     
     // MARK: Local Variables
     var audioURL: NSURL!
     var curOriginalURL: NSURL!
+    var curTranslatedURL: NSURL!
     var referencedController: MainMenuViewController!
     var audioRecorder: AVAudioRecorder!
-    var audioPlayer: AVAudioPlayer!
     var curPower = Float(0)
     let powerThreshold = Float(-20.0)
     var curRecordingLength = Double(0)
     var curAnimal: Animal! = .WesternDog
     var curGender: Gender! = .Male
+    var bufferList = [AVAudioPCMBuffer]()
+    var completionInt = 0
+    
+    var audioEngine = AVAudioEngine()
+    var playerNode = AVAudioPlayerNode()
     
     // MARK: Functions
     func getDocumentsDirectory() -> String
@@ -74,21 +80,88 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         return documentsDirectory
     }
     
-    /* Initializes the audio player and starts playing */
-    func startPlayback()
+    func audioBufferCallBack()
     {
+        if !bufferList.isEmpty
+        {
+            let curIndex = Int(arc4random_uniform(UInt32(bufferList.count)))
+                playerNode.scheduleBuffer(bufferList[curIndex], completionHandler: audioBufferCallBack)
+                bufferList.removeAtIndex(curIndex)
+                playerNode.play()
+        }
+        else
+        {
+            completionInt = 1
+        }
+    }
+    
+    func translateIntoPet()
+    {
+        var audioFile: AVAudioFile!
+        let numberOfSegments: UInt32 = 10
+        bufferList = [AVAudioPCMBuffer]()
+        
         do
         {
-            let originalVoice = try AVAudioPlayer(contentsOfURL: curOriginalURL)
-            audioPlayer = originalVoice
-            audioPlayer.delegate = self
-            audioPlayer.play()
+            try audioFile = AVAudioFile(forReading: curOriginalURL)
         }
         catch
         {
-            print("HumanToPet: ERROR - Playback failed")
-            playButton.enabled = true
+            print("HumanToPet: ERROR - Could not create audio file")
+            return
         }
+        
+        let frameCount = UInt32(audioFile.length)
+        let framesPerSegment = frameCount / numberOfSegments
+        audioFile.framePosition = 0
+        
+        do
+        {
+            for framePos in 0...(numberOfSegments-1)
+            {
+                audioFile.framePosition = Int64(framesPerSegment * framePos)
+                let curBuffer = AVAudioPCMBuffer(PCMFormat: audioFile.processingFormat,
+                                                frameCapacity: framesPerSegment)
+                try audioFile.readIntoBuffer(curBuffer)
+                try audioFile.readIntoBuffer(curBuffer)
+                bufferList.append(curBuffer)
+
+            }
+        }
+        catch
+        {
+            print("HumanToPet: Translation failed!")
+        }
+        
+        let format = AVAudioFormat(commonFormat: bufferList[0].format.commonFormat,
+                                   sampleRate: bufferList[0].format.sampleRate,
+                                   channels: bufferList[0].format.channelCount,
+                                   interleaved: bufferList[0].format.interleaved);
+        audioEngine.connect(playerNode, to: audioEngine.outputNode, format: format)
+        
+      
+        let curIndex = Int(arc4random_uniform(UInt32(bufferList.count)))
+        playerNode.scheduleBuffer(bufferList[curIndex], completionHandler: audioBufferCallBack)
+        bufferList.removeAtIndex(curIndex)
+       
+        do
+        {
+            try audioEngine.start()
+            completionInt = 0
+            playerNode.play()
+        }
+        catch
+        {
+            print("HumanToPet: Error starting audio engine")
+        }
+        
+        while(completionInt == 0)
+        {
+            
+        }
+        
+        recordButton.setTitle("Press to Record", forState: .Normal)
+    
     }
     
     /* Cleans up the recording */
@@ -125,10 +198,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
                 return
             }
             
-            recordButton.enabled = false
-            audioPlayer = originalVoice
-            audioPlayer.delegate = self
-            audioPlayer.play()
+            translateIntoPet()
             
         }
         catch
@@ -139,7 +209,6 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         if(success)
         {
             statusLabel.text = "I hear ya! Here is the translation!"
-            startPlayback()
         }
         else
         {
@@ -151,10 +220,11 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     
     override func viewDidLoad()
     {
+        super.viewDidLoad()
         recordButton.setTitle("Press to Record", forState: .Normal)
         genderPicker.delegate = self
         animalPicker.delegate = self
-        super.viewDidLoad()
+        audioEngine.attachNode(playerNode)
     }
 
     override func didReceiveMemoryWarning() {
@@ -214,7 +284,6 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     {
         recordButton.enabled = false
         playButton.enabled = false
-        startPlayback()
     }
     
     // MARK: AVAudioRecorderDelegate
@@ -231,20 +300,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     // MARK: AVAudioPlayerDelegate
     func audioPlayerDidFinishPlaying(player: AVAudioPlayer, successfully flag: Bool)
     {
-        playButton.enabled = true
-        
-        if flag
-        {
-            print("HumanToPet: Playback finished!")
-        }
-        else
-        {
-            print("HumanToPet: ERROR: Error with playback")
-        }
-        
-        recordButton.enabled = true
-        recordButton.setTitle("Press to Record", forState: .Normal)
-        playButton.enabled = true
+
     }
     
     // MARK: UIPickerViewDelegate

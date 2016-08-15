@@ -53,10 +53,6 @@ class ImageShareViewController: UIViewController,
         super.viewDidLoad()
         translationTextField.text = referencedController.curTrans.translatedText
         translationTextField.delegate = self
-        let notificationCenter = NSNotificationCenter.defaultCenter()
-        notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIKeyboardWillHideNotification, object: nil)
-        notificationCenter.addObserver(self, selector: #selector(adjustForKeyboard), name: UIKeyboardWillChangeFrameNotification, object: nil)
-
     }
 
     override func didReceiveMemoryWarning() {
@@ -116,19 +112,5 @@ class ImageShareViewController: UIViewController,
         }
     }
     
-    func adjustForKeyboard(notification: NSNotification)
-    {
-        let userInfo = notification.userInfo!
-        
-        let keyboardScreenEndFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
-        let keyboardViewEndFrame = view.convertRect(keyboardScreenEndFrame, fromView: view.window)
-        
-        if notification.name == UIKeyboardWillHideNotification {
-            textScroller.contentInset = UIEdgeInsetsZero
-        } else {
-            textScroller.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardViewEndFrame.height, right: 0)
-        }
-        
-        textScroller.scrollIndicatorInsets = textScroller.contentInset
-    }
+
 }
