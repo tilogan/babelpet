@@ -9,22 +9,10 @@
 import UIKit
 import AVFoundation
 
-enum Animal: Int, CustomStringConvertible
-{
-    case WesternDog = 0
-    case 日本Dog = 1
-    
-    static var count: Int { return Language.日本語.hashValue + 1}
-    
-    var description: String
-    {
-        switch self
-        {
-        case .WesternDog: return "Western Dog"
-        case .日本Dog   : return "日本 (Japanese) Dog"
-        }
-    }
-}
+private var maleDogPitches: [Float] = [-1700, 1000, 1700]
+private var femaleDogPitches: [Float] = [1000, 2000, 2400]
+private var westernDogSpeeds: [Float] = [0.5, 2.0, 10.0]
+private var japaneseDogSpeeds: [Float] = [0.75, 5.0, 20.0]
 
 enum Gender: Int, CustomStringConvertible
 {
@@ -48,29 +36,29 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
 {
 
     //MARK: Properties
-    @IBOutlet weak var animalPicker: UIPickerView!
     @IBOutlet weak var genderPicker: UIPickerView!
     @IBOutlet weak var playButton: UIButton!
-
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var recordButton: UIButton!
     
     // MARK: Local Variables
     var audioURL: NSURL!
     var curOriginalURL: NSURL!
-    var curTranslatedURL: NSURL!
     var referencedController: MainMenuViewController!
     var audioRecorder: AVAudioRecorder!
     var curPower = Float(0)
-    let powerThreshold = Float(-20.0)
     var curRecordingLength = Double(0)
-    var curAnimal: Animal! = .WesternDog
     var curGender: Gender! = .Male
     var bufferList = [AVAudioPCMBuffer]()
     var completionInt = 0
-    
     var audioEngine = AVAudioEngine()
     var playerNode = AVAudioPlayerNode()
+    var curTransition = 0
+    var translatedFile: AVAudioFile!
+    var translatedURL: NSURL!
+    let powerThreshold = Float(-20.0)
+    let pitch = AVAudioUnitTimePitch()
+    let numOfTransitions = 3
     
     // MARK: Functions
     func getDocumentsDirectory() -> String
@@ -84,10 +72,27 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     {
         if !bufferList.isEmpty
         {
+            /* Setting the speed */
+            if curGender == .Male
+            {
+                pitch.pitch = maleDogPitches[curTransition]
+            }
+            else if curGender == .Female
+            {
+                pitch.pitch = femaleDogPitches[curTransition]
+            }
+            
+            curTransition = curTransition + 1
+            
+            if curTransition == numOfTransitions
+            {
+                curTransition = 0
+            }
+            
             let curIndex = Int(arc4random_uniform(UInt32(bufferList.count)))
-                playerNode.scheduleBuffer(bufferList[curIndex], completionHandler: audioBufferCallBack)
-                bufferList.removeAtIndex(curIndex)
-                playerNode.play()
+            playerNode.scheduleBuffer(bufferList[curIndex], completionHandler: audioBufferCallBack)
+            bufferList.removeAtIndex(curIndex)
+            playerNode.play()
         }
         else
         {
@@ -98,7 +103,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     func translateIntoPet()
     {
         var audioFile: AVAudioFile!
-        let numberOfSegments: UInt32 = 10
+        let numberOfSegments: UInt32 = 8
         bufferList = [AVAudioPCMBuffer]()
         
         do
@@ -123,7 +128,6 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
                 let curBuffer = AVAudioPCMBuffer(PCMFormat: audioFile.processingFormat,
                                                 frameCapacity: framesPerSegment)
                 try audioFile.readIntoBuffer(curBuffer)
-                try audioFile.readIntoBuffer(curBuffer)
                 bufferList.append(curBuffer)
 
             }
@@ -133,17 +137,54 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
             print("HumanToPet: Translation failed!")
         }
         
-        let format = AVAudioFormat(commonFormat: bufferList[0].format.commonFormat,
-                                   sampleRate: bufferList[0].format.sampleRate,
-                                   channels: bufferList[0].format.channelCount,
-                                   interleaved: bufferList[0].format.interleaved);
-        audioEngine.connect(playerNode, to: audioEngine.outputNode, format: format)
+        let format = bufferList[0].format
+        audioEngine.connect(playerNode, to: pitch, format: format)
+        audioEngine.connect(pitch, to: audioEngine.outputNode, format: format)
         
-      
         let curIndex = Int(arc4random_uniform(UInt32(bufferList.count)))
         playerNode.scheduleBuffer(bufferList[curIndex], completionHandler: audioBufferCallBack)
         bufferList.removeAtIndex(curIndex)
-       
+        curTransition = 0
+        
+        do
+        {
+            try translatedFile = AVAudioFile(forWriting: translatedURL,
+                                    settings: audioEngine.inputNode!.inputFormatForBus(0).settings)
+        }
+        catch
+        {
+                print("HumanToPet: ERROR - Could not write file")
+        }
+        
+        audioEngine.inputNode!.installTapOnBus(0, bufferSize: 1024,
+                                              format: format)
+        {
+            (buffer, time) -> Void in
+            
+            do
+            {
+                try self.translatedFile.writeFromBuffer(buffer)
+            }
+            catch
+            {
+                print("HumanToPet: ERROR - Could not write file buffer")
+            }
+            
+            return
+        }
+        
+        /* Setting the speed */
+        if curGender == .Male
+        {
+            pitch.pitch = maleDogPitches[0]
+        }
+        else if curGender == .Female
+        {
+            pitch.pitch = femaleDogPitches[0]
+        }
+        
+        curTransition = curTransition + 1
+    
         do
         {
             try audioEngine.start()
@@ -221,13 +262,22 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
         recordButton.setTitle("Press to Record", forState: .Normal)
         genderPicker.delegate = self
-        animalPicker.delegate = self
+        
+        /* Setting up the audio engine */
         audioEngine.attachNode(playerNode)
+        pitch.rate = 0.5
+        pitch.overlap = 20
+        audioEngine.attachNode(pitch)
+        
+        /* Configuring the file for translation */
+        translatedURL = NSURL(string: getDocumentsDirectory().stringByAppendingString("/petTrans.caf"))
     }
 
-    override func didReceiveMemoryWarning() {
+    override func didReceiveMemoryWarning()
+    {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
@@ -312,16 +362,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     // The number of rows of data
     func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int
     {
-        if pickerView.isEqual(genderPicker)
-        {
-            return Gender.count
-        }
-        else if pickerView.isEqual(animalPicker)
-        {
-            return Animal.count
-        }
-        
-        return 0
+        return Gender.count
     }
     
     func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView?) -> UIView
@@ -337,29 +378,16 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
             pickerLabel?.textAlignment = NSTextAlignment.Center
         }
         
-        if pickerView.isEqual(genderPicker)
-        {
-            pickerLabel?.text = Gender(rawValue: row)?.description
-            return pickerLabel!;
-        }
-        else
-        {
-            pickerLabel?.text = Animal(rawValue: row)?.description
-            return pickerLabel!;
-        }
+        pickerLabel?.text = Gender(rawValue: row)?.description
+        return pickerLabel!;
+
     }
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
     {
-        if pickerView.isEqual(genderPicker)
-        {
-            curGender = Gender(rawValue: row)
-            print("HumanToPet: Gender changed to \(curGender.description)")
-        }
-        else if pickerView.isEqual(animalPicker)
-        {
-            curAnimal = Animal(rawValue: row)
-            print("HumanToPet: Animal changed to \(curAnimal.description)")
-        }
+
+    curGender = Gender(rawValue: row)
+    print("HumanToPet: Gender changed to \(curGender.description)")
+
    }
 }
