@@ -560,11 +560,15 @@ CQ
                                             <outletCollection property="gestureRecognizers" destination="Jx4-GG-TmW" appends="YES" id="j2B-uf-faf"/>
                                         </connections>
                                     </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="shintakoLogo" translatesAutoresizingMaskIntoConstraints="NO" id="kOR-ki-ytq">
+                                    <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="shintakoLogo" translatesAutoresizingMaskIntoConstraints="NO" id="kOR-ki-ytq">
                                         <rect key="frame" x="0.0" y="514" width="560" height="50"/>
+                                        <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="2SG-8m-CTJ"/>
                                         </constraints>
+                                        <connections>
+                                            <outletCollection property="gestureRecognizers" destination="EEg-xH-SZC" appends="YES" id="fkG-AT-Xom"/>
+                                        </connections>
                                     </imageView>
                                 </subviews>
                                 <constraints>
@@ -592,6 +596,11 @@ CQ
                 <tapGestureRecognizer id="9jv-3K-lUe">
                     <connections>
                         <segue destination="7ve-v0-zIB" kind="show" identifier="humanToPet" id="pWH-AC-PSr"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="EEg-xH-SZC">
+                    <connections>
+                        <action selector="shintakoPressed:" destination="FBr-Lq-1he" id="Lgc-XO-T02"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>

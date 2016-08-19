@@ -292,6 +292,8 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     //MARK: Actions
     @IBAction func recordPressed(sender: UIButton)
     {
+        timer.invalidate()
+        
         /* If we are in the middle of the recording, clean it up */
         if audioRecorder != nil
         {

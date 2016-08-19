@@ -139,8 +139,8 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     {
         if audioRecorder != nil
         {
-            /* Updating the meter and discarding any recording which is too
-             quiet */
+            /* Updating the meter and discarding any recording which is too quiet */
+            timer.invalidate()
             audioRecorder.updateMeters()
             curPower = audioRecorder.peakPowerForChannel(0)
             audioRecorder.stop()

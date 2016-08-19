@@ -11,6 +11,13 @@ import iAd
 
 class MainMenuViewController: UIViewController
 {
+    // MARK: Actions:
+    @IBAction func shintakoPressed(sender: UITapGestureRecognizer)
+    {
+        UIApplication.sharedApplication().openURL(NSURL(string: "http://www.shintako.com")!)
+    }
+    
+    
     // MARK: Audio Engine
     var recordingSession: AVAudioSession!
     let audioSettings =
