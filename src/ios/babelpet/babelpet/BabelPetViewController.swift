@@ -19,11 +19,13 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     var audioURL: NSURL!
     var curLanguage: Language!
     var curPower = Float(0)
-    let powerThreshold = Float(-20.0)
     var curRecordingLength = Double(0)
     var referencedController: MainMenuViewController!
     var audioRecorder: AVAudioRecorder!
     var audioPlayer: AVAudioPlayer!
+    var timer = NSTimer()
+    let powerThreshold = Float(-20.0)
+    let timeoutDuration = 10.0
     
     // MARK: Properties
     @IBOutlet weak var languagePicker: UIPickerView!
@@ -63,6 +65,12 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     }
     
     // MARK: Functions
+    func timeTimedOut()
+    {
+        print("Recording timed out")
+        recordStarted(recordButton)
+    }
+    
     func cleanUpRecording(success success: Bool)
     {
         if curLanguage == Language.日本語
@@ -74,47 +82,41 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
             recordButton.setTitle("Tap to Record", forState: .Normal)
         }
         
-        if audioRecorder != nil
-        {
-            audioRecorder.stop()
-        }
-        
         audioRecorder = nil
         
-        if curPower < powerThreshold
+        if(success)
         {
-            translationLabel.text = "Pet was too quiet. Could not detect animal voice!"
-            shareButton.enabled = false
-            return
-        }
-        
-        do
-        {
-            let originalVoice = try AVAudioPlayer(contentsOfURL: audioURL!)
-            
-            print("Duration is \(originalVoice.duration)")
-            
-            /* Making sure we have at least one second of sampling */
-            if originalVoice.duration < 1.5
+            if curPower < powerThreshold
             {
-                translationLabel.text = "Recording not long enough! Try again!"
+                translationLabel.text = "Pet was too quiet. Could not detect animal voice!"
                 shareButton.enabled = false
                 return
             }
             
-            recordButton.enabled = false
-            audioPlayer = originalVoice
-            audioPlayer.delegate = self
-            audioPlayer.play()
-        }
-        catch
-        {
-            print("Playback failed")
-        }
-        
-        
-        if(success)
-        {
+            do
+            {
+                let originalVoice = try AVAudioPlayer(contentsOfURL: audioURL!)
+                
+                print("Duration is \(originalVoice.duration)")
+                
+                /* Making sure we have at least one second of sampling */
+                if originalVoice.duration < 0.5
+                {
+                    translationLabel.text = "Recording not long enough! Try again!"
+                    shareButton.enabled = false
+                    return
+                }
+                
+                recordButton.enabled = false
+                audioPlayer = originalVoice
+                audioPlayer.delegate = self
+                audioPlayer.play()
+            }
+            catch
+            {
+                print("Playback failed")
+            }
+            
             let myDate = NSDate()
             curTrans = PetTranslation(audioURL: audioURL, transLanguage: curLanguage,
                                         duration: Float((audioPlayer?.duration)!), dateRecorded: myDate)
@@ -135,53 +137,62 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     // MARK: Actions
     @IBAction func recordStarted(sender: UIButton)
     {
-        /* If we are in the middle of the recording, clean it up */
         if audioRecorder != nil
         {
-            /* Updating the meter and discarding any recording which is too 
-                quiet */
+            /* Updating the meter and discarding any recording which is too
+             quiet */
             audioRecorder.updateMeters()
             curPower = audioRecorder.peakPowerForChannel(0)
-            print("Peak power is \(curPower)")
+            audioRecorder.stop()
+            print("PetToHuman: Peak power is \(curPower)")
             
             cleanUpRecording(success: true)
-            print("Recording finished without issue")
+            print("PetToHuman: Recording finished without issue")
             return
         }
-        
-        /* Otherwise we are a new recording */
-        audioPath = getDocumentsDirectory().stringByAppendingString("/petBabel\(translations.count).m4a")
-        audioURL = NSURL(fileURLWithPath: audioPath)
-        
-        if curLanguage == Language.日本語
+        else
         {
-            recordButton.setTitle("Tap to Stop", forState: .Normal)
-        }
-        else if curLanguage == Language.English
-        {
-            recordButton.setTitle("Tap to Stop", forState: .Normal)
-        }
-        
-        do
-        {
-            audioRecorder = try AVAudioRecorder(URL: audioURL, settings: referencedController.audioSettings)
-            audioRecorder.delegate = self
-            audioRecorder.meteringEnabled = true
+            /* Otherwise we are a new recording */
+            audioPath = getDocumentsDirectory().stringByAppendingString("/petBabel\(translations.count).m4a")
+            audioURL = NSURL(fileURLWithPath: audioPath)
             
-            if !audioRecorder.record()
+            if curLanguage == Language.日本語
             {
-                print("Recording failed to start...")
-                return
+                recordButton.setTitle("Tap to Stop", forState: .Normal)
+            }
+            else if curLanguage == Language.English
+            {
+                recordButton.setTitle("Tap to Stop", forState: .Normal)
             }
             
-            playBackButton.enabled = false
-            print("Recording started...")
-            
-        }
-        catch
-        {
-            print("Failure trying to make Audio Recorder!")
-            cleanUpRecording(success: false)
+            do
+            {
+                audioRecorder = try AVAudioRecorder(URL: audioURL,
+                                                    settings: referencedController.audioSettings)
+                audioRecorder.delegate = self
+                audioRecorder.meteringEnabled = true
+                
+                if !audioRecorder.record()
+                {
+                    print("PetToHuman: ERROR - Recording failed to start...")
+                    return
+                }
+                
+                playBackButton.enabled = false
+                print("PetToHuman: Recording started...")
+                timer = NSTimer.scheduledTimerWithTimeInterval(timeoutDuration,
+                                                               target: self,
+                                                               selector: #selector(BabelPetViewController.timeTimedOut),
+                                                               userInfo: nil,
+                                                               repeats: false)
+                
+            }
+            catch
+            {
+                print("PetToHuman: ERROR - Failure trying to make Audio Recorder!")
+                cleanUpRecording(success: false)
+            }
+
         }
     }
     
@@ -238,29 +249,35 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     }
     
     // MARK: AVAudioRecorderDelegate
-    func audioRecorderDidFinishRecording(recorder: AVAudioRecorder, successfully flag: Bool)
+    func audioRecorderDidFinishRecording(recorder: AVAudioRecorder,
+                                         successfully flag: Bool)
     {
         if !flag
         {
-            print("Audio did not finish recording!")
+            print("PetToHuman: ERROR - Audio did not finish recording!")
             cleanUpRecording(success: false)
+        }
+        else
+        {
+            print("PetToHuman: Recording callback without issue")
         }
        
     }
     
     // MARK: AVAudioPlayerDelegate
-    func audioPlayerDidFinishPlaying(player: AVAudioPlayer, successfully flag: Bool)
+    func audioPlayerDidFinishPlaying(player: AVAudioPlayer,
+                                     successfully flag: Bool)
     {
         playBackButton.enabled = true
         recordButton.enabled = true
         
         if flag
         {
-            print("Playback finished!")
+            print("PetToHuman: Playback finished!")
         }
         else
         {
-            print("Error with playback")
+            print("PetToHuman: ERROR: Error with playback")
         }
     }
     

@@ -56,11 +56,19 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     var curTransition = 0
     var translatedFile: AVAudioFile!
     var translatedURL: NSURL!
+    var timer = NSTimer()
     let powerThreshold = Float(-20.0)
     let pitch = AVAudioUnitTimePitch()
     let numOfTransitions = 3
+    let timeoutDuration = 10.0
     
     // MARK: Functions
+    func recordingTimedOut()
+    {
+        print("HumanToPet: Recording timed out")
+        recordPressed(recordButton)
+    }
+    
     func getDocumentsDirectory() -> String
     {
         let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
@@ -129,7 +137,6 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
                                                 frameCapacity: framesPerSegment)
                 try audioFile.readIntoBuffer(curBuffer)
                 bufferList.append(curBuffer)
-
             }
         }
         catch
@@ -156,7 +163,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
                 print("HumanToPet: ERROR - Could not write file")
         }
         
-        audioEngine.inputNode!.installTapOnBus(0, bufferSize: 1024,
+     /*   audioEngine.inputNode!.installTapOnBus(0, bufferSize: 1024,
                                               format: format)
         {
             (buffer, time) -> Void in
@@ -171,7 +178,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
             }
             
             return
-        }
+        }*/
         
         /* Setting the speed */
         if curGender == .Male
@@ -317,6 +324,11 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
             }
             
             playButton.enabled = false
+            timer = NSTimer.scheduledTimerWithTimeInterval(timeoutDuration,
+                                                           target: self,
+                                                           selector: #selector(HumanToPetViewController.recordingTimedOut),
+                                                           userInfo: nil,
+                                                           repeats: false)
             print("HumanToPet: Recording started...")
             recordButton.setTitle("Press to Stop", forState: .Normal)
             
@@ -385,9 +397,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
     {
-
-    curGender = Gender(rawValue: row)
-    print("HumanToPet: Gender changed to \(curGender.description)")
-
-   }
+        curGender = Gender(rawValue: row)
+        print("HumanToPet: Gender changed to \(curGender.description)")
+    }
 }
