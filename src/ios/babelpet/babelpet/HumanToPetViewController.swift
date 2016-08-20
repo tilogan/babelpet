@@ -8,11 +8,10 @@
 
 import UIKit
 import AVFoundation
+import FBAudienceNetwork
 
 private var maleDogPitches: [Float] = [-1700, 1000, 1700]
 private var femaleDogPitches: [Float] = [1000, 2000, 2400]
-private var westernDogSpeeds: [Float] = [0.5, 2.0, 10.0]
-private var japaneseDogSpeeds: [Float] = [0.75, 5.0, 20.0]
 
 enum Gender: Int, CustomStringConvertible
 {
@@ -269,6 +268,17 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
+        /* Adding the Facebook banner */
+        let adView = FBAdView(placementID: "556114377906938_559339737584402",
+                              adSize: kFBAdSizeHeight50Banner,
+                              rootViewController: self)
+        adView.frame = CGRectMake(0,
+                                  self.view.frame.size.height-adView.frame.size.height,
+                                  adView.frame.size.width,
+                                  adView.frame.size.height)
+        adView.loadAd()
+        self.view.addSubview(adView)
         
         recordButton.setTitle("Press to Record", forState: .Normal)
         genderPicker.delegate = self

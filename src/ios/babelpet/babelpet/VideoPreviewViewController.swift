@@ -12,14 +12,16 @@ import AVKit
 import Photos
 import FBSDKLoginKit
 import FBSDKShareKit
+import FBAudienceNetwork
 
-class VideoPreviewViewController: UIViewController
+class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
 {
     // MARK: Variables
     var referencedController: ImageShareViewController!
     var savedVideo: NSURL!
     var assetURL: String!
     var myDialog: FBSDKShareDialog!
+    var fullSiteAd: FBInterstitialAd!
     
     // MARK: Video generation
     var writer: AVAssetWriter!
@@ -510,14 +512,49 @@ class VideoPreviewViewController: UIViewController
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
+        /* Adding the Facebook banner */
+        let adView = FBAdView(placementID: "556114377906938_559339737584402",
+                              adSize: kFBAdSizeHeight50Banner,
+                              rootViewController: self)
+        adView.frame = CGRectMake(0,
+                                  self.view.frame.size.height-adView.frame.size.height,
+                                  adView.frame.size.width,
+                                  adView.frame.size.height)
+        adView.loadAd()
+        self.view.addSubview(adView)
+        
+        /* Load the ad from Facebook */
+        fullSiteAd = FBInterstitialAd(placementID: "556114377906938_559362917582084")
+        fullSiteAd.delegate = self
+        fullSiteAd.loadAd()
 
         self.assetURL = ""
-        createVideoFromImage(referencedController.petImage.image,
-                             translation: referencedController.translationTextField.text)
+        
     }
 
     override func didReceiveMemoryWarning()
     {
         super.didReceiveMemoryWarning()
     }
+    
+    // MARK: Intersitital Ad
+    func interstitialAdDidLoad(interstitialAd: FBInterstitialAd)
+    {
+        print("PetShare: Interstitial ad did load")
+        fullSiteAd.showAdFromRootViewController(self)
+    }
+    
+    func interstitialAd(interstitialAd: FBInterstitialAd,
+                        didFailWithError error: NSError)
+    {
+        print("PetShare: Interstitial ad did not load")
+    }
+    
+    func interstitialAdDidClose(interstitialAd: FBInterstitialAd)
+    {
+        createVideoFromImage(referencedController.petImage.image,
+                             translation: referencedController.translationTextField.text)
+    }
+    
 }

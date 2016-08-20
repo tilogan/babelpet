@@ -8,15 +8,18 @@
 
 import UIKit
 import iAd
+import FBAudienceNetwork
 
 class MainMenuViewController: UIViewController
 {
-    // MARK: Actions:
+    // MARK: Actions
     @IBAction func shintakoPressed(sender: UITapGestureRecognizer)
     {
         UIApplication.sharedApplication().openURL(NSURL(string: "http://www.shintako.com")!)
     }
     
+    // MARK: Properties
+    @IBOutlet weak var stackView: UIStackView!
     
     // MARK: Audio Engine
     var recordingSession: AVAudioSession!
@@ -31,6 +34,14 @@ class MainMenuViewController: UIViewController
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        FBAdSettings.addTestDevice("ebadf1868ee0b4c2eb364f912a7603e85824310a")
+        let adView = FBAdView(placementID: "556114377906938_559339737584402",
+                              adSize: kFBAdSizeHeight50Banner,
+                              rootViewController: self)
+        adView.frame = CGRectMake(0, self.view.frame.size.height-adView.frame.size.height, adView.frame.size.width, adView.frame.size.height)
+        adView.loadAd()
+        self.view.addSubview(adView)
+
     }
 
     override func didReceiveMemoryWarning()

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FBAudienceNetwork
 
 class ImageShareViewController: UIViewController,
                         UIImagePickerControllerDelegate,
@@ -51,11 +52,24 @@ class ImageShareViewController: UIViewController,
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
+        /* Adding the Facebook banner */
+        let adView = FBAdView(placementID: "556114377906938_559339737584402",
+                              adSize: kFBAdSizeHeight50Banner,
+                              rootViewController: self)
+        adView.frame = CGRectMake(0,
+                                  self.view.frame.size.height-adView.frame.size.height,
+                                  adView.frame.size.width,
+                                  adView.frame.size.height)
+        adView.loadAd()
+        self.view.addSubview(adView)
+        
         translationTextField.text = referencedController.curTrans.translatedText
         translationTextField.delegate = self
     }
 
-    override func didReceiveMemoryWarning() {
+    override func didReceiveMemoryWarning()
+    {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }

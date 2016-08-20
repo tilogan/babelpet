@@ -26,6 +26,10 @@
 		0C8F62CA1D5E7D73009DBDBE /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C8F62C61D5E7D72009DBDBE /* FBSDKCoreKit.framework */; };
 		0C8F62CB1D5E7D73009DBDBE /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C8F62C71D5E7D72009DBDBE /* FBSDKLoginKit.framework */; };
 		0C8F62CC1D5E7D73009DBDBE /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C8F62C81D5E7D72009DBDBE /* FBSDKShareKit.framework */; };
+		0C8F62D01D68B864009DBDBE /* FBAudienceNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C8F62CF1D68B863009DBDBE /* FBAudienceNetwork.framework */; };
+		0C8F62D21D68B887009DBDBE /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C8F62D11D68B887009DBDBE /* AdSupport.framework */; };
+		0C8F62D41D68B88F009DBDBE /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C8F62D31D68B88F009DBDBE /* CoreMotion.framework */; };
+		0C8F62D61D68B89B009DBDBE /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C8F62D51D68B89B009DBDBE /* StoreKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,6 +66,10 @@
 		0C8F62C61D5E7D72009DBDBE /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		0C8F62C71D5E7D72009DBDBE /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		0C8F62C81D5E7D72009DBDBE /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
+		0C8F62CF1D68B863009DBDBE /* FBAudienceNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBAudienceNetwork.framework; sourceTree = "<group>"; };
+		0C8F62D11D68B887009DBDBE /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
+		0C8F62D31D68B88F009DBDBE /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
+		0C8F62D51D68B89B009DBDBE /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,11 +77,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C8F62D61D68B89B009DBDBE /* StoreKit.framework in Frameworks */,
+				0C8F62D41D68B88F009DBDBE /* CoreMotion.framework in Frameworks */,
+				0C8F62D21D68B887009DBDBE /* AdSupport.framework in Frameworks */,
 				0C8F62C91D5E7D73009DBDBE /* Bolts.framework in Frameworks */,
 				0C8F62CA1D5E7D73009DBDBE /* FBSDKCoreKit.framework in Frameworks */,
 				0C8F62CC1D5E7D73009DBDBE /* FBSDKShareKit.framework in Frameworks */,
 				0C8F62CB1D5E7D73009DBDBE /* FBSDKLoginKit.framework in Frameworks */,
 				0C8F62C21D5E7B7A009DBDBE /* iAd.framework in Frameworks */,
+				0C8F62D01D68B864009DBDBE /* FBAudienceNetwork.framework in Frameworks */,
 				0C8F62C01D5E7B6C009DBDBE /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -139,6 +151,10 @@
 		0C8F62BE1D5E7B61009DBDBE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0C8F62D51D68B89B009DBDBE /* StoreKit.framework */,
+				0C8F62D31D68B88F009DBDBE /* CoreMotion.framework */,
+				0C8F62D11D68B887009DBDBE /* AdSupport.framework */,
+				0C8F62CF1D68B863009DBDBE /* FBAudienceNetwork.framework */,
 				0C8F62C51D5E7D72009DBDBE /* Bolts.framework */,
 				0C8F62C61D5E7D72009DBDBE /* FBSDKCoreKit.framework */,
 				0C8F62C71D5E7D72009DBDBE /* FBSDKLoginKit.framework */,
