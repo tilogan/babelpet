@@ -54,22 +54,33 @@ class TranslationHistoryTableViewController: UITableViewController
         return cell
     }
 
-    // Override to support conditional editing of the table view.
+    /* Override to support conditional editing of the table view. */
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool
     {
-        // Return false if you do not want the specified item to be editable.
+        /* Return false if you do not want the specified item to be editable. */
         return true
     }
 
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    /* Override to support editing the table view. */
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath)
+    {
         if editingStyle == .Delete
         {
+            let translationToDelete: PetTranslation! = referencedController.translations[indexPath.row]
+            
+            /* If they are deleting the current translation, we have to reset the
+                view */
+            if referencedController.curTrans != nil &&
+                referencedController.curTrans.isEqual(translationToDelete)
+            {
+                referencedController.translationLabel.text = "Press Record to Start!"
+                referencedController.playBackButton.enabled = false
+                referencedController.shareButton.enabled = false
+            }
+            
             referencedController.translations.removeAtIndex(indexPath.row)
             referencedController.saveTranslations()
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert
-        {
         }
     }
     

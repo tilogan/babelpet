@@ -28,8 +28,6 @@ class VideoPreviewViewController: UIViewController
     @IBOutlet weak var imagePreview: UIImageView!
     @IBOutlet var playGesture: UITapGestureRecognizer!
     
-    // MARK: Share Dialog
-    
     // MARK: Actions
     @IBAction func playVideoAction(sender: UITapGestureRecognizer)
     {
@@ -42,34 +40,38 @@ class VideoPreviewViewController: UIViewController
         }
     }
     
+    /* Instagram is easier than Facebook. Just save the asset, and then
+     construct/escape the string into the Instagram application */
     @IBAction func shareInstagram(sender: AnyObject)
     {
-        /* Instagram is easier than Facebook. Just save the asset, and then 
-            construct/escape the string into the Instagram application */
+        /* We need to save before we can share */
         if self.assetURL.isEmpty
         {
             saveVideoToLibrary()
         }
         
+        /* Making sure we saved */
         if self.assetURL.isEmpty
         {
-            print("INSTAGRAM: Error saving to instagram")
+            print("PetShare: ERROR: Saving to instagram")
             return
         }
+        
+        /* Otherwise construct the URL and send it to the external application */
         let escapedPath = self.assetURL.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.alphanumericCharacterSet())
         let instaString = String.localizedStringWithFormat("instagram://library?AssetPath=%@", escapedPath!)
-       
         let instagramURL: NSURL = NSURL(string: instaString)!
-        
         UIApplication.sharedApplication().openURL(instagramURL)
     }
     
-    
+    /* Share to Facebook. We need to get credentials from Facebook before
+        calling the dialog to share the video */
     @IBAction func shareFacebookButton(sender: UIButton)
     {
         /* If the user is not already logged in to Facebook, login */
         if FBSDKAccessToken.currentAccessToken() == nil
         {
+            /* Make the login manager and prompt the user for the login */
             let loginManager: FBSDKLoginManager = FBSDKLoginManager()
             loginManager.loginBehavior = FBSDKLoginBehavior.Native
             loginManager.logInWithPublishPermissions (["publish_actions"],
@@ -78,17 +80,17 @@ class VideoPreviewViewController: UIViewController
                 { (response:FBSDKLoginManagerLoginResult!, error: NSError!) in
                 if(error != nil)
                 {
-                    print("FACEBOOK: Login Error Happened")
+                    print("PetShare: ERROR - FACEBOOK: Login Error Happened")
                     return
                 }
                 else if(response.isCancelled)
                 {
-                    print("FACEBOOK: Login canceled")
+                    print("PetShare: ERROR - FACEBOOK: Login canceled")
                     return
                 }
                 else
                 {
-                    print("FACEBOOK: Login worked")
+                    print("PetShare: FACEBOOK: Login worked")
                 }
             })
         }
@@ -103,7 +105,7 @@ class VideoPreviewViewController: UIViewController
         
         if(self.assetURL.isEmpty)
         {
-            print("ERROR: Saving video to library!")
+            print("PetShare: ERROR - Saving video to library!")
         }
         
         /* Now we need to share. Create the asset URL and open the dialog */
@@ -122,11 +124,17 @@ class VideoPreviewViewController: UIViewController
     }
     
     // MARK: Functions
+    
+    /* Takes the meme and saves it to the video library. This is needed to 
+        share on the various media platforms */
     func saveVideoToLibrary() -> String
     {
         var videoAssetPlaceholder:PHObjectPlaceholder!
         var completionInt = 0
         
+        /* This class takes a local video file on the file system and saves
+           it to the asset library. From there we parse the asset URL and
+           save it as a class object */
         PHPhotoLibrary.sharedPhotoLibrary().performChanges(
             {
                 let request = PHAssetChangeRequest.creationRequestForAssetFromVideoAtFileURL(self.savedVideo)
@@ -137,11 +145,12 @@ class VideoPreviewViewController: UIViewController
             {
                 let localID = videoAssetPlaceholder.localIdentifier
                 let assetID = localID.stringByReplacingOccurrencesOfString("/.*", withString: "",
-                                                                           options: NSStringCompareOptions.RegularExpressionSearch, range: nil)
+                                                                           options: NSStringCompareOptions.RegularExpressionSearch,
+                                                                           range: nil)
                 let ext = "mov"
                 self.assetURL =
                     "assets-library://asset/asset.\(ext)?id=\(assetID)&ext=\(ext)"
-                print("Video saved to library")
+                print("PetShare: Video saved to library")
             }
             
             completionInt = 1
@@ -156,13 +165,36 @@ class VideoPreviewViewController: UIViewController
         return self.assetURL
     }
     
+    /* Takes the image and the text and makes an overlayed movie out of it */
     func convertImagetoPetMovie(petImage: UIImage, videoPath: String,
                                 duration: Float, audioURL: NSURL) -> NSURL?
     {
-        /* Create AVAssetWriter to write video */
-        guard let assetWriter = createAssetWriter(videoPath, size: petImage.size) else
+        var writeSize = petImage.size
+        var scaledImage = UIImage()
+
+        /* We need to convert the picture to a usable width so it doesn't overload
+         the social media site or the movie player. If the width is greater
+         than 1000 pixels, set it down to 1000 pixels (and proportion the
+         height) so that we can work with it */
+        if writeSize.width > 1000
         {
-            print("Error converting images to video: AVAssetWriter not created")
+            writeSize.height = (1000.0 * writeSize.height)/writeSize.width
+            writeSize.width = 1000.0
+            
+            UIGraphicsBeginImageContext(CGSizeMake(writeSize.width, writeSize.height))
+            petImage.drawInRect(CGRectMake(0, 0, writeSize.width, writeSize.height))
+            scaledImage = UIGraphicsGetImageFromCurrentImageContext()
+            UIGraphicsEndImageContext()
+        }
+        else
+        {
+            scaledImage = petImage
+        }
+        
+        /* Create AVAssetWriter to write video */
+        guard let assetWriter = createAssetWriter(videoPath, size: scaledImage.size) else
+        {
+            print("PetShare: ERROR - Converting images to video: AVAssetWriter not created")
             return nil
         }
         
@@ -171,8 +203,8 @@ class VideoPreviewViewController: UIViewController
         let sourceBufferAttributes : [String : AnyObject] =
             [
                 kCVPixelBufferPixelFormatTypeKey as String : Int(kCVPixelFormatType_32ARGB),
-                kCVPixelBufferWidthKey as String : petImage.size.width,
-                kCVPixelBufferHeightKey as String : petImage.size.height,
+                kCVPixelBufferWidthKey as String : scaledImage.size.width,
+                kCVPixelBufferHeightKey as String : scaledImage.size.height,
             ]
         let pixelBufferAdaptor = AVAssetWriterInputPixelBufferAdaptor(assetWriterInput: writerInput,
                                                                       sourcePixelBufferAttributes: sourceBufferAttributes)
@@ -182,7 +214,7 @@ class VideoPreviewViewController: UIViewController
         assetWriter.startSessionAtSourceTime(kCMTimeZero)
         if (pixelBufferAdaptor.pixelBufferPool == nil)
         {
-            print("Error converting images to video: pixelBufferPool nil after starting session")
+            print("PetShare: ERROR - Converting images to video: pixelBufferPool nil after starting session")
             return nil
         }
         
@@ -190,26 +222,26 @@ class VideoPreviewViewController: UIViewController
         var completionFlag = 0
 
         /* Writing a frame at the beginning to start the write */
-        if !appendPixelBufferForImageAtURL(petImage, pixelBufferAdaptor: pixelBufferAdaptor,
+        if !appendPixelBufferForImageAtURL(scaledImage, pixelBufferAdaptor: pixelBufferAdaptor,
                                            presentationTime: frameDuration)
         {
-            print("Error converting images to video: AVAssetWriterInputPixelBufferAdapter failed to append pixel buffer")
+            print("PetShare: ERROR - Error converting images to video: AVAssetWriterInputPixelBufferAdapter failed to append pixel buffer")
             return nil
         }
         
         /* Writing one frame at the end to make the length */
         frameDuration = CMTimeMake(Int64(ceil(duration)),1)
-        if !appendPixelBufferForImageAtURL(petImage, pixelBufferAdaptor: pixelBufferAdaptor,
+        if !appendPixelBufferForImageAtURL(scaledImage, pixelBufferAdaptor: pixelBufferAdaptor,
                                            presentationTime: frameDuration)
         {
-            print("Error converting images to video: AVAssetWriterInputPixelBufferAdapter failed to append pixel buffer")
+            print("PetShare: ERROR - Converting images to video: AVAssetWriterInputPixelBufferAdapter failed to append pixel buffer")
             return nil
         }
         
         writerInput.markAsFinished()
         assetWriter.finishWritingWithCompletionHandler
             {
-                print("Recording finished!")
+                print("PetShare: Recording finished!")
                 completionFlag = 1
         }
         
@@ -235,7 +267,7 @@ class VideoPreviewViewController: UIViewController
         
         if audioTracks.count == 0 || videoTracks.count == 0
         {
-            print("ERROR: Could not compose video")
+            print("PetShare: ERROR - Could not compose video")
             return nil
         }
         
@@ -250,7 +282,7 @@ class VideoPreviewViewController: UIViewController
         }
         catch
         {
-            print("ERROR: Could not compose video!")
+            print("PetShare: ERROR - Could not compose video!")
             return nil
         }
         
@@ -266,7 +298,7 @@ class VideoPreviewViewController: UIViewController
             }
             catch
             {
-                print("Unable to delete share video file!")
+                print("PetShare: ERROR - Unable to delete shared video file!")
                 return nil
             }
         }
@@ -288,31 +320,28 @@ class VideoPreviewViewController: UIViewController
         switch exporter.status
         {
             case  AVAssetExportSessionStatus.Failed:
-                print("Exporter failed composition!")
+                print("PetShare: ERROR - Exporter failed composition!")
                 return nil
             case AVAssetExportSessionStatus.Cancelled:
-                print("Exporter was canceled!")
+                print("PetShare: ERROR - Exporter was canceled!")
                 return nil
             default:
-                print("Movie export completed without issue!")
+                print("PetShare: Movie export completed without issue!")
         }
 
         return completeMovieUrl
     
     }
     
-    
+    /* Creates the asset writer for converting the image and audio into a 
+        meme */
     func createAssetWriter(path: String, size: CGSize) -> AVAssetWriter?
     {
-        // Convert <path> to NSURL object
         let pathURL = NSURL(fileURLWithPath: path)
         
-        // Return new asset writer or nil
         do {
-            // Create asset writer
             let newWriter = try AVAssetWriter(URL: pathURL, fileType: AVFileTypeMPEG4)
             
-            // Define settings for video input
             let videoSettings: [String : AnyObject] =
                 [
                     AVVideoCodecKey  : AVVideoCodecH264,
@@ -320,22 +349,22 @@ class VideoPreviewViewController: UIViewController
                     AVVideoHeightKey : size.height,
                 ]
             
-            // Add video input to writer
             let assetWriterVideoInput = AVAssetWriterInput(mediaType: AVMediaTypeVideo, outputSettings: videoSettings)
             newWriter.addInput(assetWriterVideoInput)
             
-            // Return writer
-            print("Created asset writer for \(size.width)x\(size.height) video")
+            print("PetShare: Created asset writer for \(size.width)x\(size.height) video")
             return newWriter
         } catch
         {
-            print("Error creating asset writer: \(error)")
+            print("PetShare: ERROR - Creating asset writer: \(error)")
             return nil
         }
     }
     
-    
-    func appendPixelBufferForImageAtURL(image: UIImage, pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor, presentationTime: CMTime) -> Bool
+    /* Appends a UIImage into a pixes buffer so that we can pass it into AssetWriter */
+    func appendPixelBufferForImageAtURL(image: UIImage,
+                                        pixelBufferAdaptor: AVAssetWriterInputPixelBufferAdaptor,
+                                        presentationTime: CMTime) -> Bool
     {
         var appendSucceeded = false
         
@@ -354,8 +383,10 @@ class VideoPreviewViewController: UIViewController
                     fillPixelBufferFromImage(image, pixelBuffer: pixelBuffer)
                     appendSucceeded = pixelBufferAdaptor.appendPixelBuffer(pixelBuffer, withPresentationTime: presentationTime)
                     pixelBufferPointer.destroy()
-                } else {
-                    NSLog("Error: Failed to allocate pixel buffer from pool")
+                }
+                else
+                {
+                    print("PetShare: ERROR - Failed to allocate pixel buffer from pool")
                 }
                 
                 pixelBufferPointer.dealloc(1)
@@ -365,7 +396,7 @@ class VideoPreviewViewController: UIViewController
         return appendSucceeded
     }
     
-    
+    /* Actually populates pixel buffer with UIImage */
     func fillPixelBufferFromImage(image: UIImage, pixelBuffer: CVPixelBufferRef)
     {
         CVPixelBufferLockBaseAddress(pixelBuffer, 0)
@@ -373,7 +404,6 @@ class VideoPreviewViewController: UIViewController
         let pixelData = CVPixelBufferGetBaseAddress(pixelBuffer)
         let rgbColorSpace = CGColorSpaceCreateDeviceRGB()
         
-        // Create CGBitmapContext
         let context = CGBitmapContextCreate(
             pixelData,
             Int(image.size.width),
@@ -384,31 +414,38 @@ class VideoPreviewViewController: UIViewController
             CGImageAlphaInfo.PremultipliedFirst.rawValue
         )
         
-        // Draw image into context
-        CGContextDrawImage(context, CGRectMake(0, 0, image.size.width, image.size.height), image.CGImage)
+        CGContextDrawImage(context,
+                           CGRectMake(0, 0, image.size.width, image.size.height),
+                           image.CGImage)
         
         CVPixelBufferUnlockBaseAddress(pixelBuffer, 0)
     }
     
+    /* Function that returns common path as a string to the documents directory */
     func getDocumentsDirectory() -> String
     {
-        let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
+        let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory,
+                                                        .UserDomainMask, true)
         let documentsDirectory = paths[0]
         return documentsDirectory
     }
     
+    /* Sets up the meme creation */
     func createVideoFromImage(image: UIImage!, translation: NSString!)
     {
         /* Text Variables */
         let fontColor: UIColor = UIColor.whiteColor()
         let curTrans: PetTranslation = referencedController.referencedController.curTrans
 
-        let atPoint: CGPoint = CGPoint(x: image.size.width/6, y: image.size.height/2)
+        let atPoint: CGPoint = CGPoint(x: image.size.width/6,
+                                       y: image.size.height/3)
         let scale = UIScreen.mainScreen().scale
         
-        UIGraphicsBeginImageContextWithOptions(image.size, false, scale)
+        UIGraphicsBeginImageContextWithOptions(image.size, false,
+                                               scale)
         
-        let fontStyle: UIFont = UIFont(name: "Chalkboard SE", size: image.size.width/12)!
+        let fontStyle: UIFont = UIFont(name: "Chalkboard SE",
+                                       size: image.size.width/12)!
         
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineBreakMode = NSLineBreakMode.ByWordWrapping
@@ -449,14 +486,15 @@ class VideoPreviewViewController: UIViewController
             }
             catch
             {
-                print("Unable to delete share video file!")
+                print("PetShare: ERROR - Unable to delete shared video file!")
                 return
             }
         }
         
-        let completeVideoURL = convertImagetoPetMovie(imagePreview.image!, videoPath: videoPath,
-                                  duration: curTrans.duration,
-                                  audioURL: curTrans.audioURL!)
+        let completeVideoURL = convertImagetoPetMovie(imagePreview.image!,
+                                                      videoPath: videoPath,
+                                                      duration: curTrans.duration,
+                                                      audioURL: curTrans.audioURL!)
         
         
         if completeVideoURL == nil
@@ -465,7 +503,7 @@ class VideoPreviewViewController: UIViewController
         }
         
         self.savedVideo = completeVideoURL!
-        playVideoAction(playGesture                                     )
+        playVideoAction(playGesture)
         
     }
 
@@ -481,6 +519,5 @@ class VideoPreviewViewController: UIViewController
     override func didReceiveMemoryWarning()
     {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 }
