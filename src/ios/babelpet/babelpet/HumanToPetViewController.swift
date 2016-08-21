@@ -15,8 +15,8 @@ private var femaleDogPitches: [Float] = [1000, 2000, 2400]
 
 enum Gender: Int, CustomStringConvertible
 {
-    case Male = 0
-    case Female = 1
+    case Male = 1
+    case Female = 0
     
     static var count: Int { return Language.日本語.hashValue + 1}
     
@@ -34,7 +34,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     AVAudioPlayerDelegate, UIPickerViewDelegate
 {
 
-    //MARK: Properties
+    // MARK: Properties
     @IBOutlet weak var genderPicker: UIPickerView!
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var statusLabel: UILabel!
@@ -47,7 +47,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     var audioRecorder: AVAudioRecorder!
     var curPower = Float(0)
     var curRecordingLength = Double(0)
-    var curGender: Gender! = .Male
+    var curGender: Gender! = .Female
     var bufferList = [AVAudioPCMBuffer]()
     var completionInt = 0
     var audioEngine = AVAudioEngine()
@@ -56,10 +56,12 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     var translatedFile: AVAudioFile!
     var translatedURL: NSURL!
     var timer = NSTimer()
+    var audioPlayer: AVAudioPlayer!
     let powerThreshold = Float(-20.0)
     let pitch = AVAudioUnitTimePitch()
     let numOfTransitions = 3
     let timeoutDuration = 10.0
+    
     
     // MARK: Functions
     func recordingTimedOut()
@@ -103,6 +105,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         }
         else
         {
+            audioEngine.inputNode?.removeTapOnBus(0)
             completionInt = 1
         }
     }
@@ -159,10 +162,10 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         }
         catch
         {
-                print("HumanToPet: ERROR - Could not write file")
+            print("HumanToPet: ERROR - Could not write file")
         }
         
-     /*   audioEngine.inputNode!.installTapOnBus(0, bufferSize: 1024,
+        audioEngine.inputNode!.installTapOnBus(0, bufferSize: 1024,
                                               format: format)
         {
             (buffer, time) -> Void in
@@ -177,7 +180,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
             }
             
             return
-        }*/
+        }
         
         /* Setting the speed */
         if curGender == .Male
@@ -208,7 +211,6 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         }
         
         recordButton.setTitle("Press to Record", forState: .Normal)
-    
     }
     
     /* Cleans up the recording */
@@ -245,6 +247,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
                 return
             }
             
+            statusLabel.text = "I hear ya! Here is the translation!"
             translateIntoPet()
             
         }
@@ -252,12 +255,8 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         {
             print("HumanToPet: ERROR - Could not initialize playback")
         }
-    
-        if(success)
-        {
-            statusLabel.text = "I hear ya! Here is the translation!"
-        }
-        else
+
+        if !success
         {
             print("HumanToPet: ERROR - Failed recording!")
             playButton.enabled = false
@@ -314,8 +313,11 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
             print("HumanToPet: Peak power is \(curPower)")
             
             curOriginalURL = audioRecorder.url
+            audioEngine.inputNode?.removeTapOnBus(0)
+            
             cleanUpRecording(success: true)
             print("HumanToPet: Recording finished without issue")
+            playButton.enabled = true
             return
         }
         
@@ -358,6 +360,19 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     {
         recordButton.enabled = false
         playButton.enabled = false
+        
+        do
+        {
+            let originalVoice = try AVAudioPlayer(contentsOfURL: self.translatedURL!)
+            audioPlayer = originalVoice
+            audioPlayer.delegate = self
+            audioPlayer.play()
+        }
+        catch
+        {
+            print("HumanToPet: Playback failed")
+            playButton.enabled = true
+        }
     }
     
     // MARK: AVAudioRecorderDelegate
@@ -374,6 +389,17 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     // MARK: AVAudioPlayerDelegate
     func audioPlayerDidFinishPlaying(player: AVAudioPlayer, successfully flag: Bool)
     {
+        if flag
+        {
+            print("PetToHuman: Playback finished without issue.")
+        }
+        else
+        {
+            print("PetToHuman: ERROR - Issue with playback")
+        }
+        
+        recordButton.enabled = true
+        playButton.enabled = true
 
     }
     

@@ -26,7 +26,7 @@ class MainMenuViewController: UIViewController
     let audioSettings =
         [
             AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
-            AVSampleRateKey: 12000.0,
+            AVSampleRateKey: 48000.0,
             AVNumberOfChannelsKey: 1 as NSNumber,
             AVEncoderAudioQualityKey: AVAudioQuality.High.rawValue
     ]

@@ -21,13 +21,8 @@ class ImageShareViewController: UIViewController,
     
     // MARK: Variables
     var referencedController: BabelPetViewController!
-    
+
     // MARK: Actions
-    @IBAction func generateVideoAction(sender: UIButton)
-    {
-        
-    }
-    
     @IBAction func playTranslationOption(sender: UIButton)
     {
         referencedController.startPlaybackAction(sender)
