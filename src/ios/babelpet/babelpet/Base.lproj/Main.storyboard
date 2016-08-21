@@ -28,10 +28,10 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="8ZX-4k-S4f">
+                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="8ZX-4k-S4f">
                                         <rect key="frame" x="0.0" y="0.0" width="560" height="215"/>
                                         <subviews>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="poodleImage" translatesAutoresizingMaskIntoConstraints="NO" id="HeK-7o-eJD">
+                                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="poodleImage" translatesAutoresizingMaskIntoConstraints="NO" id="HeK-7o-eJD">
                                                 <rect key="frame" x="0.0" y="0.0" width="80" height="215"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="80" id="Jc0-K1-opw"/>
@@ -43,7 +43,7 @@
                                                     <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="translationBubble" translatesAutoresizingMaskIntoConstraints="NO" id="UvD-Uz-EXF">
                                                         <rect key="frame" x="0.0" y="0.0" width="480" height="215"/>
                                                     </imageView>
-                                                    <label userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Translation" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G2N-TL-XYp">
+                                                    <label userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Record your voice and the translation will go here!" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G2N-TL-XYp">
                                                         <rect key="frame" x="56" y="8" width="380" height="199"/>
                                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -66,7 +66,7 @@
                                             </view>
                                         </subviews>
                                     </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DZG-Nr-X3i">
+                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DZG-Nr-X3i">
                                         <rect key="frame" x="0.0" y="215" width="549" height="60"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Language:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fhJ-h3-OFa">
@@ -86,7 +86,7 @@
                                             <constraint firstAttribute="height" constant="60" id="d4t-R2-SwB"/>
                                         </constraints>
                                     </stackView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" distribution="fillEqually" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="GmR-So-2nn">
+                                    <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" distribution="fillEqually" alignment="center" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="GmR-So-2nn">
                                         <rect key="frame" x="0.0" y="275" width="559" height="100"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="che-G7-UN9">
@@ -121,7 +121,7 @@
                                             <constraint firstAttribute="height" constant="100" id="Wgu-Gx-R8C"/>
                                         </constraints>
                                     </stackView>
-                                    <button opaque="NO" contentMode="scaleAspectFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7s0-wO-iHQ">
+                                    <button opaque="NO" contentMode="scaleAspectFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7s0-wO-iHQ">
                                         <rect key="frame" x="0.0" y="375" width="270" height="127"/>
                                         <fontDescription key="fontDescription" name="ChalkboardSE-Bold" family="Chalkboard SE" pointSize="30"/>
                                         <state key="normal" title="Press to Record" backgroundImage="fiverPink"/>
@@ -218,7 +218,7 @@
                                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ufw-N9-7lA">
                                                 <rect key="frame" x="0.0" y="0.0" width="400" height="60"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Gender" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ugg-Ug-kY8">
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Style" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ugg-Ug-kY8">
                                                         <rect key="frame" x="0.0" y="0.0" width="80" height="60"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="80" id="jxh-VI-ix2"/>

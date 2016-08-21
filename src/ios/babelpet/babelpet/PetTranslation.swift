@@ -88,7 +88,7 @@ enum Language: Int, CustomStringConvertible
     case Chinese = 2
     case Spanish = 3
 
-    static var count: Int { return Language.日本語.hashValue + 1}
+    static var count: Int { return Language.Spanish.hashValue + 1}
     
     var description: String
     {
@@ -156,19 +156,19 @@ class PetTranslation: NSObject, NSCoding
         var translationCount: UInt32
         var translationBank: [String]
         
-        switch transLanguage
+        switch transLanguage.rawValue
         {
-        case Language.日本語:
+        case Language.日本語.rawValue:
             translationBank = possibleGenericJapaneseTranslations
-        case Language.English:
+        case Language.English.rawValue:
             translationBank = possibleGenericEnglishTranslations
-        case Language.Chinese:
+        case Language.Chinese.rawValue:
             translationBank = possibleGenericChineseTranslations
-        case Language.Spanish:
+        case Language.Spanish.rawValue:
             translationBank = possibleGenericSpanishTranslations
         default:
             print("PetTranslation: ERROR - Unsupported Language!")
-            return
+            return ""
         }
     
         translationCount = UInt32(translationBank.count)

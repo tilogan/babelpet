@@ -10,10 +10,19 @@ import UIKit
 import AVFoundation
 import FBAudienceNetwork
 
+
 private let recordButtonTranslationStopped =
 [
-    Language.English: "Press to Record",
-    Language.日本語: "Some Japanese",
+    Language.English: "Tap to Record",
+    Language.日本語: "録音開始",
+    Language.Chinese: "Some Chinese",
+    Language.Spanish: "Some Spanish"
+]
+
+private let recordButtonTranslationRecord =
+[
+    Language.English: "Tap to Stop",
+    Language.日本語: "停止",
     Language.Chinese: "Some Chinese",
     Language.Spanish: "Some Spanish"
 ]
@@ -21,7 +30,7 @@ private let recordButtonTranslationStopped =
 private let tooQuietTranslation =
 [
     Language.English: "I can't hear you! Speak up!",
-    Language.日本語: "Some Japanese",
+    Language.日本語: "聞こえないよ〜！もっと大きな声で！！",
     Language.Chinese: "Some Chinese",
     Language.Spanish: "Some Spanish"
 ]
@@ -29,27 +38,58 @@ private let tooQuietTranslation =
 private let tooShortTranslation =
 [
     Language.English: "Huh!? Speak longer!",
-    Language.日本語: "Some Japanese",
+    Language.日本語: "もっと話して！！",
     Language.Chinese: "Some Chinese",
     Language.Spanish: "Some Spanish"
 ]
 
 private let playButtonTranslation =
 [
-    Language.English: "I can't hear you! Speak up!",
-    Language.日本語: "Some Japanese",
+    Language.English: "Play",
+    Language.日本語: "再生",
     Language.Chinese: "Some Chinese",
     Language.Spanish: "Some Spanish"
 ]
 
-private let tooQuietTranslation =
+private let shareButtonTranslation =
 [
-        Language.English: "I can't hear you! Speak up!",
-        Language.日本語: "Some Japanese",
-        Language.Chinese: "Some Chinese",
-        Language.Spanish: "Some Spanish"
+    Language.English: "Share",
+    Language.日本語: "シェア",
+    Language.Chinese: "Some Chinese",
+    Language.Spanish: "Some Spanish"
 ]
 
+private let historyButtonTranslation =
+[
+    Language.English: "History",
+    Language.日本語: "履歴",
+    Language.Chinese: "Some Chinese",
+    Language.Spanish: "Some Spanish"
+]
+
+private let languageLabelTranslation =
+[
+    Language.English: "Language",
+    Language.日本語: "言語",
+    Language.Chinese: "Some Chinese",
+    Language.Spanish: "Some Spanish"
+]
+
+private let translationDefaultTranslation =
+[
+    Language.English: "Translation",
+    Language.日本語: "翻訳",
+    Language.Chinese: "Some Chinese",
+    Language.Spanish: "Some Spanish"
+]
+
+private let defaultTranslationPhrase =
+[
+    Language.English: "Record your voice and the translation will go here!",
+    Language.日本語: "翻訳",
+    Language.Chinese: "Some Chinese",
+    Language.Spanish: "Some Spanish"
+]
 
 
 class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
@@ -118,7 +158,7 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     
     func cleanUpRecording(success success: Bool)
     {
-        recordButton.setTitle(recordButtonTranslation[curLanguage],
+        recordButton.setTitle(recordButtonTranslationStopped[curLanguage],
                               forState: .Normal)
         
         audioRecorder = nil
@@ -127,7 +167,7 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         {
             if curPower < powerThreshold
             {
-                translationLabel.text = "Pet was too quiet. Could not detect animal voice!"
+                translationLabel.text = tooQuietTranslation[curLanguage]
                 shareButton.enabled = false
                 return
             }
@@ -141,7 +181,7 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
                 /* Making sure we have at least one second of sampling */
                 if originalVoice.duration < 0.5
                 {
-                    translationLabel.text = "Recording not long enough! Try again!"
+                    translationLabel.text = tooShortTranslation[curLanguage]
                     shareButton.enabled = false
                     return
                 }
@@ -153,7 +193,7 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
             }
             catch
             {
-                print("Playback failed")
+                print("PetToHuman: Playback failed")
             }
             
             let myDate = NSDate()
@@ -196,14 +236,8 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
             audioPath = getDocumentsDirectory().stringByAppendingString("/petBabel\(translations.count).m4a")
             audioURL = NSURL(fileURLWithPath: audioPath)
             
-            if curLanguage == Language.日本語
-            {
-                recordButton.setTitle("Tap to Stop", forState: .Normal)
-            }
-            else if curLanguage == Language.English
-            {
-                recordButton.setTitle("Tap to Stop", forState: .Normal)
-            }
+            recordButton.setTitle(recordButtonTranslationRecord[curLanguage],
+                                  forState: .Normal)
             
             do
             {
@@ -243,13 +277,13 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     
     @IBAction func startPlaybackAction(sender: UIButton)
     {
-        print("Playback started....")
+        print("PetToHuman: Playback started....")
         playBackButton.enabled = false
         recordButton.enabled = false
         
         if curTrans == nil
         {
-            print("Tried to play a nil recording")
+            print("PetToHuman: ERROR - Tried to play a nil recording")
             return
         }
         
@@ -262,7 +296,7 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         }
         catch
         {
-            print("Playback failed")
+            print("PetToHuman: ERROR - Playback failed")
             playBackButton.enabled = true
         }
     }
@@ -397,24 +431,21 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         curLanguage = Language(rawValue: row)
         print("Language changed to \(curLanguage.description)")
         
-        /* English */
-        if curLanguage == Language.English
-            {
-                languageLabel.text = "Language"
-                playBackButton.setTitle("Play", forState: .Normal)
-                shareButton.setTitle("Share", forState: .Normal)
-                historyButton.setTitle("History", forState: .Normal)
-                translationHeadingLabel.text = "Translation"
-        }
-        /* If the user picked Japanese... */
-        else if curLanguage == Language.日本語
-        {
-            languageLabel.text = "言語"
-            playBackButton.setTitle("再生", forState: .Normal)
-            shareButton.setTitle("シェア", forState: .Normal)
-            historyButton.setTitle("履歴", forState: .Normal)
-            translationHeadingLabel.text = "翻訳"
-        }
+        languageLabel.text = languageLabelTranslation[curLanguage]
+        playBackButton.setTitle(playButtonTranslation[curLanguage],
+                                forState: .Normal)
+        shareButton.setTitle(shareButtonTranslation[curLanguage],
+                             forState: .Normal)
+        historyButton.setTitle(historyButtonTranslation[curLanguage],
+                               forState: .Normal)
+        translationHeadingLabel.text =
+                            translationDefaultTranslation[curLanguage]
+        translationLabel.text = defaultTranslationPhrase[curLanguage]
+        recordButton.setTitle(recordButtonTranslationStopped[curLanguage],
+                              forState: .Normal)
+        curTrans = nil
+        playBackButton.enabled = false
+        shareButton.enabled = false
     }
     
     func upgradeHandler(alert: UIAlertAction!)
@@ -426,13 +457,22 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
 
     func downgradeHandler(alert: UIAlertAction!)
     {
-        languagePicker.selectRow(0, inComponent: 0, animated: true)
-        languageLabel.text = "Language"
-        playBackButton.setTitle("Play", forState: .Normal)
-        shareButton.setTitle("Share", forState: .Normal)
-        historyButton.setTitle("History", forState: .Normal)
-        translationHeadingLabel.text = "Translation"
         curLanguage = Language.English
+        languagePicker.selectRow(0, inComponent: 0, animated: true)
+        print("Language changed to \(curLanguage.description)")
+        
+        languageLabel.text = languageLabelTranslation[curLanguage]
+        playBackButton.setTitle(playButtonTranslation[curLanguage],
+                                forState: .Normal)
+        shareButton.setTitle(shareButtonTranslation[curLanguage],
+                             forState: .Normal)
+        historyButton.setTitle(historyButtonTranslation[curLanguage],
+                               forState: .Normal)
+        translationHeadingLabel.text =
+            translationDefaultTranslation[curLanguage]
+        recordButton.setTitle(recordButtonTranslationStopped[curLanguage],
+                              forState: .Normal)
+
         print("PetToHuman: Premium upgrade declined")
     }
     

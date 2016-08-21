@@ -12,13 +12,19 @@ import FBAudienceNetwork
 
 private var maleDogPitches: [Float] = [-1700, 1000, 1700]
 private var femaleDogPitches: [Float] = [1000, 2000, 2400]
+private var tubaPitches: [Float] = [-2400, -1700, -1000]
+private var chipmunkPitches: [Float] = [2000, 2300, 2400]
+private var freakPitches: [Float] = [-2400, 0, 2400]
 
-enum Gender: Int, CustomStringConvertible
+enum SpeakingStyle: Int, CustomStringConvertible
 {
-    case Male = 1
     case Female = 0
+    case Male = 1
+    case Tuba = 2
+    case Chipmunk = 3
+    case Freak = 4
     
-    static var count: Int { return Language.日本語.hashValue + 1}
+    static var count: Int { return SpeakingStyle.Freak.hashValue + 1}
     
     var description: String
     {
@@ -26,6 +32,9 @@ enum Gender: Int, CustomStringConvertible
         {
         case .Male: return "Male"
         case .Female   : return "Female"
+        case .Tuba: return "Tuba"
+        case .Chipmunk   : return "Chipmunk"
+        case .Freak: return "Freak (Really Annoying)"
         }
     }
 }
@@ -47,7 +56,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     var audioRecorder: AVAudioRecorder!
     var curPower = Float(0)
     var curRecordingLength = Double(0)
-    var curGender: Gender! = .Female
+    var curStyle: SpeakingStyle! = .Female
     var bufferList = [AVAudioPCMBuffer]()
     var completionInt = 0
     var audioEngine = AVAudioEngine()
@@ -57,6 +66,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     var translatedURL: NSURL!
     var timer = NSTimer()
     var audioPlayer: AVAudioPlayer!
+    var curStylePitch: [Float]!
     let powerThreshold = Float(-20.0)
     let pitch = AVAudioUnitTimePitch()
     let numOfTransitions = 3
@@ -86,15 +96,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     {
         if !bufferList.isEmpty
         {
-            /* Setting the speed */
-            if curGender == .Male
-            {
-                pitch.pitch = maleDogPitches[curTransition]
-            }
-            else if curGender == .Female
-            {
-                pitch.pitch = femaleDogPitches[curTransition]
-            }
+            pitch.pitch = curStylePitch[curTransition]
             
             curTransition = curTransition + 1
             
@@ -194,15 +196,24 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
             return
         }
         
-        /* Setting the initial speed */
-        if curGender == .Male
+        /* Setting the speed */
+        switch curStyle.rawValue
         {
-            pitch.pitch = maleDogPitches[0]
+            case SpeakingStyle.Male.rawValue:
+                curStylePitch = maleDogPitches
+            case SpeakingStyle.Female.rawValue:
+                curStylePitch = femaleDogPitches
+            case SpeakingStyle.Chipmunk.rawValue:
+                curStylePitch = chipmunkPitches
+            case SpeakingStyle.Tuba.rawValue:
+                curStylePitch = tubaPitches
+            case SpeakingStyle.Freak.rawValue:
+                curStylePitch = freakPitches
+            default:
+                curStylePitch = maleDogPitches
         }
-        else if curGender == .Female
-        {
-            pitch.pitch = femaleDogPitches[0]
-        }
+        
+        pitch.pitch = curStylePitch[0]
         
         curTransition = curTransition + 1
     
@@ -431,7 +442,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     // The number of rows of data
     func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int
     {
-        return Gender.count
+        return SpeakingStyle.count
     }
     
     func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView?) -> UIView
@@ -447,14 +458,71 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
             pickerLabel?.textAlignment = NSTextAlignment.Center
         }
         
-        pickerLabel?.text = Gender(rawValue: row)?.description
+        pickerLabel?.text = SpeakingStyle(rawValue: row)?.description
         return pickerLabel!;
 
     }
     
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
     {
-        curGender = Gender(rawValue: row)
-        print("HumanToPet: Gender changed to \(curGender.description)")
+        /* Checking to make sure premium is unlocked */
+        if !MainMenuViewController.isPremiumPurchased && row != 0
+        {
+            let alertController = UIAlertController(title: "Unlock Premium Babel Pet",
+                                                    message: MainMenuViewController.premiumMessage,
+                                                    preferredStyle: .Alert)
+            
+            // Create the actions
+            let okAction = UIAlertAction(title: "Upgrade",
+                                         style: UIAlertActionStyle.Default,
+                                         handler: upgradeHandler)
+            let cancelAction = UIAlertAction(title: "Cancel",
+                                             style: UIAlertActionStyle.Cancel,
+                                             handler: downgradeHandler)
+            
+            // Add the actions
+            alertController.addAction(okAction)
+            alertController.addAction(cancelAction)
+            
+            self.presentViewController(alertController,
+                                       animated: true,
+                                       completion: nil)
+            
+        }
+        
+        curStyle = SpeakingStyle(rawValue: row)
+        print("HumanToPet: Gender changed to \(curStyle.description)")
+        
+        switch curStyle.rawValue
+        {
+        case SpeakingStyle.Male.rawValue:
+            pitch.rate = 0.5
+        case SpeakingStyle.Female.rawValue:
+            pitch.rate = 0.6
+        case SpeakingStyle.Chipmunk.rawValue:
+            pitch.rate = 2
+        case SpeakingStyle.Tuba.rawValue:
+            pitch.rate = 0.125
+        case SpeakingStyle.Freak.rawValue:
+            pitch.rate = 0.06
+        default:
+            pitch.rate = 0.5
+        }
+    }
+    
+    func upgradeHandler(alert: UIAlertAction!)
+    {
+        /* Purchase premium here */
+        print("PetToHuman: Premium upgrade initiated")
+        MainMenuViewController.isPremiumPurchased = true
+    }
+    
+    func downgradeHandler(alert: UIAlertAction!)
+    {
+        curStyle = SpeakingStyle.Female
+        genderPicker.selectRow(0, inComponent: 0, animated: true)
+        pitch.rate = 3
+        print("HumanToPet: Gender changed to \(curStyle.description)")
+        print("HumanToPet: Premium upgrade declined")
     }
 }
