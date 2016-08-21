@@ -18,6 +18,10 @@ class MainMenuViewController: UIViewController
         UIApplication.sharedApplication().openURL(NSURL(string: "http://www.shintako.com")!)
     }
     
+    // MARK: Static Variables
+    static var isPremiumPurchased: Bool = false
+    static let premiumMessage = "Upgrade to premium to remove ads and unlock all languages! Be a pal, your furrry friend is worth $0.99!"
+    
     // MARK: Properties
     @IBOutlet weak var stackView: UIStackView!
     
@@ -34,13 +38,18 @@ class MainMenuViewController: UIViewController
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        FBAdSettings.addTestDevice("ebadf1868ee0b4c2eb364f912a7603e85824310a")
-        let adView = FBAdView(placementID: "556114377906938_559339737584402",
-                              adSize: kFBAdSizeHeight50Banner,
-                              rootViewController: self)
-        adView.frame = CGRectMake(0, self.view.frame.size.height-adView.frame.size.height, adView.frame.size.width, adView.frame.size.height)
-        adView.loadAd()
-        self.view.addSubview(adView)
+        
+        if !MainMenuViewController.isPremiumPurchased
+        {
+            FBAdSettings.addTestDevice("ebadf1868ee0b4c2eb364f912a7603e85824310a")
+            let adView = FBAdView(placementID: "556114377906938_559339737584402",
+                                  adSize: kFBAdSizeHeight50Banner,
+                                  rootViewController: self)
+            adView.frame = CGRectMake(0, self.view.frame.size.height-adView.frame.size.height,
+                                      adView.frame.size.width, adView.frame.size.height)
+            adView.loadAd()
+            self.view.addSubview(adView)
+        }
 
     }
 

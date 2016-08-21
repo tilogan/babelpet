@@ -514,23 +514,30 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
         super.viewDidLoad()
         
         /* Adding the Facebook banner */
-        let adView = FBAdView(placementID: "556114377906938_559339737584402",
-                              adSize: kFBAdSizeHeight50Banner,
-                              rootViewController: self)
-        adView.frame = CGRectMake(0,
-                                  self.view.frame.size.height-adView.frame.size.height,
-                                  adView.frame.size.width,
-                                  adView.frame.size.height)
-        adView.loadAd()
-        self.view.addSubview(adView)
+        if !MainMenuViewController.isPremiumPurchased
+        {
+            let adView = FBAdView(placementID: "556114377906938_559339737584402",
+                                adSize: kFBAdSizeHeight50Banner,
+                                rootViewController: self)
+            adView.frame = CGRectMake(0,
+                                      self.view.frame.size.height-adView.frame.size.height,
+                                    adView.frame.size.width,
+                                    adView.frame.size.height)
+            adView.loadAd()
+            self.view.addSubview(adView)
         
-        /* Load the ad from Facebook */
-        fullSiteAd = FBInterstitialAd(placementID: "556114377906938_559362917582084")
-        fullSiteAd.delegate = self
-        fullSiteAd.loadAd()
+            /* Load the ad from Facebook */
+            fullSiteAd = FBInterstitialAd(placementID: "556114377906938_559362917582084")
+            fullSiteAd.delegate = self
+            fullSiteAd.loadAd()
+        }
+        else
+        {
+            createVideoFromImage(referencedController.petImage.image,
+                                 translation: referencedController.translationTextField.text)
+        }
 
         self.assetURL = ""
-        
     }
 
     override func didReceiveMemoryWarning()

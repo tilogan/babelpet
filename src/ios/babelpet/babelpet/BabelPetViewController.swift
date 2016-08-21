@@ -25,6 +25,7 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     var audioRecorder: AVAudioRecorder!
     var audioPlayer: AVAudioPlayer!
     var timer = NSTimer()
+    var completionInterrupt = Int(0)
     let powerThreshold = Float(-20.0)
     let timeoutDuration = 10.0
     
@@ -234,15 +235,18 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         super.viewDidLoad()
         
         /* Adding the Facebook banner */
-        let adView = FBAdView(placementID: "556114377906938_559339737584402",
-                              adSize: kFBAdSizeHeight50Banner,
-                              rootViewController: self)
-        adView.frame = CGRectMake(0,
-                                  self.view.frame.size.height-adView.frame.size.height,
-                                  adView.frame.size.width,
-                                  adView.frame.size.height)
-        adView.loadAd()
-        self.view.addSubview(adView)
+        if !MainMenuViewController.isPremiumPurchased
+        {
+            let adView = FBAdView(placementID: "556114377906938_559339737584402",
+                                  adSize: kFBAdSizeHeight50Banner,
+                                  rootViewController: self)
+            adView.frame = CGRectMake(0,
+                                    self.view.frame.size.height-adView.frame.size.height,
+                                    adView.frame.size.width,
+                                    adView.frame.size.height)
+            adView.loadAd()
+            self.view.addSubview(adView)
+        }
         
         if let savedTranslations = loadTranslations()
         {
@@ -328,11 +332,45 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int,
                     inComponent component: Int)
     {
+        /* Checking to make sure premium is unlocked */
+        if !MainMenuViewController.isPremiumPurchased && row != 0
+        {
+            let alertController = UIAlertController(title: "Unlock Premium Babel Pet",
+                                                    message: MainMenuViewController.premiumMessage,
+                                                    preferredStyle: .Alert)
+            
+            // Create the actions
+            let okAction = UIAlertAction(title: "Upgrade",
+                                         style: UIAlertActionStyle.Default,
+                                         handler: upgradeHandler)
+            let cancelAction = UIAlertAction(title: "Cancel",
+                                             style: UIAlertActionStyle.Cancel,
+                                             handler: downgradeHandler)
+            
+            // Add the actions
+            alertController.addAction(okAction)
+            alertController.addAction(cancelAction)
+            
+            self.presentViewController(alertController,
+                                       animated: true,
+                                       completion: nil)
+            
+        }
+        
         curLanguage = Language(rawValue: row)
         print("Language changed to \(curLanguage.description)")
         
+        /* English */
+        if curLanguage == Language.English
+            {
+                languageLabel.text = "Language"
+                playBackButton.setTitle("Play", forState: .Normal)
+                shareButton.setTitle("Share", forState: .Normal)
+                historyButton.setTitle("History", forState: .Normal)
+                translationHeadingLabel.text = "Translation"
+        }
         /* If the user picked Japanese... */
-        if curLanguage == Language.日本語
+        else if curLanguage == Language.日本語
         {
             languageLabel.text = "言語"
             playBackButton.setTitle("再生", forState: .Normal)
@@ -340,15 +378,25 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
             historyButton.setTitle("履歴", forState: .Normal)
             translationHeadingLabel.text = "翻訳"
         }
-        /* English */
-        else if curLanguage == Language.English
-        {
-            languageLabel.text = "Language"
-            playBackButton.setTitle("Play", forState: .Normal)
-            shareButton.setTitle("Share", forState: .Normal)
-            historyButton.setTitle("History", forState: .Normal)
-            translationHeadingLabel.text = "Translation"
-        }
+    }
+    
+    func upgradeHandler(alert: UIAlertAction!)
+    {
+        /* Purchase premium here */
+        print("PetToHuman: Premium upgrade initiated")
+        MainMenuViewController.isPremiumPurchased = true
+    }
+
+    func downgradeHandler(alert: UIAlertAction!)
+    {
+        languagePicker.selectRow(0, inComponent: 0, animated: true)
+        languageLabel.text = "Language"
+        playBackButton.setTitle("Play", forState: .Normal)
+        shareButton.setTitle("Share", forState: .Normal)
+        historyButton.setTitle("History", forState: .Normal)
+        translationHeadingLabel.text = "Translation"
+        curLanguage = Language.English
+        print("PetToHuman: Premium upgrade declined")
     }
     
     //MARK: Navigation

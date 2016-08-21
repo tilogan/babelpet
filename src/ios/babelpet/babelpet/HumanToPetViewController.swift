@@ -64,12 +64,16 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     
     
     // MARK: Functions
+    
+    /* Callback that is called if the recording goes above the maximum allowed
+        time. */
     func recordingTimedOut()
     {
         print("HumanToPet: Recording timed out")
         recordPressed(recordButton)
     }
     
+    /* Gets the document directory to save the transalted file in */
     func getDocumentsDirectory() -> String
     {
         let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
@@ -77,6 +81,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         return documentsDirectory
     }
     
+    /* Mixes up the input recording into different pitches/tones */
     func audioBufferCallBack()
     {
         if !bufferList.isEmpty
@@ -110,12 +115,16 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         }
     }
     
+    /* Takes the recorded sample and changes pitch/tone to make it funny and
+        seemingly translated into pet speak */
     func translateIntoPet()
     {
         var audioFile: AVAudioFile!
         let numberOfSegments: UInt32 = 8
         bufferList = [AVAudioPCMBuffer]()
         
+        /* Splitting our original recording into a bunch of different segments
+            so that we can mix them up */
         do
         {
             try audioFile = AVAudioFile(forReading: curOriginalURL)
@@ -146,6 +155,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
             print("HumanToPet: Translation failed!")
         }
         
+        /* Creating an audio engine so that we can change pitch/speed */
         let format = bufferList[0].format
         audioEngine.connect(playerNode, to: pitch, format: format)
         audioEngine.connect(pitch, to: audioEngine.outputNode, format: format)
@@ -155,6 +165,8 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         bufferList.removeAtIndex(curIndex)
         curTransition = 0
         
+        /* Since we want all translations to be consistent, we should
+         record the output of the audio engine */
         do
         {
             try translatedFile = AVAudioFile(forWriting: translatedURL,
@@ -182,7 +194,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
             return
         }
         
-        /* Setting the speed */
+        /* Setting the initial speed */
         if curGender == .Male
         {
             pitch.pitch = maleDogPitches[0]
@@ -194,6 +206,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         
         curTransition = curTransition + 1
     
+        /* Starting the audio engine and waiting for the completion flag */
         do
         {
             try audioEngine.start()
@@ -210,7 +223,9 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
             
         }
         
+        /* Setting the buttons back */
         recordButton.setTitle("Press to Record", forState: .Normal)
+        playButton.enabled = true
     }
     
     /* Cleans up the recording */
@@ -269,15 +284,19 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         super.viewDidLoad()
         
         /* Adding the Facebook banner */
-        let adView = FBAdView(placementID: "556114377906938_559339737584402",
-                              adSize: kFBAdSizeHeight50Banner,
-                              rootViewController: self)
-        adView.frame = CGRectMake(0,
-                                  self.view.frame.size.height-adView.frame.size.height,
-                                  adView.frame.size.width,
-                                  adView.frame.size.height)
-        adView.loadAd()
-        self.view.addSubview(adView)
+        if !MainMenuViewController.isPremiumPurchased
+        {
+        /* Adding the Facebook banner */
+            let adView = FBAdView(placementID: "556114377906938_559339737584402",
+                                  adSize: kFBAdSizeHeight50Banner,
+                                  rootViewController: self)
+            adView.frame = CGRectMake(0,
+                                    self.view.frame.size.height-adView.frame.size.height,
+                                    adView.frame.size.width,
+                                    adView.frame.size.height)
+            adView.loadAd()
+            self.view.addSubview(adView)
+        }
         
         recordButton.setTitle("Press to Record", forState: .Normal)
         genderPicker.delegate = self
