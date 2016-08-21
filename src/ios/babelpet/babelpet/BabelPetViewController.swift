@@ -10,6 +10,48 @@ import UIKit
 import AVFoundation
 import FBAudienceNetwork
 
+private let recordButtonTranslationStopped =
+[
+    Language.English: "Press to Record",
+    Language.日本語: "Some Japanese",
+    Language.Chinese: "Some Chinese",
+    Language.Spanish: "Some Spanish"
+]
+
+private let tooQuietTranslation =
+[
+    Language.English: "I can't hear you! Speak up!",
+    Language.日本語: "Some Japanese",
+    Language.Chinese: "Some Chinese",
+    Language.Spanish: "Some Spanish"
+]
+
+private let tooShortTranslation =
+[
+    Language.English: "Huh!? Speak longer!",
+    Language.日本語: "Some Japanese",
+    Language.Chinese: "Some Chinese",
+    Language.Spanish: "Some Spanish"
+]
+
+private let playButtonTranslation =
+[
+    Language.English: "I can't hear you! Speak up!",
+    Language.日本語: "Some Japanese",
+    Language.Chinese: "Some Chinese",
+    Language.Spanish: "Some Spanish"
+]
+
+private let tooQuietTranslation =
+[
+        Language.English: "I can't hear you! Speak up!",
+        Language.日本語: "Some Japanese",
+        Language.Chinese: "Some Chinese",
+        Language.Spanish: "Some Spanish"
+]
+
+
+
 class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     AVAudioPlayerDelegate, UIPickerViewDelegate
 {
@@ -45,11 +87,11 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         if NSKeyedArchiver.archiveRootObject(translations,
                                         toFile: PetTranslation.ArchiveURL.path!)
         {
-            print("Pet translations saved without issue!")
+            print("PetToHuman: Pet translations saved without issue!")
         }
         else
         {
-            print("Something happened and translations could not be saved")
+            print("PetToHuman: ERROR - Something happened and translations could not be saved")
         }
     }
     
@@ -61,7 +103,8 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     // MARK: Convenience Functions
     func getDocumentsDirectory() -> String
     {
-        let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
+        let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory,
+                                                        .UserDomainMask, true)
         let documentsDirectory = paths[0]
         return documentsDirectory
     }
@@ -75,14 +118,8 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     
     func cleanUpRecording(success success: Bool)
     {
-        if curLanguage == Language.日本語
-        {
-            recordButton.setTitle("Tap to Record", forState: .Normal)
-        }
-        else if curLanguage == Language.English
-        {
-            recordButton.setTitle("Tap to Record", forState: .Normal)
-        }
+        recordButton.setTitle(recordButtonTranslation[curLanguage],
+                              forState: .Normal)
         
         audioRecorder = nil
         

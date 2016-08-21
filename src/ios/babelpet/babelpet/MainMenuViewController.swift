@@ -28,7 +28,7 @@ class MainMenuViewController: UIViewController
     // MARK: Audio Engine
     var recordingSession: AVAudioSession!
     let audioSettings =
-        [
+    [
             AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
             AVSampleRateKey: 48000.0,
             AVNumberOfChannelsKey: 1 as NSNumber,

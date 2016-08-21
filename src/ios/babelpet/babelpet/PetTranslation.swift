@@ -1,77 +1,92 @@
 import UIKit
 
 private var possibleGenericEnglishTranslations =
-    ["Why don't you play with me some more?",
-     "Do you have any food?",
-     "I'm dying to go on a walk!",
-     "Please adopt a friend for me to hang out with.",
-      "I love you!",
-      "Give me a banana.",
-      "I wish my name was spaghetti.",
-      "When you are away, I lick your toothbrush.",
-      "You're my most favorite person in the world!",
-      "Leave me alone I want to sleep.",
-      "Never leave me alone!",
-      "Where is your partner?",
-      "I miss daddy.",
-      "I miss mommy.",
-      "I'm as happy as a clown!",
-      "I'm as sad as a mime!",
-      "I'm so angry that I could explode!",
-      "I could eat a horse right now.",
-      "Give me the food or there will be trouble.",
-      "Where did my toy go?",
-      "Quit pointing your phone at me.",
-      "Your phone is annoying.",
-      "Take me outside!",
-      "Your phone says Apple... can I eat it?",
-      "When you are away, I throw wild parties.",
-      "That other pet next door is super cute.",
-      "It's so boring right now. Amuse me human!",
-      "I am plotting to take over the world... after eating.",
-      "Yogurt is my favorite food.",
-      "I have soiled myself. Please forgive me.",
-      "All work no play makes me busy.",
-      "Leave me alone! I'm busy.",
-      "Yummy yummy yummy I've got love in my tummy.",
-      "Give me a bunch of old socks!",
-      "It's too dusty in here!",
-      "Play with my belly!",
-      "Go get my elephant toy.",
-      "I wish I was a tiger.",
-      "Give me some space! You are crowding my style!",
-      "Chill! Before I catch a case!",
-      "Give me all of your food!",
-      "Leave me alone!",
-      "Spend more time with me!",
-      "Let's go for a drive!",
-      "I hate going to the vet.",
-      "Ball! Ball! Ball!",
-      "The mailman is evil!",
-      "Give me yogurt!",
-      "Yvan Eht Nioj",
-      "Where is your friend? They are cute!",
-      "I like carpet a lot!",
-      "I need to pee.",
-      "I want to protect you",
-      "I will love you forever",
-      "Let's go poop!",
-      "Build me a house to live in!",
-      "I'm burning up in here!!",
-      "I'm freezing!",
-      "Bad luck and extreme misfortune will infest your pathetic soul for all eternity."]
+[
+    "Why don't you play with me some more?",
+    "Do you have any food?",
+    "I'm dying to go on a walk!",
+    "Please adopt a friend for me to hang out with.",
+    "I love you!",
+    "Give me a banana.",
+    "I wish my name was spaghetti.",
+    "When you are away, I lick your toothbrush.",
+    "You're my most favorite person in the world!",
+    "Leave me alone I want to sleep.",
+    "Never leave me alone!",
+    "Where is your partner?",
+    "I miss daddy.",
+    "I miss mommy.",
+    "I'm as happy as a clown!",
+    "I'm as sad as a mime!",
+    "I'm so angry that I could explode!",
+    "I could eat a horse right now.",
+    "Give me the food or there will be trouble.",
+    "Where did my toy go?",
+    "Quit pointing your phone at me.",
+    "Your phone is annoying.",
+    "Take me outside!",
+    "Your phone says Apple... can I eat it?",
+    "When you are away, I throw wild parties.",
+    "That other pet next door is super cute.",
+    "It's so boring right now. Amuse me human!",
+    "I am plotting to take over the world... after eating.",
+    "Yogurt is my favorite food.",
+    "I have soiled myself. Please forgive me.",
+    "All work no play makes me busy.",
+    "Leave me alone! I'm busy.",
+    "Yummy yummy yummy I've got love in my tummy.",
+    "Give me a bunch of old socks!",
+    "It's too dusty in here!",
+    "Play with my belly!",
+    "Go get my elephant toy.",
+    "I wish I was a tiger.",
+    "Give me some space! You are crowding my style!",
+    "Chill! Before I catch a case!",
+    "Give me all of your food!",
+    "Leave me alone!",
+    "Spend more time with me!",
+    "Let's go for a drive!",
+    "I hate going to the vet.",
+    "Ball! Ball! Ball!",
+    "The mailman is evil!",
+    "Give me yogurt!",
+    "Yvan Eht Nioj",
+    "Where is your friend? They are cute!",
+    "I like carpet a lot!",
+    "I need to pee.",
+    "I want to protect you",
+    "I will love you forever",
+    "Let's go poop!",
+    "Build me a house to live in!",
+    "I'm burning up in here!!",
+    "I'm freezing!",
+    "Bad luck and extreme misfortune will infest your pathetic soul for all eternity."
+]
 
 private var possibleGenericJapaneseTranslations =
-["こんにちは",
- "お腹すいた〜",
- "散歩に行こうよ",
- "お友だちと遊びたいな"
+[
+    "こんにちは",
+    "お腹すいた〜",
+    "散歩に行こうよ",
+    "お友だちと遊びたいな"
+]
+
+private var possibleGenericSpanishTranslations =
+[
+    "Hola mi amigo"
+]
+
+private var possibleGenericChineseTranslations =
+[
+    "你好"
 ]
 
 enum Language: Int, CustomStringConvertible
 {
     case English = 0
     case 日本語 = 1
+    case Chinese = 2
+    case Spanish = 3
 
     static var count: Int { return Language.日本語.hashValue + 1}
     
@@ -81,6 +96,8 @@ enum Language: Int, CustomStringConvertible
         {
             case .English: return "English"
             case .日本語   : return "日本語"
+            case .Spanish : return "Español"
+            case .Chinese : return "中文"
         }
     }
 }
@@ -139,18 +156,19 @@ class PetTranslation: NSObject, NSCoding
         var translationCount: UInt32
         var translationBank: [String]
         
-        if transLanguage == Language.日本語
+        switch transLanguage
         {
+        case Language.日本語:
             translationBank = possibleGenericJapaneseTranslations
-        }
-        else if transLanguage == Language.English
-        {
+        case Language.English:
             translationBank = possibleGenericEnglishTranslations
-        }
-        else
-        {
-            print("Unsupported language provided for translation")
-            return ""
+        case Language.Chinese:
+            translationBank = possibleGenericChineseTranslations
+        case Language.Spanish:
+            translationBank = possibleGenericSpanishTranslations
+        default:
+            print("PetTranslation: ERROR - Unsupported Language!")
+            return
         }
     
         translationCount = UInt32(translationBank.count)
