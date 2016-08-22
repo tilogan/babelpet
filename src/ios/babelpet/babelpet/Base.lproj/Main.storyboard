@@ -442,7 +442,13 @@ CQ
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="directionsLabel" destination="AF3-GC-O7X" id="8in-XC-cfr"/>
+                        <outlet property="generateButton" destination="zN9-11-PxX" id="AVC-Mg-eGO"/>
+                        <outlet property="libraryButton" destination="WRU-Xt-fvQ" id="4IP-X0-s9C"/>
                         <outlet property="petImage" destination="v5p-jz-EAf" id="hKc-id-UCc"/>
+                        <outlet property="pictureButton" destination="GqS-fv-CuT" id="DAF-vx-yMt"/>
+                        <outlet property="playButton" destination="lgi-Rr-odl" id="fqg-kA-Em3"/>
+                        <outlet property="translationLabel" destination="2o3-Ia-KKF" id="odd-sY-8hn"/>
                         <outlet property="translationTextField" destination="FXY-xM-r49" id="VMR-IT-ncx"/>
                     </connections>
                 </viewController>

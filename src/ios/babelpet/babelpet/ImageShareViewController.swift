@@ -9,6 +9,48 @@
 import UIKit
 import FBAudienceNetwork
 
+private let shareDescriptionTranslation =
+[
+    Language.日本語: "録音開始",
+    Language.Chinese: "Some Chinese",
+    Language.Spanish: "Some Spanish"
+]
+
+private let libraryButtonTranslation =
+[
+    Language.日本語: "Some Japanese",
+    Language.Chinese: "Some Chinese",
+    Language.Spanish: "Some Spanish"
+]
+
+private let takePictureButtonTranslation =
+[
+    Language.日本語: "Some Japanese",
+    Language.Chinese: "Some Chinese",
+    Language.Spanish: "Some Spanish"
+]
+
+private let translationHeaderTranslation =
+[
+    Language.日本語: "Some Japanese",
+    Language.Chinese: "Some Chinese",
+    Language.Spanish: "Some Spanish"
+]
+
+private let playButtonTranslation =
+[
+    Language.日本語: "Some Japanese",
+    Language.Chinese: "Some Chinese",
+    Language.Spanish: "Some Spanish"
+]
+
+private let generateVideoTranslation =
+[
+    Language.日本語: "Some Japanese",
+    Language.Chinese: "Some Chinese",
+    Language.Spanish: "Some Spanish"
+]
+
 class ImageShareViewController: UIViewController,
                         UIImagePickerControllerDelegate,
                         UINavigationControllerDelegate,
@@ -18,6 +60,12 @@ class ImageShareViewController: UIViewController,
     @IBOutlet weak var translationTextField: UITextField!
     @IBOutlet weak var textScroller: UIScrollView!
     @IBOutlet weak var petImage: UIImageView!
+    @IBOutlet weak var libraryButton: UIButton!
+    @IBOutlet weak var pictureButton: UIButton!
+    @IBOutlet weak var playButton: UIButton!
+    @IBOutlet weak var generateButton: UIButton!
+    @IBOutlet weak var directionsLabel: UILabel!
+    @IBOutlet weak var translationLabel: UILabel!
     
     // MARK: Variables
     var referencedController: BabelPetViewController!
@@ -62,8 +110,25 @@ class ImageShareViewController: UIViewController,
             self.view.addSubview(adView)
         }
         
-        translationTextField.text = referencedController.curTrans.translatedText
-        translationTextField.delegate = self
+        let curLanguage = referencedController.curLanguage
+        
+        if curLanguage != Language.English
+        {
+            translationTextField.text = referencedController.curTrans.translatedText
+            translationTextField.delegate = self
+            
+            libraryButton.setTitle(libraryButtonTranslation[curLanguage],
+                                   forState: .Normal)
+            pictureButton.setTitle(takePictureButtonTranslation[curLanguage],
+                                   forState: .Normal)
+            generateButton.setTitle(generateVideoTranslation[curLanguage],
+                                    forState: .Normal)
+            playButton.setTitle(playButtonTranslation[curLanguage],
+                                    forState: .Normal)
+            translationLabel.text = translationHeaderTranslation[curLanguage]
+            directionsLabel.text = shareDescriptionTranslation[curLanguage]
+        }
+        
     }
 
     override func didReceiveMemoryWarning()

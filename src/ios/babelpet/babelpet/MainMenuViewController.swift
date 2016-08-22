@@ -20,7 +20,7 @@ class MainMenuViewController: UIViewController
     
     // MARK: Static Variables
     static var isPremiumPurchased: Bool = false
-    static let premiumMessage = "Upgrade to premium to remove ads and unlock all languages! Be a pal, your furrry friend is worth $0.99!"
+    static let premiumMessage = "Upgrade to premium to remove ads and unlock all languages! Be a pal, your furrry friend is worth the kibble!"
     
     // MARK: Properties
     @IBOutlet weak var stackView: UIStackView!

@@ -1,6 +1,6 @@
 import UIKit
 
-private var possibleGenericEnglishTranslations =
+private let possibleGenericEnglishTranslations =
 [
     "Why don't you play with me some more?",
     "Do you have any food?",
@@ -60,7 +60,30 @@ private var possibleGenericEnglishTranslations =
     "Build me a house to live in!",
     "I'm burning up in here!!",
     "I'm freezing!",
-    "Bad luck and extreme misfortune will infest your pathetic soul for all eternity."
+    "Bad luck and extreme misfortune will infest your pathetic soul for all eternity.",
+    "Take me to the beach",
+    "Let's pig out!",
+    "What's in the box?",
+    "How about them Cowboys?",
+    "I don't know why I'm yelling!",
+    "Please give me a treat!",
+    "Nap! Nap! Nap!",
+    "You leave me alone too often!",
+    "I saw a bug over there!",
+    "The sky is falling!",
+    "Where did you go!?!?",
+    "May I sleep with you?",
+    "Baaaaaaaaaaah! Go away!",
+    "Let's have a romantic date together",
+    "I want to take a bath!",
+    "Let's go swimming!",
+    "Do you want to barbeque at the beach?",
+    "Let's make bacon on the beach",
+    "I'm mad at you!",
+    "I'm just crazy about you!",
+    "My breath smells like dog food.",
+    "I like licking my butt.",
+    "Toilet paper is a good toy!"
 ]
 
 private var possibleGenericJapaneseTranslations =
