@@ -51,8 +51,8 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate
         requestProductInfo()
         
         let defaultSettings = NSUserDefaults.standardUserDefaults()
-      //  MainMenuViewController.isPremiumPurchased =
-      //          defaultSettings.boolForKey(MainMenuViewController.premiumIdentifier)
+        MainMenuViewController.isPremiumPurchased =
+                defaultSettings.boolForKey(MainMenuViewController.premiumIdentifier)
         
         if !MainMenuViewController.isPremiumPurchased
         {
