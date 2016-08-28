@@ -9,8 +9,9 @@
 import UIKit
 import iAd
 import FBAudienceNetwork
+import StoreKit
 
-class MainMenuViewController: UIViewController
+class MainMenuViewController: UIViewController, SKProductsRequestDelegate
 {
     // MARK: Actions
     @IBAction func shintakoPressed(sender: UITapGestureRecognizer)
@@ -21,6 +22,12 @@ class MainMenuViewController: UIViewController
     // MARK: Static Variables
     static var isPremiumPurchased: Bool = false
     static let premiumMessage = "Upgrade to premium to remove ads and unlock all languages! Be a pal, your furrry friend is worth the kibble!"
+    static let premiumIdentifier = "ShintakoLLC.BabelBet.premium"
+    static let premiumPurchased = "Upgrade to Babel Pet Premium successful! You may need to restart the application for changes to take full effect."
+    
+    // MARK: Variables for premium purchase
+    var productIDs: Array<String!> = []
+    var productsArray: Array<SKProduct!> = []
     
     // MARK: Properties
     @IBOutlet weak var stackView: UIStackView!
@@ -35,9 +42,17 @@ class MainMenuViewController: UIViewController
             AVEncoderAudioQualityKey: AVAudioQuality.High.rawValue
     ]
     
+    // MARK: Functions:
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
+        productIDs.append("ShintakoLLC.BabelBet.premium")
+        requestProductInfo()
+        
+        let defaultSettings = NSUserDefaults.standardUserDefaults()
+      //  MainMenuViewController.isPremiumPurchased =
+      //          defaultSettings.boolForKey(MainMenuViewController.premiumIdentifier)
         
         if !MainMenuViewController.isPremiumPurchased
         {
@@ -51,6 +66,21 @@ class MainMenuViewController: UIViewController
             self.view.addSubview(adView)
         }
 
+    }
+    
+    func requestProductInfo()
+    {
+        if SKPaymentQueue.canMakePayments()
+        {
+            let productIdentifiers = NSSet(array: productIDs)
+            let productRequest = SKProductsRequest(productIdentifiers: productIdentifiers as! Set<String>)
+            productRequest.delegate = self
+            productRequest.start()
+        }
+        else
+        {
+            print("MainMenu: ERROR - Cannot perform In App Purchases.")
+        }
     }
 
     override func didReceiveMemoryWarning()
@@ -71,7 +101,25 @@ class MainMenuViewController: UIViewController
         super.viewWillDisappear(animated)
     }
     
-    //MARK: Navigation
+    // MARK: SKProductsRequestDelegate
+    func productsRequest(request: SKProductsRequest,
+                         didReceiveResponse response: SKProductsResponse)
+    {
+        if response.products.count > 0
+        {
+            for product in response.products
+            {
+                productsArray.append(product)
+            }
+            print("MainMenu: Found \(response.products.count) products")
+        }
+        else
+        {
+            print("MainMenu: ERROR - There are no products.")
+        }
+    }
+    
+    // MARK: Navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
     {
         /* We need the user to grant permission to use the microphone */

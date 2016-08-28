@@ -7,9 +7,11 @@
 //
 
 import UIKit
+import StoreKit
 import AVFoundation
 import FBAudienceNetwork
 
+/* Various Pitches for premium content */
 private var maleDogPitches: [Float] = [-1700, 1000, 1700]
 private var femaleDogPitches: [Float] = [1000, 2000, 2400]
 private var tubaPitches: [Float] = [-2400, -1700, -1000]
@@ -40,7 +42,7 @@ enum SpeakingStyle: Int, CustomStringConvertible
 }
 
 class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
-    AVAudioPlayerDelegate, UIPickerViewDelegate
+    AVAudioPlayerDelegate, UIPickerViewDelegate, SKPaymentTransactionObserver
 {
 
     // MARK: Properties
@@ -48,6 +50,9 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var recordButton: UIButton!
+    
+    // MARK: Variables for premium purchase
+    var transactionInProgress = false
     
     // MARK: Local Variables
     var audioURL: NSURL!
@@ -72,8 +77,99 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     let numOfTransitions = 3
     let timeoutDuration = 10.0
     
+    // MARK: IAPurchaseViewController
+    func paymentQueue(queue: SKPaymentQueue,
+                      updatedTransactions transactions: [SKPaymentTransaction])
+    {
+        for transaction in transactions
+        {
+            switch transaction.transactionState
+            {
+            case SKPaymentTransactionState.Purchased:
+                print("HumanToPet: Transaction completed successfully.")
+                SKPaymentQueue.defaultQueue().finishTransaction(transaction)
+                self.didPurchasePremiumSuccessfully()
+                transactionInProgress = false
+            case SKPaymentTransactionState.Failed:
+                print("HumanToPet: ERROR - Transaction Failed");
+                SKPaymentQueue.defaultQueue().finishTransaction(transaction)
+                transactionInProgress = false
+                self.didPurchasePremiumFail()
+                curStyle = SpeakingStyle.Female
+            default:
+                print("HumanToPet: Status Code \(transaction.transactionState.rawValue)")
+            }
+        }
+    }
+    
+    func didPurchasePremiumSuccessfully()
+    {
+        MainMenuViewController.isPremiumPurchased = true
+        let defaultSettings = NSUserDefaults.standardUserDefaults()
+        defaultSettings.setBool(true,
+                                forKey: MainMenuViewController.premiumIdentifier)
+        
+        let alertController = UIAlertController(title: "Babel Pet Premium",
+                                                message: MainMenuViewController.premiumPurchased,
+                                                preferredStyle: .Alert)
+        
+        alertController.addAction(UIAlertAction(title: "Ok",
+            style: .Default,
+            handler:
+            { (action: UIAlertAction!) in
+                print("PetToHuman: Premium purchased dialog displayed.")
+        }))
+        
+        self.presentViewController(alertController,
+                                   animated: true,
+                                   completion: nil)
+        
+    }
+    
+    func didPurchasePremiumFail()
+    {
+        
+        let alertController = UIAlertController(title: "Unlock Babel Pet Premium",
+                                                message: "Failed to complete transaction!",
+                                                preferredStyle: .Alert)
+        
+        alertController.addAction(UIAlertAction(title: "Ok",
+            style: .Default,
+            handler:
+            { (action: UIAlertAction!) in
+                print("HumanToPet: Premium purchased dialog displayed.")
+        }))
+        
+        self.presentViewController(alertController,
+                                   animated: true,
+                                   completion: nil)
+        
+        genderPicker.selectRow(0, inComponent: 0, animated: true)
+        
+    }
     
     // MARK: Functions
+    func upgradeHandler(alert: UIAlertAction!)
+    {
+        /* Purchase premium here */
+        print("PetToHuman: Premium upgrade initiated")
+        
+        if self.transactionInProgress == true
+        {
+            print("MainMenu: Transaction already in progress!")
+            return
+        }
+        
+        if referencedController.productsArray.count == 0
+        {
+            print("MainMenu: Cannot retrieve products!")
+            return
+        }
+        
+        let payment = SKPayment(product: referencedController.productsArray[0])
+        SKPaymentQueue.defaultQueue().addPayment(payment)
+        self.transactionInProgress = true
+    }
     
     /* Callback that is called if the recording goes above the maximum allowed
         time. */
@@ -294,6 +390,8 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     {
         super.viewDidLoad()
         
+        SKPaymentQueue.defaultQueue().addTransactionObserver(self)
+        
         /* Adding the Facebook banner */
         if !MainMenuViewController.isPremiumPurchased
         {
@@ -508,13 +606,6 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         default:
             pitch.rate = 0.5
         }
-    }
-    
-    func upgradeHandler(alert: UIAlertAction!)
-    {
-        /* Purchase premium here */
-        print("PetToHuman: Premium upgrade initiated")
-        MainMenuViewController.isPremiumPurchased = true
     }
     
     func downgradeHandler(alert: UIAlertAction!)

@@ -13,48 +13,54 @@ import FBAudienceNetwork
 
 private let recordButtonTranslationStopped =
 [
-    Language.English: "Tap to Record",
-    Language.日本語: "録音開始",
+    Language.English: "Record",
+    Language.Japanese: "録音開始",
     Language.Chinese: "Some Chinese",
-    Language.Spanish: "Some Spanish"
+    Language.Spanish: "Graba",
+    Language.Korean: "녹음"
 ]
 
 private let recordButtonTranslationRecord =
 [
-    Language.English: "Tap to Stop",
-    Language.日本語: "停止",
-    Language.Chinese: "Some Chinese",
-    Language.Spanish: "Some Spanish"
+    Language.English: "Stop",
+    Language.Japanese: "停止",
+    Language.Chinese: "Stop",
+    Language.Spanish: "Stop",
+    Language.Korean: "Stop"
 ]
 
 private let tooQuietTranslation =
 [
     Language.English: "I can't hear you! Speak up!",
-    Language.日本語: "聞こえないよ〜！もっと大きな声で！！",
+    Language.Japanese: "聞こえないよ〜！もっと大きな声で！！",
     Language.Chinese: "Some Chinese",
-    Language.Spanish: "Some Spanish"
+    Language.Spanish: "Some Spanish",
+    Language.Korean: "Some Korean"
 ]
 
 private let tooShortTranslation =
 [
     Language.English: "Huh!? Speak longer!",
-    Language.日本語: "もっと話して！！",
+    Language.Japanese: "もっと話して！！",
     Language.Chinese: "Some Chinese",
-    Language.Spanish: "Some Spanish"
+    Language.Spanish: "Some Spanish",
+    Language.Korean: "Some Korean"
 ]
 
 private let playButtonTranslation =
 [
     Language.English: "Play",
-    Language.日本語: "再生",
+    Language.Japanese: "再生",
     Language.Chinese: "Some Chinese",
-    Language.Spanish: "Some Spanish"
+    Language.Spanish: "Reproduce",
+    Language.Korean: "듣기"
 ]
 
 private let shareButtonTranslation =
 [
-    Language.English: "Share",
-    Language.日本語: "シェア",
+    Language.English: "Comparte",
+    Language.Japanese: "シェア",
+    Language.Korean: "공유",
     Language.Chinese: "Some Chinese",
     Language.Spanish: "Some Spanish"
 ]
@@ -62,38 +68,42 @@ private let shareButtonTranslation =
 private let historyButtonTranslation =
 [
     Language.English: "History",
-    Language.日本語: "履歴",
+    Language.Japanese: "履歴",
+    Language.Korean: "기록",
     Language.Chinese: "Some Chinese",
-    Language.Spanish: "Some Spanish"
+    Language.Spanish: "Historia"
 ]
 
 private let languageLabelTranslation =
 [
     Language.English: "Language",
-    Language.日本語: "言語",
+    Language.Japanese: "言語",
+    Language.Korean: "언어",
     Language.Chinese: "Some Chinese",
-    Language.Spanish: "Some Spanish"
+    Language.Spanish: "Lenguaje"
 ]
 
 private let translationDefaultTranslation =
 [
     Language.English: "Translation",
-    Language.日本語: "翻訳",
+    Language.Japanese: "翻訳",
+    Language.Korean: "번역",
     Language.Chinese: "Some Chinese",
-    Language.Spanish: "Some Spanish"
+    Language.Spanish: "Traducción"
 ]
 
 private let defaultTranslationPhrase =
 [
-    Language.English: "Record your voice and the translation will go here!",
-    Language.日本語: "翻訳",
+    Language.English: "Translation",
+    Language.Japanese: "翻訳",
+    Language.Korean: "번역",
     Language.Chinese: "Some Chinese",
-    Language.Spanish: "Some Spanish"
+    Language.Spanish: "Traducción"
 ]
 
 
 class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
-    AVAudioPlayerDelegate, UIPickerViewDelegate
+    AVAudioPlayerDelegate, UIPickerViewDelegate, SKPaymentTransactionObserver
 {
     // MARK: Local Variables
     var translations = [PetTranslation]()
@@ -110,6 +120,9 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     var completionInterrupt = Int(0)
     let powerThreshold = Float(-20.0)
     let timeoutDuration = 10.0
+    
+    // MARK: Variables for premium purchase
+    var transactionInProgress = false
     
     // MARK: Properties
     @IBOutlet weak var languagePicker: UIPickerView!
@@ -154,6 +167,28 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     {
         print("Recording timed out")
         recordStarted(recordButton)
+    }
+    
+    func upgradeHandler(alert: UIAlertAction!)
+    {
+        /* Purchase premium here */
+        print("PetToHuman: Premium upgrade initiated")
+        
+        if self.transactionInProgress == true
+        {
+            print("MainMenu: Transaction already in progress!")
+            return
+        }
+        
+        if referencedController.productsArray.count == 0
+        {
+            print("MainMenu: Cannot retrieve products!")
+            return
+        }
+        
+        let payment = SKPayment(product: referencedController.productsArray[0])
+        SKPaymentQueue.defaultQueue().addPayment(payment)
+        self.transactionInProgress = true
     }
     
     func cleanUpRecording(success success: Bool)
@@ -301,9 +336,86 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         }
     }
     
+    // MARK: IAPurchaseViewController
+    func paymentQueue(queue: SKPaymentQueue,
+                      updatedTransactions transactions: [SKPaymentTransaction])
+    {
+        for transaction in transactions
+        {
+            switch transaction.transactionState
+            {
+            case SKPaymentTransactionState.Purchased:
+                print("PetToHuman: Transaction completed successfully.")
+                SKPaymentQueue.defaultQueue().finishTransaction(transaction)
+                self.didPurchasePremiumSuccessfully()
+                transactionInProgress = false
+            case SKPaymentTransactionState.Failed:
+                print("PetToHuman: ERROR - Transaction Failed");
+                SKPaymentQueue.defaultQueue().finishTransaction(transaction)
+                transactionInProgress = false
+                self.didPurchasePremiumFail()
+                curLanguage = Language.English
+            default:
+                print("PetToHuman: Status Code \(transaction.transactionState.rawValue)")
+            }
+        }
+    }
+    
+    func didPurchasePremiumSuccessfully()
+    {
+        MainMenuViewController.isPremiumPurchased = true
+        let defaultSettings = NSUserDefaults.standardUserDefaults()
+        defaultSettings.setBool(true,
+                                forKey: MainMenuViewController.premiumIdentifier)
+        
+        let alertController = UIAlertController(title: "Babel Pet Premium",
+                                                message: MainMenuViewController.premiumPurchased,
+                                                preferredStyle: .Alert)
+        
+        alertController.addAction(UIAlertAction(title: "Ok",
+            style: .Default,
+            handler:
+            { (action: UIAlertAction!) in
+                print("PetToHuman: Premium purchased dialog displayed.")
+        }))
+        
+        self.presentViewController(alertController,
+                                   animated: true,
+                                   completion: nil)
+        
+        premiumCallBack()
+        
+    }
+    
+    func didPurchasePremiumFail()
+    {
+        
+        let alertController = UIAlertController(title: "Unlock Babel Pet Premium",
+                                                message: "Failed to complete transaction!",
+                                                preferredStyle: .Alert)
+        
+        alertController.addAction(UIAlertAction(title: "Ok",
+            style: .Default,
+            handler:
+            { (action: UIAlertAction!) in
+                print("PetToHuman: Premium purchased dialog displayed.")
+        }))
+        
+        self.presentViewController(alertController,
+                                   animated: true,
+                                   completion: nil)
+        
+        languagePicker.selectRow(0, inComponent: 0, animated: true)
+        
+        premiumCallBack()
+        
+    }
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
+        SKPaymentQueue.defaultQueue().addTransactionObserver(self)
         
         /* Adding the Facebook banner */
         if !MainMenuViewController.isPremiumPurchased
@@ -403,6 +515,8 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     func pickerView(pickerView: UIPickerView, didSelectRow row: Int,
                     inComponent component: Int)
     {
+        curLanguage = Language(rawValue: row)
+        
         /* Checking to make sure premium is unlocked */
         if !MainMenuViewController.isPremiumPurchased && row != 0
         {
@@ -427,9 +541,16 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
                                        completion: nil)
             
         }
+        else
+        {
+            premiumCallBack()
+        }
         
-        curLanguage = Language(rawValue: row)
-        print("Language changed to \(curLanguage.description)")
+    }
+    
+    func premiumCallBack()
+    {
+        print("PetToHuman: Language changed to \(curLanguage.description)")
         
         languageLabel.text = languageLabelTranslation[curLanguage]
         playBackButton.setTitle(playButtonTranslation[curLanguage],
@@ -439,7 +560,7 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         historyButton.setTitle(historyButtonTranslation[curLanguage],
                                forState: .Normal)
         translationHeadingLabel.text =
-                            translationDefaultTranslation[curLanguage]
+            translationDefaultTranslation[curLanguage]
         translationLabel.text = defaultTranslationPhrase[curLanguage]
         recordButton.setTitle(recordButtonTranslationStopped[curLanguage],
                               forState: .Normal)
@@ -448,13 +569,6 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         shareButton.enabled = false
     }
     
-    func upgradeHandler(alert: UIAlertAction!)
-    {
-        /* Purchase premium here */
-        print("PetToHuman: Premium upgrade initiated")
-        MainMenuViewController.isPremiumPurchased = true
-    }
-
     func downgradeHandler(alert: UIAlertAction!)
     {
         curLanguage = Language.English

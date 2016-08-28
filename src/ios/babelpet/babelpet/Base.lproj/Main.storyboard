@@ -643,7 +643,7 @@ CQ
         <image name="gradientGreen" width="601" height="240"/>
         <image name="gradientPurple" width="601" height="240"/>
         <image name="humanToPet" width="601" height="240"/>
-        <image name="mainLogo" width="547" height="308"/>
+        <image name="mainLogo" width="621" height="312"/>
         <image name="petToHuman" width="601" height="240"/>
         <image name="poodleImage" width="366" height="247"/>
         <image name="shintakoLogo" width="577" height="277"/>
