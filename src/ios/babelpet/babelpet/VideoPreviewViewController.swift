@@ -42,6 +42,30 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
         }
     }
     
+    @IBAction func saveToPhonePressed(sender: UIButton)
+    {
+        if(self.assetURL.isEmpty)
+        {
+            saveVideoToLibrary()
+        }
+        
+        let alertController = UIAlertController(title: "Video saved",
+                                                message: "Video saved to phone library!!",
+                                                preferredStyle: .Alert)
+        
+        alertController.addAction(UIAlertAction(title: "Ok",
+            style: .Default,
+            handler:
+            { (action: UIAlertAction!) in
+                print("ImageShare: Video saved to phone.")
+        }))
+        
+        self.presentViewController(alertController,
+                                   animated: true,
+                                   completion: nil)
+    }
+    
+    
     /* Instagram is easier than Facebook. Just save the asset, and then
      construct/escape the string into the Instagram application */
     @IBAction func shareInstagram(sender: AnyObject)

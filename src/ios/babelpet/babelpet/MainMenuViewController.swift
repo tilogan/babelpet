@@ -46,6 +46,7 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        let margins = view.layoutMarginsGuide
         
         productIDs.append("ShintakoLLC.BabelBet.premium")
         requestProductInfo()
@@ -64,6 +65,10 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate
                                       adView.frame.size.width, adView.frame.size.height)
             adView.loadAd()
             self.view.addSubview(adView)
+        }
+        else
+        {
+            //stackView.trailingAnchor.constraintEqualToAnchor(margins.trailingAnchor).active = true
         }
 
     }

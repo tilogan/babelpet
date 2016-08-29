@@ -472,14 +472,14 @@ CQ
                                 <rect key="frame" x="20" y="30" width="560" height="502"/>
                                 <subviews>
                                     <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="e79-Mt-2Hm">
-                                        <rect key="frame" x="0.0" y="0.0" width="560" height="402"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="560" height="352"/>
                                         <gestureRecognizers/>
                                         <connections>
                                             <outletCollection property="gestureRecognizers" destination="3uq-AE-FAg" appends="YES" id="dia-vA-i0C"/>
                                         </connections>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fgw-I7-dhP">
-                                        <rect key="frame" x="0.0" y="402" width="560" height="50"/>
+                                        <rect key="frame" x="0.0" y="352" width="560" height="50"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="5IQ-9h-sy1"/>
                                         </constraints>
@@ -492,7 +492,7 @@ CQ
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bNW-vq-N5U">
-                                        <rect key="frame" x="0.0" y="452" width="560" height="50"/>
+                                        <rect key="frame" x="0.0" y="402" width="560" height="50"/>
                                         <fontDescription key="fontDescription" name="ChalkboardSE-Regular" family="Chalkboard SE" pointSize="15"/>
                                         <state key="normal" title="Instagram" backgroundImage="gradientPurple">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -501,8 +501,18 @@ CQ
                                             <action selector="shareInstagram:" destination="ykV-RG-FdJ" eventType="touchUpInside" id="w3Q-Yd-4TO"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nt2-jt-CSp">
+                                        <rect key="frame" x="0.0" y="452" width="560" height="50"/>
+                                        <fontDescription key="fontDescription" name="ChalkboardSE-Regular" family="Chalkboard SE" pointSize="18"/>
+                                        <state key="normal" title="Save" backgroundImage="gradientBlue"/>
+                                        <connections>
+                                            <action selector="saveToPhonePressed:" destination="ykV-RG-FdJ" eventType="touchUpInside" id="2xR-5M-LLC"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="Nt2-jt-CSp" firstAttribute="width" secondItem="Fgw-I7-dhP" secondAttribute="width" id="Qyf-Ui-mCL"/>
+                                    <constraint firstItem="Nt2-jt-CSp" firstAttribute="height" secondItem="Fgw-I7-dhP" secondAttribute="height" id="sVf-z5-1j0"/>
                                     <constraint firstItem="bNW-vq-N5U" firstAttribute="height" secondItem="Fgw-I7-dhP" secondAttribute="height" id="tjx-1A-MfB"/>
                                     <constraint firstItem="bNW-vq-N5U" firstAttribute="width" secondItem="Fgw-I7-dhP" secondAttribute="width" id="x0f-FE-ujQ"/>
                                 </constraints>

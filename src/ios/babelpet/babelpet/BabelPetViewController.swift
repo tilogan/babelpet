@@ -26,7 +26,7 @@ private let recordButtonTranslationRecord =
     Language.Japanese: "停止",
     Language.Chinese: "Stop",
     Language.Spanish: "Stop",
-    Language.Korean: "Stop"
+    Language.Korean: "그만 찍어요!"
 ]
 
 private let tooQuietTranslation =
