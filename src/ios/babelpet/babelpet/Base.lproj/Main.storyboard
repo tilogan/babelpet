@@ -602,6 +602,7 @@ CQ
                     </view>
                     <navigationItem key="navigationItem" id="fF4-Ng-L8L"/>
                     <connections>
+                        <outlet property="bottomMargin" destination="o7Z-lM-LVu" id="Xaw-Ny-rOo"/>
                         <outlet property="stackView" destination="tSF-sw-Mu9" id="SBs-gQ-zI7"/>
                     </connections>
                 </viewController>
@@ -652,9 +653,9 @@ CQ
         <image name="gradientBlue" width="601" height="240"/>
         <image name="gradientGreen" width="601" height="240"/>
         <image name="gradientPurple" width="601" height="240"/>
-        <image name="humanToPet" width="601" height="240"/>
+        <image name="humanToPet" width="538" height="204"/>
         <image name="mainLogo" width="621" height="312"/>
-        <image name="petToHuman" width="601" height="240"/>
+        <image name="petToHuman" width="538" height="204"/>
         <image name="poodleImage" width="366" height="247"/>
         <image name="shintakoLogo" width="577" height="277"/>
         <image name="smallYellow" width="90" height="50"/>

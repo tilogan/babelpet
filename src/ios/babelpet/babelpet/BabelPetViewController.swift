@@ -35,7 +35,7 @@ private let tooQuietTranslation =
     Language.Japanese: "聞こえないよ〜！もっと大きな声で！！",
     Language.Chinese: "Some Chinese",
     Language.Spanish: "Some Spanish",
-    Language.Korean: "Some Korean"
+    Language.Korean: "안들려요 더 크게 말해주세요"
 ]
 
 private let tooShortTranslation =
@@ -44,7 +44,7 @@ private let tooShortTranslation =
     Language.Japanese: "もっと話して！！",
     Language.Chinese: "Some Chinese",
     Language.Spanish: "Some Spanish",
-    Language.Korean: "Some Korean"
+    Language.Korean: "뭐라구요? 더 길게 말해 주세요!"
 ]
 
 private let playButtonTranslation =

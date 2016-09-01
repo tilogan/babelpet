@@ -208,7 +208,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         }
         else
         {
-            audioEngine.inputNode?.removeTapOnBus(0)
+            pitch.removeTapOnBus(0)
             completionInt = 1
         }
     }
@@ -275,7 +275,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
             print("HumanToPet: ERROR - Could not write file")
         }
         
-        audioEngine.inputNode!.installTapOnBus(0, bufferSize: 1024,
+        pitch.installTapOnBus(0, bufferSize: 1024,
                                               format: format)
         {
             (buffer, time) -> Void in

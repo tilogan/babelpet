@@ -31,6 +31,9 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate
     
     // MARK: Properties
     @IBOutlet weak var stackView: UIStackView!
+    @IBOutlet weak var bottomMargin: NSLayoutConstraint!
+
+
     
     // MARK: Audio Engine
     var recordingSession: AVAudioSession!
@@ -46,7 +49,6 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate
     override func viewDidLoad()
     {
         super.viewDidLoad()
-        let margins = view.layoutMarginsGuide
         
         productIDs.append("ShintakoLLC.BabelBet.premium")
         requestProductInfo()
@@ -54,10 +56,10 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate
         let defaultSettings = NSUserDefaults.standardUserDefaults()
         MainMenuViewController.isPremiumPurchased =
                 defaultSettings.boolForKey(MainMenuViewController.premiumIdentifier)
+        MainMenuViewController.isPremiumPurchased = false
         
         if !MainMenuViewController.isPremiumPurchased
         {
-            FBAdSettings.addTestDevice("ebadf1868ee0b4c2eb364f912a7603e85824310a")
             let adView = FBAdView(placementID: "556114377906938_559339737584402",
                                   adSize: kFBAdSizeHeight50Banner,
                                   rootViewController: self)
@@ -68,7 +70,7 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate
         }
         else
         {
-            //stackView.trailingAnchor.constraintEqualToAnchor(margins.trailingAnchor).active = true
+            bottomMargin.constant = 10
         }
 
     }
