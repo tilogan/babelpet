@@ -59,7 +59,7 @@ private let generateVideoTranslation =
 
 private let colorLabelTranslation =
 [
-    Language.Japanese: "色:",
+    Language.Japanese: "文字色:",
     Language.Chinese: "顏色:",
     Language.Spanish: "Color:",
     Language.Korean: "색:"
@@ -127,14 +127,14 @@ private let colorStringChinese =
 
 private let colorStringJapanese =
 [
-    "黒",
-    "青",
-    "緑",
-    "橙",
-    "紫",
-    "赤",
-    "白",
-    "黄"
+    "くろ",
+    "あお",
+    "みどり",
+    "オレンジ",
+    "むらさき",
+    "あか",
+    "しろ",
+    "きいろ"
 ]
 
 private let colorStringChoices =
