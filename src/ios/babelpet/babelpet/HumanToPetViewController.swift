@@ -20,8 +20,8 @@ private var freakPitches: [Float] = [-2400, 0, 2400]
 
 enum SpeakingStyle: Int, CustomStringConvertible
 {
-    case Female = 0
-    case Male = 1
+    case Male = 0
+    case Female = 1
     case Tuba = 2
     case Chipmunk = 3
     case Freak = 4
@@ -50,6 +50,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     @IBOutlet weak var playButton: UIButton!
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var recordButton: UIButton!
+    @IBOutlet weak var bottomMargin: NSLayoutConstraint!
     
     // MARK: Variables for premium purchase
     var transactionInProgress = false
@@ -61,7 +62,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     var audioRecorder: AVAudioRecorder!
     var curPower = Float(0)
     var curRecordingLength = Double(0)
-    var curStyle: SpeakingStyle! = .Female
+    var curStyle: SpeakingStyle! = .Male
     var bufferList = [AVAudioPCMBuffer]()
     var completionInt = 0
     var audioEngine = AVAudioEngine()
@@ -149,6 +150,15 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     }
     
     // MARK: Functions
+    func downgradeHandler(alert: UIAlertAction!)
+    {
+        curStyle = SpeakingStyle.Female
+        genderPicker.selectRow(0, inComponent: 0, animated: true)
+        pitch.rate = 3
+        print("HumanToPet: Gender changed to \(curStyle.description)")
+        print("HumanToPet: Premium upgrade declined")
+    }
+    
     func upgradeHandler(alert: UIAlertAction!)
     {
         /* Purchase premium here */
@@ -395,7 +405,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         /* Adding the Facebook banner */
         if !MainMenuViewController.isPremiumPurchased
         {
-        /* Adding the Facebook banner */
+            /* Adding the Facebook banner */
             let adView = FBAdView(placementID: "556114377906938_559339737584402",
                                   adSize: kFBAdSizeHeight50Banner,
                                   rootViewController: self)
@@ -405,6 +415,10 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
                                     adView.frame.size.height)
             adView.loadAd()
             self.view.addSubview(adView)
+        }
+        else
+        {
+            bottomMargin.constant = 10
         }
         
         recordButton.setTitle("Press to Record", forState: .Normal)
@@ -418,6 +432,10 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         
         /* Configuring the file for translation */
         translatedURL = NSURL(string: getDocumentsDirectory().stringByAppendingString("/petTrans.caf"))
+        
+        /* Config the buttons to auto-size */
+        recordButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        statusLabel.adjustsFontSizeToFitWidth = true
     }
 
     override func didReceiveMemoryWarning()
@@ -551,7 +569,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         {
             pickerLabel = UILabel()
             
-            pickerLabel?.font = UIFont(name: "Chalkboard SE", size: 16)
+            pickerLabel?.font = UIFont(name: "Futara", size: 16)
             pickerLabel?.textColor = UIColor.whiteColor()
             pickerLabel?.textAlignment = NSTextAlignment.Center
         }
@@ -606,14 +624,5 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         default:
             pitch.rate = 0.5
         }
-    }
-    
-    func downgradeHandler(alert: UIAlertAction!)
-    {
-        curStyle = SpeakingStyle.Female
-        genderPicker.selectRow(0, inComponent: 0, animated: true)
-        pitch.rate = 3
-        print("HumanToPet: Gender changed to \(curStyle.description)")
-        print("HumanToPet: Premium upgrade declined")
     }
 }

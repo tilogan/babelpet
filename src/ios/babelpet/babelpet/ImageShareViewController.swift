@@ -57,10 +57,102 @@ private let generateVideoTranslation =
     Language.Korean: "비디오 번역 생성하기"
 ]
 
+private let colorLabelTranslation =
+[
+    Language.Japanese: "色:",
+    Language.Chinese: "顏色:",
+    Language.Spanish: "Color:",
+    Language.Korean: "색:"
+]
+
+private let colorChoices =
+[
+    UIColor.blackColor(),
+    UIColor.blueColor(),
+    UIColor.greenColor(),
+    UIColor.orangeColor(),
+    UIColor.purpleColor(),
+    UIColor.redColor(),
+    UIColor.whiteColor(),
+    UIColor.yellowColor()
+]
+
+private let colorStringEnglish =
+[
+    "Black",
+    "Blue",
+    "Green",
+    "Orange",
+    "Purple",
+    "Red",
+    "White",
+    "Yellow"
+]
+
+private let colorStringSpanish =
+[
+    "Negro",
+    "Azul",
+    "Verde",
+    "Naranja",
+    "Púrpura",
+    "Rojo",
+    "Blanco",
+    "Amarillo"
+]
+
+private let colorStringKorean =
+[
+    "검은",
+    "푸른",
+    "녹색",
+    "주황색",
+    "보라색",
+    "빨간",
+    "화이트",
+    "노랑"
+]
+
+private let colorStringChinese =
+[
+    "黑色",
+    "藍色",
+    "綠色",
+    "橙子",
+    "紫色",
+    "紅",
+    "白色",
+    "黃色"
+]
+
+private let colorStringJapanese =
+[
+    "黒",
+    "青",
+    "緑",
+    "橙",
+    "紫",
+    "赤",
+    "白",
+    "黄"
+]
+
+private let colorStringChoices =
+[
+    Language.Spanish: colorStringSpanish,
+    Language.English: colorStringEnglish,
+    Language.Japanese: colorStringJapanese,
+    Language.Chinese: colorStringChinese,
+    Language.Korean: colorStringKorean
+]
+
+
+
 class ImageShareViewController: UIViewController,
                         UIImagePickerControllerDelegate,
                         UINavigationControllerDelegate,
-                        UITextFieldDelegate
+                        UITextFieldDelegate,
+                        UIPickerViewDelegate
 {
     // MARK: Properties
     @IBOutlet weak var translationTextField: UITextField!
@@ -72,9 +164,12 @@ class ImageShareViewController: UIViewController,
     @IBOutlet weak var generateButton: UIButton!
     @IBOutlet weak var directionsLabel: UILabel!
     @IBOutlet weak var translationLabel: UILabel!
+    @IBOutlet weak var colorLabel: UILabel!
+    @IBOutlet weak var colorPicker: UIPickerView!
     
     // MARK: Variables
     var referencedController: BabelPetViewController!
+    var curColor: UIColor!
 
     // MARK: Actions
     @IBAction func playTranslationOption(sender: UIButton)
@@ -101,6 +196,10 @@ class ImageShareViewController: UIViewController,
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
+        /* Changing the default color to blue */
+        curColor = UIColor.blueColor()
+        colorPicker.selectRow(1, inComponent: 0, animated: false)
         
         /* Adding the Facebook banner */
         if !MainMenuViewController.isPremiumPurchased
@@ -130,10 +229,19 @@ class ImageShareViewController: UIViewController,
                                     forState: .Normal)
             translationLabel.text = translationHeaderTranslation[curLanguage]
             directionsLabel.text = shareDescriptionTranslation[curLanguage]
+            colorLabel.text = colorLabelTranslation[curLanguage]
         }
         
         translationTextField.text = referencedController.curTrans.translatedText
         translationTextField.delegate = self
+        
+        directionsLabel.adjustsFontSizeToFitWidth = true
+        libraryButton.titleLabel!.adjustsFontSizeToFitWidth = true
+        pictureButton.titleLabel!.adjustsFontSizeToFitWidth = true
+        translationLabel.adjustsFontSizeToFitWidth = true
+        playButton.titleLabel!.adjustsFontSizeToFitWidth = true
+        colorLabel.adjustsFontSizeToFitWidth = true
+        colorPicker.delegate = self
         
     }
 
@@ -195,5 +303,40 @@ class ImageShareViewController: UIViewController,
         }
     }
     
+    // MARK: UIPickerViewDelegate
+    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int
+    {
+        return 1
+    }
+    
+    // The number of rows of data
+    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int
+    {
+        return colorChoices.count
+    }
+    
+    func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView?) -> UIView
+    {
+        var pickerLabel = view as? UILabel;
+        
+        if (pickerLabel == nil)
+        {
+            pickerLabel = UILabel()
+            
+            pickerLabel?.font = UIFont(name: "Futara", size: 16)
+            pickerLabel?.textColor = UIColor.whiteColor()
+            pickerLabel?.textAlignment = NSTextAlignment.Center
+        }
+        
+        pickerLabel?.text = colorStringChoices[referencedController.curLanguage]![row]
+        return pickerLabel!;
+        
+    }
+    
+    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
+    {
+        curColor = colorChoices[row]
+        print("ImageShare: Color changed to \(colorStringEnglish[row])")
+    }
 
 }

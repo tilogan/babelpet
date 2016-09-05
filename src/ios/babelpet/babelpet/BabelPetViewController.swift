@@ -58,11 +58,11 @@ private let playButtonTranslation =
 
 private let shareButtonTranslation =
 [
-    Language.English: "Comparte",
+    Language.English: "Share",
     Language.Japanese: "シェア",
     Language.Korean: "공유",
     Language.Chinese: "Some Chinese",
-    Language.Spanish: "Some Spanish"
+    Language.Spanish: "Comparte"
 ]
 
 private let historyButtonTranslation =
@@ -353,8 +353,8 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
                 print("PetToHuman: ERROR - Transaction Failed");
                 SKPaymentQueue.defaultQueue().finishTransaction(transaction)
                 transactionInProgress = false
-                self.didPurchasePremiumFail()
                 curLanguage = Language.English
+                self.didPurchasePremiumFail()
             default:
                 print("PetToHuman: Status Code \(transaction.transactionState.rawValue)")
             }
@@ -439,6 +439,11 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         /* Setting up Delegates  and default values */
         languagePicker.delegate = self
         curLanguage = Language.English
+        
+        recordButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        shareButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        historyButton.titleLabel?.adjustsFontSizeToFitWidth = true
+        playBackButton.titleLabel?.adjustsFontSizeToFitWidth = true
        
     }
 

@@ -29,6 +29,7 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
     // MARK: Properties
     @IBOutlet weak var imagePreview: UIImageView!
     @IBOutlet var playGesture: UITapGestureRecognizer!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     // MARK: Actions
     @IBAction func playVideoAction(sender: UITapGestureRecognizer)
@@ -460,7 +461,7 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
     func createVideoFromImage(image: UIImage!, translation: NSString!)
     {
         /* Text Variables */
-        let fontColor: UIColor = UIColor.whiteColor()
+        let fontColor: UIColor = referencedController.curColor
         let curTrans: PetTranslation = referencedController.referencedController.curTrans
 
         let atPoint: CGPoint = CGPoint(x: image.size.width/6,
@@ -529,6 +530,7 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
         }
         
         self.savedVideo = completeVideoURL!
+        activityIndicator.stopAnimating()
         playVideoAction(playGesture)
         
     }
@@ -536,6 +538,7 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        activityIndicator.startAnimating()
         
         /* Adding the Facebook banner */
         if !MainMenuViewController.isPremiumPurchased
