@@ -35,10 +35,10 @@ private let takePictureButtonTranslation =
 
 private let translationHeaderTranslation =
 [
-    Language.Japanese: "翻訳",
+    Language.Japanese: "翻訳:",
     Language.Chinese: "Some Chinese",
-    Language.Spanish: "Traducción",
-    Language.Korean: "번역"
+    Language.Spanish: "Traducción:",
+    Language.Korean: "번역:"
 ]
 
 private let playButtonTranslation =
@@ -166,6 +166,7 @@ class ImageShareViewController: UIViewController,
     @IBOutlet weak var translationLabel: UILabel!
     @IBOutlet weak var colorLabel: UILabel!
     @IBOutlet weak var colorPicker: UIPickerView!
+    @IBOutlet weak var bottomMargin: NSLayoutConstraint!
     
     // MARK: Variables
     var referencedController: BabelPetViewController!
@@ -213,6 +214,10 @@ class ImageShareViewController: UIViewController,
                                     adView.frame.size.height)
             adView.loadAd()
             self.view.addSubview(adView)
+        }
+        else
+        {
+            bottomMargin.constant = 10
         }
         
         let curLanguage = referencedController.curLanguage

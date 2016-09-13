@@ -30,6 +30,7 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
     @IBOutlet weak var imagePreview: UIImageView!
     @IBOutlet var playGesture: UITapGestureRecognizer!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var bottomMargin: NSLayoutConstraint!
     
     // MARK: Actions
     @IBAction func playVideoAction(sender: UITapGestureRecognizer)
@@ -560,6 +561,7 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
         }
         else
         {
+            bottomMargin.constant = 10
             createVideoFromImage(referencedController.petImage.image,
                                  translation: referencedController.translationTextField.text)
         }

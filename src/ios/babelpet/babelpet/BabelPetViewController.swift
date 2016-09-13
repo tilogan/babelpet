@@ -133,6 +133,7 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     @IBOutlet weak var translationHeadingLabel: UILabel!
     @IBOutlet weak var recordButton: UIButton!
     @IBOutlet weak var languageLabel: UILabel!
+    @IBOutlet weak var bottomMargin: NSLayoutConstraint!
     
     // MARK: NSCoding
     func saveTranslations()
@@ -429,6 +430,10 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
                                     adView.frame.size.height)
             adView.loadAd()
             self.view.addSubview(adView)
+        }
+        else
+        {
+            bottomMargin.constant = 10
         }
         
         if let savedTranslations = loadTranslations()
