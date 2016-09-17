@@ -501,7 +501,7 @@ CQ
                                         </constraints>
                                     </activityIndicatorView>
                                     <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e79-Mt-2Hm">
-                                        <rect key="frame" x="0.0" y="0.0" width="560" height="175"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="560" height="144"/>
                                         <gestureRecognizers/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="300" id="tX6-DL-y37"/>
@@ -511,7 +511,7 @@ CQ
                                         </connections>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fgw-I7-dhP">
-                                        <rect key="frame" x="0.0" y="185" width="560" height="99"/>
+                                        <rect key="frame" x="0.0" y="154" width="560" height="109"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="5IQ-9h-sy1"/>
                                         </constraints>
@@ -524,7 +524,7 @@ CQ
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bNW-vq-N5U">
-                                        <rect key="frame" x="0.0" y="294" width="560" height="99"/>
+                                        <rect key="frame" x="0.0" y="273" width="560" height="110"/>
                                         <state key="normal" title="Instagram" backgroundImage="redBig">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -533,7 +533,7 @@ CQ
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nt2-jt-CSp">
-                                        <rect key="frame" x="0.0" y="403" width="560" height="99"/>
+                                        <rect key="frame" x="0.0" y="393" width="560" height="109"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="Nt2-jt-CSp" secondAttribute="height" multiplier="56:5" id="lb0-zy-WQp"/>
                                         </constraints>
@@ -545,7 +545,6 @@ CQ
                                     </button>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="Fgw-I7-dhP" firstAttribute="top" secondItem="e79-Mt-2Hm" secondAttribute="bottom" constant="10" id="8Vf-fx-lXa"/>
                                     <constraint firstItem="Nt2-jt-CSp" firstAttribute="width" secondItem="Fgw-I7-dhP" secondAttribute="width" id="Qyf-Ui-mCL"/>
                                     <constraint firstItem="Nt2-jt-CSp" firstAttribute="height" secondItem="Fgw-I7-dhP" secondAttribute="height" id="sVf-z5-1j0"/>
                                     <constraint firstItem="bNW-vq-N5U" firstAttribute="height" secondItem="Fgw-I7-dhP" secondAttribute="height" id="tjx-1A-MfB"/>

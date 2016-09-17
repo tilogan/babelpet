@@ -12,7 +12,7 @@ import FBAudienceNetwork
 private let shareDescriptionTranslation =
 [
     Language.Japanese: "Babel Pet はあなたのペットの写真、音声、翻訳をご友人とSNSでシェアすることができます。写真を撮影/選択し翻訳したペットの音声＋言葉をFACEBOOKやInstagramに投稿して可愛いペットを紹介、自慢しちゃいましょう！！！",
-    Language.Chinese: "Some Chinese",
+    Language.Chinese: "巴別寵物讓你給你毛茸茸的朋友拍照片, 加上翻譯/音頻, 並與朋友分享！只需在下面選擇/拍攝一張照片,更改翻譯，並製作出可愛的視頻",
     Language.Spanish: "¡“Babel Pet” te permite tomar fotos de tu peludo amigo, pega una edición/audio y comparte con tus amigos!, ¡Simplemente escoge/toma una foto, cambia la edición si quieres y genera un video adorable!",
     Language.Korean: "Babel Pet으로 여러분의 반려 동물의 사진을 찍어 그들의 말을 번역하고, 친구들과 공유하세요!  갖고있는 반려동물의 사진을 선택하거나,  사진찍기를 선택하여 새로운 사진을 찍고 , 그들의  언어를 번역하여 사랑스러운 영상도 만들어 보세요!"
 ]
@@ -20,7 +20,7 @@ private let shareDescriptionTranslation =
 private let libraryButtonTranslation =
 [
     Language.Japanese: "写真を選ぶ",
-    Language.Chinese: "Some Chinese",
+    Language.Chinese: "從圖書館選擇",
     Language.Spanish: "Escoge desde la librería",
     Language.Korean: "라이브러리에서 선택하기"
 ]
@@ -28,7 +28,7 @@ private let libraryButtonTranslation =
 private let takePictureButtonTranslation =
 [
     Language.Japanese: "撮影",
-    Language.Chinese: "Some Chinese",
+    Language.Chinese: "拍照",
     Language.Spanish: "Toma una foto",
     Language.Korean: "사진 찍기"
 ]
@@ -36,7 +36,7 @@ private let takePictureButtonTranslation =
 private let translationHeaderTranslation =
 [
     Language.Japanese: "翻訳:",
-    Language.Chinese: "Some Chinese",
+    Language.Chinese: "翻譯:",
     Language.Spanish: "Traducción:",
     Language.Korean: "번역:"
 ]
@@ -44,7 +44,7 @@ private let translationHeaderTranslation =
 private let playButtonTranslation =
 [
     Language.Japanese: "再生",
-    Language.Chinese: "Some Chinese",
+    Language.Chinese: "播放",
     Language.Spanish: "Reproduce",
     Language.Korean: "듣기"
 ]
@@ -52,7 +52,7 @@ private let playButtonTranslation =
 private let generateVideoTranslation =
 [
     Language.Japanese: "写真・音声付翻訳作成",
-    Language.Chinese: "Some Chinese",
+    Language.Chinese: "製作視頻翻譯",
     Language.Spanish: "Generar traducción de video",
     Language.Korean: "비디오 번역 생성하기"
 ]

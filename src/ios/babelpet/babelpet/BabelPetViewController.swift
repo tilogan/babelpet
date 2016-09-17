@@ -15,7 +15,7 @@ private let recordButtonTranslationStopped =
 [
     Language.English: "Record",
     Language.Japanese: "録音開始",
-    Language.Chinese: "Some Chinese",
+    Language.Chinese: "記錄",
     Language.Spanish: "Graba",
     Language.Korean: "녹음"
 ]
@@ -24,8 +24,8 @@ private let recordButtonTranslationRecord =
 [
     Language.English: "Stop",
     Language.Japanese: "停止",
-    Language.Chinese: "Stop",
-    Language.Spanish: "Stop",
+    Language.Chinese: "停止",
+    Language.Spanish: "Detener",
     Language.Korean: "그만 찍어요!"
 ]
 
@@ -33,8 +33,8 @@ private let tooQuietTranslation =
 [
     Language.English: "I can't hear you! Speak up!",
     Language.Japanese: "聞こえないよ〜！もっと大きな声で！！",
-    Language.Chinese: "Some Chinese",
-    Language.Spanish: "Some Spanish",
+    Language.Chinese: "我沒聽見！講久一點！",
+    Language.Spanish: "¡Habla mas alto!",
     Language.Korean: "안들려요 더 크게 말해주세요"
 ]
 
@@ -42,8 +42,8 @@ private let tooShortTranslation =
 [
     Language.English: "Huh!? Speak longer!",
     Language.Japanese: "もっと話して！！",
-    Language.Chinese: "Some Chinese",
-    Language.Spanish: "Some Spanish",
+    Language.Chinese: "你說什麼?!講大聲點！",
+    Language.Spanish: "¡Hable más!",
     Language.Korean: "뭐라구요? 더 길게 말해 주세요!"
 ]
 
@@ -51,7 +51,7 @@ private let playButtonTranslation =
 [
     Language.English: "Play",
     Language.Japanese: "再生",
-    Language.Chinese: "Some Chinese",
+    Language.Chinese: "語言",
     Language.Spanish: "Reproduce",
     Language.Korean: "듣기"
 ]
@@ -61,7 +61,7 @@ private let shareButtonTranslation =
     Language.English: "Share",
     Language.Japanese: "シェア",
     Language.Korean: "공유",
-    Language.Chinese: "Some Chinese",
+    Language.Chinese: "共享",
     Language.Spanish: "Comparte"
 ]
 
@@ -70,7 +70,7 @@ private let historyButtonTranslation =
     Language.English: "History",
     Language.Japanese: "履歴",
     Language.Korean: "기록",
-    Language.Chinese: "Some Chinese",
+    Language.Chinese: "歷史",
     Language.Spanish: "Historia"
 ]
 
@@ -79,7 +79,7 @@ private let languageLabelTranslation =
     Language.English: "Language",
     Language.Japanese: "言語",
     Language.Korean: "언어",
-    Language.Chinese: "Some Chinese",
+    Language.Chinese: "語言",
     Language.Spanish: "Lenguaje"
 ]
 
@@ -88,7 +88,7 @@ private let translationDefaultTranslation =
     Language.English: "Translation",
     Language.Japanese: "翻訳",
     Language.Korean: "번역",
-    Language.Chinese: "Some Chinese",
+    Language.Chinese: "翻譯",
     Language.Spanish: "Traducción"
 ]
 
@@ -97,7 +97,7 @@ private let defaultTranslationPhrase =
     Language.English: "Translation",
     Language.Japanese: "翻訳",
     Language.Korean: "번역",
-    Language.Chinese: "Some Chinese",
+    Language.Chinese: "翻譯",
     Language.Spanish: "Traducción"
 ]
 
