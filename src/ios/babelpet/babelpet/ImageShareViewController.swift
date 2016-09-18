@@ -11,70 +11,70 @@ import FBAudienceNetwork
 
 private let shareDescriptionTranslation =
 [
-    Language.Japanese: "Babel Pet はあなたのペットの写真、音声、翻訳をご友人とSNSでシェアすることができます。写真を撮影/選択し翻訳したペットの音声＋言葉をFACEBOOKやInstagramに投稿して可愛いペットを紹介、自慢しちゃいましょう！！！",
-    Language.Chinese: "巴別寵物讓你給你毛茸茸的朋友拍照片, 加上翻譯/音頻, 並與朋友分享！只需在下面選擇/拍攝一張照片,更改翻譯，並製作出可愛的視頻",
-    Language.Spanish: "¡“Babel Pet” te permite tomar fotos de tu peludo amigo, pega una edición/audio y comparte con tus amigos!, ¡Simplemente escoge/toma una foto, cambia la edición si quieres y genera un video adorable!",
-    Language.Korean: "Babel Pet으로 여러분의 반려 동물의 사진을 찍어 그들의 말을 번역하고, 친구들과 공유하세요!  갖고있는 반려동물의 사진을 선택하거나,  사진찍기를 선택하여 새로운 사진을 찍고 , 그들의  언어를 번역하여 사랑스러운 영상도 만들어 보세요!"
+    Language.japanese: "Babel Pet はあなたのペットの写真、音声、翻訳をご友人とSNSでシェアすることができます。写真を撮影/選択し翻訳したペットの音声＋言葉をFACEBOOKやInstagramに投稿して可愛いペットを紹介、自慢しちゃいましょう！！！",
+    Language.chinese: "巴別寵物讓你給你毛茸茸的朋友拍照片, 加上翻譯/音頻, 並與朋友分享！只需在下面選擇/拍攝一張照片,更改翻譯，並製作出可愛的視頻",
+    Language.spanish: "¡“Babel Pet” te permite tomar fotos de tu peludo amigo, pega una edición/audio y comparte con tus amigos!, ¡Simplemente escoge/toma una foto, cambia la edición si quieres y genera un video adorable!",
+    Language.korean: "Babel Pet으로 여러분의 반려 동물의 사진을 찍어 그들의 말을 번역하고, 친구들과 공유하세요!  갖고있는 반려동물의 사진을 선택하거나,  사진찍기를 선택하여 새로운 사진을 찍고 , 그들의  언어를 번역하여 사랑스러운 영상도 만들어 보세요!"
 ]
 
 private let libraryButtonTranslation =
 [
-    Language.Japanese: "写真を選ぶ",
-    Language.Chinese: "從圖書館選擇",
-    Language.Spanish: "Escoge desde la librería",
-    Language.Korean: "라이브러리에서 선택하기"
+    Language.japanese: "写真を選ぶ",
+    Language.chinese: "從圖書館選擇",
+    Language.spanish: "Escoge desde la librería",
+    Language.korean: "라이브러리에서 선택하기"
 ]
 
 private let takePictureButtonTranslation =
 [
-    Language.Japanese: "撮影",
-    Language.Chinese: "拍照",
-    Language.Spanish: "Toma una foto",
-    Language.Korean: "사진 찍기"
+    Language.japanese: "撮影",
+    Language.chinese: "拍照",
+    Language.spanish: "Toma una foto",
+    Language.korean: "사진 찍기"
 ]
 
 private let translationHeaderTranslation =
 [
-    Language.Japanese: "翻訳:",
-    Language.Chinese: "翻譯:",
-    Language.Spanish: "Traducción:",
-    Language.Korean: "번역:"
+    Language.japanese: "翻訳:",
+    Language.chinese: "翻譯:",
+    Language.spanish: "Traducción:",
+    Language.korean: "번역:"
 ]
 
 private let playButtonTranslation =
 [
-    Language.Japanese: "再生",
-    Language.Chinese: "播放",
-    Language.Spanish: "Reproduce",
-    Language.Korean: "듣기"
+    Language.japanese: "再生",
+    Language.chinese: "播放",
+    Language.spanish: "Reproduce",
+    Language.korean: "듣기"
 ]
 
 private let generateVideoTranslation =
 [
-    Language.Japanese: "写真・音声付翻訳作成",
-    Language.Chinese: "製作視頻翻譯",
-    Language.Spanish: "Generar traducción de video",
-    Language.Korean: "비디오 번역 생성하기"
+    Language.japanese: "写真・音声付翻訳作成",
+    Language.chinese: "製作視頻翻譯",
+    Language.spanish: "Generar traducción de video",
+    Language.korean: "비디오 번역 생성하기"
 ]
 
 private let colorLabelTranslation =
 [
-    Language.Japanese: "文字色:",
-    Language.Chinese: "顏色:",
-    Language.Spanish: "Color:",
-    Language.Korean: "색:"
+    Language.japanese: "文字色:",
+    Language.chinese: "顏色:",
+    Language.spanish: "Color:",
+    Language.korean: "색:"
 ]
 
 private let colorChoices =
 [
-    UIColor.blackColor(),
-    UIColor.blueColor(),
-    UIColor.greenColor(),
-    UIColor.orangeColor(),
-    UIColor.purpleColor(),
-    UIColor.redColor(),
-    UIColor.whiteColor(),
-    UIColor.yellowColor()
+    UIColor.black,
+    UIColor.blue,
+    UIColor.green,
+    UIColor.orange,
+    UIColor.purple,
+    UIColor.red,
+    UIColor.white,
+    UIColor.yellow
 ]
 
 private let colorStringEnglish =
@@ -139,11 +139,11 @@ private let colorStringJapanese =
 
 private let colorStringChoices =
 [
-    Language.Spanish: colorStringSpanish,
-    Language.English: colorStringEnglish,
-    Language.Japanese: colorStringJapanese,
-    Language.Chinese: colorStringChinese,
-    Language.Korean: colorStringKorean
+    Language.spanish: colorStringSpanish,
+    Language.english: colorStringEnglish,
+    Language.japanese: colorStringJapanese,
+    Language.chinese: colorStringChinese,
+    Language.korean: colorStringKorean
 ]
 
 
@@ -173,25 +173,25 @@ class ImageShareViewController: UIViewController,
     var curColor: UIColor!
 
     // MARK: Actions
-    @IBAction func playTranslationOption(sender: UIButton)
+    @IBAction func playTranslationOption(_ sender: UIButton)
     {
         referencedController.startPlaybackAction(sender)
     }
     
-    @IBAction func takePictureAction(sender: UIButton)
+    @IBAction func takePictureAction(_ sender: UIButton)
     {
         let imagePicker = UIImagePickerController()
-        imagePicker.sourceType = .Camera
+        imagePicker.sourceType = .camera
         imagePicker.delegate = self
-        presentViewController(imagePicker, animated: true, completion: nil)
+        present(imagePicker, animated: true, completion: nil)
     }
     
-    @IBAction func chooseLibraryAction(sender: UIButton)
+    @IBAction func chooseLibraryAction(_ sender: UIButton)
     {
         let imagePicker = UIImagePickerController()
-        imagePicker.sourceType = .PhotoLibrary
+        imagePicker.sourceType = .photoLibrary
         imagePicker.delegate = self
-        presentViewController(imagePicker, animated: true, completion: nil)
+        present(imagePicker, animated: true, completion: nil)
     }
 
     override func viewDidLoad()
@@ -199,7 +199,7 @@ class ImageShareViewController: UIViewController,
         super.viewDidLoad()
         
         /* Changing the default color to blue */
-        curColor = UIColor.blueColor()
+        curColor = UIColor.blue
         colorPicker.selectRow(1, inComponent: 0, animated: false)
         
         /* Adding the Facebook banner */
@@ -208,10 +208,10 @@ class ImageShareViewController: UIViewController,
             let adView = FBAdView(placementID: "556114377906938_559339737584402",
                                 adSize: kFBAdSizeHeight50Banner,
                                 rootViewController: self)
-            adView.frame = CGRectMake(0,
-                                    self.view.frame.size.height-adView.frame.size.height,
-                                    adView.frame.size.width,
-                                    adView.frame.size.height)
+            adView.frame = CGRect(x: 0,
+                                    y: self.view.frame.size.height-adView.frame.size.height,
+                                    width: adView.frame.size.width,
+                                    height: adView.frame.size.height)
             adView.loadAd()
             self.view.addSubview(adView)
         }
@@ -220,21 +220,22 @@ class ImageShareViewController: UIViewController,
             bottomMargin.constant = 10
         }
         
+        
         let curLanguage = referencedController.curLanguage
         
-        if curLanguage != Language.English
+        if curLanguage != Language.english
         {
-            libraryButton.setTitle(libraryButtonTranslation[curLanguage],
-                                   forState: .Normal)
-            pictureButton.setTitle(takePictureButtonTranslation[curLanguage],
-                                   forState: .Normal)
-            generateButton.setTitle(generateVideoTranslation[curLanguage],
-                                    forState: .Normal)
-            playButton.setTitle(playButtonTranslation[curLanguage],
-                                    forState: .Normal)
-            translationLabel.text = translationHeaderTranslation[curLanguage]
-            directionsLabel.text = shareDescriptionTranslation[curLanguage]
-            colorLabel.text = colorLabelTranslation[curLanguage]
+            libraryButton.setTitle(libraryButtonTranslation[curLanguage!],
+                                   for: UIControlState())
+            pictureButton.setTitle(takePictureButtonTranslation[curLanguage!],
+                                   for: UIControlState())
+            generateButton.setTitle(generateVideoTranslation[curLanguage!],
+                                    for: UIControlState())
+            playButton.setTitle(playButtonTranslation[curLanguage!],
+                                    for: UIControlState())
+            translationLabel.text = translationHeaderTranslation[curLanguage!]
+            directionsLabel.text = shareDescriptionTranslation[curLanguage!]
+            colorLabel.text = colorLabelTranslation[curLanguage!]
         }
         
         translationTextField.text = referencedController.curTrans.translatedText
@@ -257,70 +258,70 @@ class ImageShareViewController: UIViewController,
     }
     
     // MARK: UIImagePickerControllerDelegate
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject])
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])
     {
         let selectedImage = info[UIImagePickerControllerOriginalImage] as! UIImage
         petImage.image = selectedImage
         
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
-    func imagePickerControllerDidCancel(picker: UIImagePickerController)
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController)
     {
-         dismissViewControllerAnimated(true, completion: nil)
+         dismiss(animated: true, completion: nil)
     }
     
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
         if segue.identifier == "showPreview"
         {
-            let videoPreviewController:VideoPreviewViewController = segue.destinationViewController as! VideoPreviewViewController
+            let videoPreviewController:VideoPreviewViewController = segue.destination as! VideoPreviewViewController
             videoPreviewController.referencedController = self
         }
     }
     
     // MARK: UITextFieldDelegate
-    func textFieldShouldReturn(textField: UITextField) -> Bool
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool
     {
         translationTextField.resignFirstResponder()
         return true
     }
     
-    func textFieldDidEndEditing(textField: UITextField)
+    func textFieldDidEndEditing(_ textField: UITextField)
     {
         let curTrans = referencedController.curTrans
         
-        if !textField.text!.isEmpty && curTrans.translatedText != textField.text
+        if !textField.text!.isEmpty && curTrans?.translatedText != textField.text
         {
-            let indexOfTrans = referencedController.translations.indexOf(curTrans)
-            curTrans.translatedText = textField.text
+            let indexOfTrans = referencedController.translations.index(of: curTrans!)
+            curTrans?.translatedText = textField.text
             
             if(indexOfTrans != nil)
             {
-                referencedController.translations.removeAtIndex(indexOfTrans!)
-                referencedController.translations.append(curTrans)
+                referencedController.translations.remove(at: indexOfTrans!)
+                referencedController.translations.append(curTrans!)
                 referencedController.curTrans = curTrans
-                referencedController.translationLabel.text = curTrans.translatedText
+                referencedController.translationLabel.text = curTrans?.translatedText
             }
         }
     }
     
     // MARK: UIPickerViewDelegate
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int
+    func numberOfComponentsInPickerView(_ pickerView: UIPickerView) -> Int
     {
         return 1
     }
     
     // The number of rows of data
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int
     {
         return colorChoices.count
     }
     
-    func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView?) -> UIView
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView
     {
         var pickerLabel = view as? UILabel;
         
@@ -329,8 +330,8 @@ class ImageShareViewController: UIViewController,
             pickerLabel = UILabel()
             
             pickerLabel?.font = UIFont(name: "Futara", size: 16)
-            pickerLabel?.textColor = UIColor.whiteColor()
-            pickerLabel?.textAlignment = NSTextAlignment.Center
+            pickerLabel?.textColor = UIColor.white
+            pickerLabel?.textAlignment = NSTextAlignment.center
         }
         
         pickerLabel?.text = colorStringChoices[referencedController.curLanguage]![row]
@@ -338,7 +339,7 @@ class ImageShareViewController: UIViewController,
         
     }
     
-    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
     {
         curColor = colorChoices[row]
         print("ImageShare: Color changed to \(colorStringEnglish[row])")

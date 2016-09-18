@@ -428,23 +428,23 @@ private var possibleGenericKoreanTranslations =
 
 enum Language: Int, CustomStringConvertible
 {
-    case English = 0
-    case Spanish = 1
-    case Japanese = 2
-    case Chinese = 3
-    case Korean = 4
+    case english = 0
+    case spanish = 1
+    case japanese = 2
+    case chinese = 3
+    case korean = 4
 
-    static var count: Int { return Language.Korean.hashValue + 1}
+    static var count: Int { return Language.korean.hashValue + 1}
     
     var description: String
     {
         switch self
         {
-            case .English: return "English"
-            case .Japanese   : return "日本語"
-            case .Spanish : return "Español"
-            case.Korean : return "한국어"
-            case .Chinese : return "中文"
+            case .english: return "English"
+            case .japanese   : return "日本語"
+            case .spanish : return "Español"
+            case.korean : return "한국어"
+            case .chinese : return "中文"
         }
     }
 }
@@ -453,16 +453,17 @@ class PetTranslation: NSObject, NSCoding
 {
     // MARK: Properties
     var translatedText: String!
-    var audioURL: NSURL?
+    var audioURL: URL?
     var transLanguage: Language!
-    var dateRecorded: NSDate!
+    var dateRecorded: Date!
     var duration: Float!
+    
     override var description: String
     {
-        let dateFormatter = NSDateFormatter()
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MM-dd-yyyy"
-        let dateRecordedString = dateFormatter.stringFromDate(self.dateRecorded)
-        return "\(dateRecordedString): \(translatedText)"
+        let dateRecordedString = dateFormatter.string(from: self.dateRecorded)
+        return "\(dateRecordedString): \(translatedText!)"
     }
     
     // MARK: Types
@@ -477,8 +478,8 @@ class PetTranslation: NSObject, NSCoding
     
     
     // MARK: Initialization
-    init?(audioURL: NSURL, transLanguage: Language, duration: Float,
-          dateRecorded: NSDate)
+    init?(audioURL: URL, transLanguage: Language, duration: Float,
+          dateRecorded: Date)
     {
         super.init()
         
@@ -493,7 +494,7 @@ class PetTranslation: NSObject, NSCoding
         super.init()
         
         self.audioURL = nil
-        self.transLanguage = Language.English
+        self.transLanguage = Language.english
         self.translatedText = ""
     }
     
@@ -505,15 +506,15 @@ class PetTranslation: NSObject, NSCoding
         
         switch transLanguage.rawValue
         {
-        case Language.Japanese.rawValue:
+        case Language.japanese.rawValue:
             translationBank = possibleGenericJapaneseTranslations
-        case Language.English.rawValue:
+        case Language.english.rawValue:
             translationBank = possibleGenericEnglishTranslations
-        case Language.Chinese.rawValue:
+        case Language.chinese.rawValue:
             translationBank = possibleGenericChineseTranslations
-        case Language.Spanish.rawValue:
+        case Language.spanish.rawValue:
             translationBank = possibleGenericSpanishTranslations
-        case Language.Korean.rawValue:
+        case Language.korean.rawValue:
             translationBank = possibleGenericKoreanTranslations
         default:
             print("PetTranslation: ERROR - Unsupported Language!")
@@ -532,22 +533,22 @@ class PetTranslation: NSObject, NSCoding
     }
     
     //MARK: NSCoding
-    func encodeWithCoder(aCoder: NSCoder)
+    func encode(with aCoder: NSCoder)
     {
-        aCoder.encodeObject(audioURL, forKey: PropertyKey.audioURLText)
-        aCoder.encodeInteger(transLanguage.rawValue, forKey: PropertyKey.transLanguageText)
-        aCoder.encodeObject(translatedText, forKey: PropertyKey.translatedText)
-        aCoder.encodeFloat(duration, forKey: PropertyKey.durationText)
-        aCoder.encodeObject(dateRecorded, forKey: PropertyKey.dateRecordedText)
+        aCoder.encode(audioURL, forKey: PropertyKey.audioURLText)
+        aCoder.encode(transLanguage.rawValue, forKey: PropertyKey.transLanguageText)
+        aCoder.encode(translatedText, forKey: PropertyKey.translatedText)
+        aCoder.encode(duration, forKey: PropertyKey.durationText)
+        aCoder.encode(dateRecorded, forKey: PropertyKey.dateRecordedText)
     }
     
     required convenience init?(coder aDecoder: NSCoder)
     {
-        let decodedURL = aDecoder.decodeObjectForKey(PropertyKey.audioURLText) as! NSURL
-        let decodedLanguage = aDecoder.decodeIntegerForKey(PropertyKey.transLanguageText)
-        let decodededText = aDecoder.decodeObjectForKey(PropertyKey.translatedText) as! String
-        let decodedDuration = aDecoder.decodeFloatForKey(PropertyKey.durationText)
-        let decodedDate = aDecoder.decodeObjectForKey(PropertyKey.dateRecordedText) as! NSDate
+        let decodedURL = aDecoder.decodeObject(forKey: PropertyKey.audioURLText) as! URL
+        let decodedLanguage = aDecoder.decodeInteger(forKey: PropertyKey.transLanguageText)
+        let decodededText = aDecoder.decodeObject(forKey: PropertyKey.translatedText) as! String
+        let decodedDuration = aDecoder.decodeObject(forKey: PropertyKey.durationText) as! Float
+        let decodedDate = aDecoder.decodeObject(forKey: PropertyKey.dateRecordedText) as! Date
         
         self.init(audioURL: decodedURL, transLanguage: Language.init(rawValue: decodedLanguage)!,
                   duration: decodedDuration, dateRecorded: decodedDate)
@@ -556,7 +557,7 @@ class PetTranslation: NSObject, NSCoding
     }
     
     // MARK: Archiving Paths:
-    static let DocumentsDirectory = NSFileManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first!
-    static let ArchiveURL = DocumentsDirectory.URLByAppendingPathComponent("petTranslations")
+    static let DocumentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!
+    static let ArchiveURL = DocumentsDirectory.appendingPathComponent("petTranslations")
     
 }

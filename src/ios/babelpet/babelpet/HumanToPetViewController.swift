@@ -20,23 +20,23 @@ private var freakPitches: [Float] = [-2400, 0, 2400]
 
 enum SpeakingStyle: Int, CustomStringConvertible
 {
-    case Male = 0
-    case Female = 1
-    case Tuba = 2
-    case Chipmunk = 3
-    case Freak = 4
+    case male = 0
+    case female = 1
+    case tuba = 2
+    case chipmunk = 3
+    case freak = 4
     
-    static var count: Int { return SpeakingStyle.Freak.hashValue + 1}
+    static var count: Int { return SpeakingStyle.freak.hashValue + 1}
     
     var description: String
     {
         switch self
         {
-        case .Male: return "Male"
-        case .Female   : return "Female"
-        case .Tuba: return "Tuba"
-        case .Chipmunk   : return "Chipmunk"
-        case .Freak: return "Freak (Really Annoying)"
+        case .male: return "Male"
+        case .female   : return "Female"
+        case .tuba: return "Tuba"
+        case .chipmunk   : return "Chipmunk"
+        case .freak: return "Freak (Really Annoying)"
         }
     }
 }
@@ -56,47 +56,49 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     var transactionInProgress = false
     
     // MARK: Local Variables
-    var audioURL: NSURL!
-    var curOriginalURL: NSURL!
+    var audioURL: URL!
+    var curOriginalURL: URL!
     var referencedController: MainMenuViewController!
     var audioRecorder: AVAudioRecorder!
     var curPower = Float(0)
     var curRecordingLength = Double(0)
-    var curStyle: SpeakingStyle! = .Male
+    var curStyle: SpeakingStyle! = .male
     var bufferList = [AVAudioPCMBuffer]()
     var completionInt = 0
     var audioEngine = AVAudioEngine()
     var playerNode = AVAudioPlayerNode()
     var curTransition = 0
     var translatedFile: AVAudioFile!
-    var translatedURL: NSURL!
-    var timer = NSTimer()
+    var translatedURL: URL!
+    var timer = Timer()
     var audioPlayer: AVAudioPlayer!
     var curStylePitch: [Float]!
     let powerThreshold = Float(-20.0)
     let pitch = AVAudioUnitTimePitch()
     let numOfTransitions = 3
     let timeoutDuration = 10.0
+    let barkSoundURL =  Bundle.main.url(forResource: "bark", withExtension: "aiff")!
+    var buttonEffectPlayer = AVAudioPlayer()
     
     // MARK: IAPurchaseViewController
-    func paymentQueue(queue: SKPaymentQueue,
+    func paymentQueue(_ queue: SKPaymentQueue,
                       updatedTransactions transactions: [SKPaymentTransaction])
     {
         for transaction in transactions
         {
             switch transaction.transactionState
             {
-            case SKPaymentTransactionState.Purchased:
+            case SKPaymentTransactionState.purchased:
                 print("HumanToPet: Transaction completed successfully.")
-                SKPaymentQueue.defaultQueue().finishTransaction(transaction)
+                SKPaymentQueue.default().finishTransaction(transaction)
                 self.didPurchasePremiumSuccessfully()
                 transactionInProgress = false
-            case SKPaymentTransactionState.Failed:
+            case SKPaymentTransactionState.failed:
                 print("HumanToPet: ERROR - Transaction Failed");
-                SKPaymentQueue.defaultQueue().finishTransaction(transaction)
+                SKPaymentQueue.default().finishTransaction(transaction)
                 transactionInProgress = false
                 self.didPurchasePremiumFail()
-                curStyle = SpeakingStyle.Female
+                curStyle = SpeakingStyle.female
             default:
                 print("HumanToPet: Status Code \(transaction.transactionState.rawValue)")
             }
@@ -106,22 +108,22 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     func didPurchasePremiumSuccessfully()
     {
         MainMenuViewController.isPremiumPurchased = true
-        let defaultSettings = NSUserDefaults.standardUserDefaults()
-        defaultSettings.setBool(true,
+        let defaultSettings = UserDefaults.standard
+        defaultSettings.set(true,
                                 forKey: MainMenuViewController.premiumIdentifier)
         
         let alertController = UIAlertController(title: "Babel Pet Premium",
                                                 message: MainMenuViewController.premiumPurchased,
-                                                preferredStyle: .Alert)
+                                                preferredStyle: .alert)
         
         alertController.addAction(UIAlertAction(title: "Ok",
-            style: .Default,
+            style: .default,
             handler:
             { (action: UIAlertAction!) in
                 print("PetToHuman: Premium purchased dialog displayed.")
         }))
         
-        self.presentViewController(alertController,
+        self.present(alertController,
                                    animated: true,
                                    completion: nil)
         
@@ -132,16 +134,16 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         
         let alertController = UIAlertController(title: "Unlock Babel Pet Premium",
                                                 message: "Failed to complete transaction!",
-                                                preferredStyle: .Alert)
+                                                preferredStyle: .alert)
         
         alertController.addAction(UIAlertAction(title: "Ok",
-            style: .Default,
+            style: .default,
             handler:
             { (action: UIAlertAction!) in
                 print("HumanToPet: Premium purchased dialog displayed.")
         }))
         
-        self.presentViewController(alertController,
+        self.present(alertController,
                                    animated: true,
                                    completion: nil)
         
@@ -150,16 +152,16 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     }
     
     // MARK: Functions
-    func downgradeHandler(alert: UIAlertAction!)
+    func downgradeHandler(_ alert: UIAlertAction!)
     {
-        curStyle = SpeakingStyle.Female
+        curStyle = SpeakingStyle.female
         genderPicker.selectRow(0, inComponent: 0, animated: true)
         pitch.rate = 3
         print("HumanToPet: Gender changed to \(curStyle.description)")
         print("HumanToPet: Premium upgrade declined")
     }
     
-    func upgradeHandler(alert: UIAlertAction!)
+    func upgradeHandler(_ alert: UIAlertAction!)
     {
         /* Purchase premium here */
         print("PetToHuman: Premium upgrade initiated")
@@ -176,8 +178,8 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
             return
         }
         
-        let payment = SKPayment(product: referencedController.productsArray[0])
-        SKPaymentQueue.defaultQueue().addPayment(payment)
+        let payment = SKPayment(product: referencedController.productsArray[0]!)
+        SKPaymentQueue.default().add(payment)
         self.transactionInProgress = true
     }
     
@@ -192,7 +194,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     /* Gets the document directory to save the transalted file in */
     func getDocumentsDirectory() -> String
     {
-        let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
+        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let documentsDirectory = paths[0]
         return documentsDirectory
     }
@@ -213,12 +215,12 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
             
             let curIndex = Int(arc4random_uniform(UInt32(bufferList.count)))
             playerNode.scheduleBuffer(bufferList[curIndex], completionHandler: audioBufferCallBack)
-            bufferList.removeAtIndex(curIndex)
+            bufferList.remove(at: curIndex)
             playerNode.play()
         }
         else
         {
-            pitch.removeTapOnBus(0)
+            pitch.removeTap(onBus: 0)
             completionInt = 1
         }
     }
@@ -252,9 +254,9 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
             for framePos in 0...(numberOfSegments-1)
             {
                 audioFile.framePosition = Int64(framesPerSegment * framePos)
-                let curBuffer = AVAudioPCMBuffer(PCMFormat: audioFile.processingFormat,
+                let curBuffer = AVAudioPCMBuffer(pcmFormat: audioFile.processingFormat,
                                                 frameCapacity: framesPerSegment)
-                try audioFile.readIntoBuffer(curBuffer)
+                try audioFile.read(into: curBuffer)
                 bufferList.append(curBuffer)
             }
         }
@@ -270,7 +272,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         
         let curIndex = Int(arc4random_uniform(UInt32(bufferList.count)))
         playerNode.scheduleBuffer(bufferList[curIndex], completionHandler: audioBufferCallBack)
-        bufferList.removeAtIndex(curIndex)
+        bufferList.remove(at: curIndex)
         curTransition = 0
         
         /* Since we want all translations to be consistent, we should
@@ -278,21 +280,21 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         do
         {
             try translatedFile = AVAudioFile(forWriting: translatedURL,
-                                    settings: audioEngine.inputNode!.inputFormatForBus(0).settings)
+                                    settings: audioEngine.inputNode!.inputFormat(forBus: 0).settings)
         }
         catch
         {
             print("HumanToPet: ERROR - Could not write file")
         }
         
-        pitch.installTapOnBus(0, bufferSize: 1024,
+        pitch.installTap(onBus: 0, bufferSize: 1024,
                                               format: format)
         {
             (buffer, time) -> Void in
             
             do
             {
-                try self.translatedFile.writeFromBuffer(buffer)
+                try self.translatedFile.write(from: buffer)
             }
             catch
             {
@@ -305,15 +307,15 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         /* Setting the speed */
         switch curStyle.rawValue
         {
-            case SpeakingStyle.Male.rawValue:
+            case SpeakingStyle.male.rawValue:
                 curStylePitch = maleDogPitches
-            case SpeakingStyle.Female.rawValue:
+            case SpeakingStyle.female.rawValue:
                 curStylePitch = femaleDogPitches
-            case SpeakingStyle.Chipmunk.rawValue:
+            case SpeakingStyle.chipmunk.rawValue:
                 curStylePitch = chipmunkPitches
-            case SpeakingStyle.Tuba.rawValue:
+            case SpeakingStyle.tuba.rawValue:
                 curStylePitch = tubaPitches
-            case SpeakingStyle.Freak.rawValue:
+            case SpeakingStyle.freak.rawValue:
                 curStylePitch = freakPitches
             default:
                 curStylePitch = maleDogPitches
@@ -341,12 +343,12 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         }
         
         /* Setting the buttons back */
-        recordButton.setTitle("Press to Record", forState: .Normal)
-        playButton.enabled = true
+        recordButton.setTitle("Press to Record", for: UIControlState())
+        playButton.isEnabled = true
     }
     
     /* Cleans up the recording */
-    func cleanUpRecording(success success: Bool)
+    func cleanUpRecording(success: Bool)
     {
         if audioRecorder != nil
         {
@@ -360,22 +362,22 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         {
             print("HumanToPet: Power failed to fall within volume threshold")
             statusLabel.text = "I can't hear you! Speak up!"
-            playButton.enabled = false
-            recordButton.setTitle("Press to Record", forState: .Normal)
+            playButton.isEnabled = false
+            recordButton.setTitle("Press to Record", for: UIControlState())
             return
         }
         
         do
         {
-            let originalVoice = try AVAudioPlayer(contentsOfURL: audioURL)
+            let originalVoice = try AVAudioPlayer(contentsOf: audioURL)
             print("HumanToPet: Duration is \(originalVoice.duration)")
             
             if originalVoice.duration < 1.5
             {
                 print("HumanToPet: ERROR - duration not long enough!")
                 statusLabel.text = "What was that?! Speak longer!"
-                playButton.enabled = false
-                recordButton.setTitle("Press to Record", forState: .Normal)
+                playButton.isEnabled = false
+                recordButton.setTitle("Press to Record", for: UIControlState())
                 return
             }
             
@@ -391,7 +393,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         if !success
         {
             print("HumanToPet: ERROR - Failed recording!")
-            playButton.enabled = false
+            playButton.isEnabled = false
         }
 
     }
@@ -400,7 +402,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     {
         super.viewDidLoad()
         
-        SKPaymentQueue.defaultQueue().addTransactionObserver(self)
+        SKPaymentQueue.default().add(self)
         
         /* Adding the Facebook banner */
         if !MainMenuViewController.isPremiumPurchased
@@ -409,10 +411,10 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
             let adView = FBAdView(placementID: "556114377906938_559339737584402",
                                   adSize: kFBAdSizeHeight50Banner,
                                   rootViewController: self)
-            adView.frame = CGRectMake(0,
-                                    self.view.frame.size.height-adView.frame.size.height,
-                                    adView.frame.size.width,
-                                    adView.frame.size.height)
+            adView.frame = CGRect(x: 0,
+                                    y: self.view.frame.size.height-adView.frame.size.height,
+                                    width: adView.frame.size.width,
+                                    height: adView.frame.size.height)
             adView.loadAd()
             self.view.addSubview(adView)
         }
@@ -421,17 +423,19 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
             bottomMargin.constant = 10
         }
         
-        recordButton.setTitle("Press to Record", forState: .Normal)
+        self.title = "Human to Pet"
+        
+        recordButton.setTitle("Press to Record", for: UIControlState())
         genderPicker.delegate = self
         
         /* Setting up the audio engine */
-        audioEngine.attachNode(playerNode)
+        audioEngine.attach(playerNode)
         pitch.rate = 0.5
         pitch.overlap = 20
-        audioEngine.attachNode(pitch)
+        audioEngine.attach(pitch)
         
         /* Configuring the file for translation */
-        translatedURL = NSURL(string: getDocumentsDirectory().stringByAppendingString("/petTrans.caf"))
+        translatedURL = URL(string: getDocumentsDirectory() + "/petTrans.caf")
         
         /* Config the buttons to auto-size */
         recordButton.titleLabel?.adjustsFontSizeToFitWidth = true
@@ -441,13 +445,23 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     override func didReceiveMemoryWarning()
     {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     //MARK: Actions
-    @IBAction func recordPressed(sender: UIButton)
+    @IBAction func recordPressed(_ sender: UIButton)
     {
         timer.invalidate()
+        
+        do
+        {
+            buttonEffectPlayer = try AVAudioPlayer(contentsOf: barkSoundURL)
+            buttonEffectPlayer.prepareToPlay()
+            buttonEffectPlayer.play()
+        }
+        catch
+        {
+            print("MainMenu: ERROR - Could not play effect")
+        }
         
         /* If we are in the middle of the recording, clean it up */
         if audioRecorder != nil
@@ -455,27 +469,27 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
             /* Updating the meter and discarding any recording which is too
              quiet */
             audioRecorder.updateMeters()
-            curPower = audioRecorder.peakPowerForChannel(0)
+            curPower = audioRecorder.peakPower(forChannel: 0)
             print("HumanToPet: Peak power is \(curPower)")
             
             curOriginalURL = audioRecorder.url
-            audioEngine.inputNode?.removeTapOnBus(0)
+            audioEngine.inputNode?.removeTap(onBus: 0)
             
             cleanUpRecording(success: true)
             print("HumanToPet: Recording finished without issue")
-            playButton.enabled = true
+            playButton.isEnabled = true
             return
         }
         
         /* Otherwise we are a new recording */
-        let audioPath = getDocumentsDirectory().stringByAppendingString("/petBabelHuman.m4a")
-        audioURL = NSURL(fileURLWithPath: audioPath)
+        let audioPath = getDocumentsDirectory() + "/petBabelHuman.m4a"
+        audioURL = URL(fileURLWithPath: audioPath)
         
         do
         {
-            audioRecorder = try AVAudioRecorder(URL: audioURL, settings: referencedController.audioSettings)
+            audioRecorder = try AVAudioRecorder(url: audioURL, settings: referencedController.audioSettings)
             audioRecorder.delegate = self
-            audioRecorder.meteringEnabled = true
+            audioRecorder.isMeteringEnabled = true
             
             if !audioRecorder.record()
             {
@@ -483,14 +497,14 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
                 return
             }
             
-            playButton.enabled = false
-            timer = NSTimer.scheduledTimerWithTimeInterval(timeoutDuration,
+            playButton.isEnabled = false
+            timer = Timer.scheduledTimer(timeInterval: timeoutDuration,
                                                            target: self,
                                                            selector: #selector(HumanToPetViewController.recordingTimedOut),
                                                            userInfo: nil,
                                                            repeats: false)
             print("HumanToPet: Recording started...")
-            recordButton.setTitle("Press to Stop", forState: .Normal)
+            recordButton.setTitle("Press to Stop", for: UIControlState())
             
         }
         catch
@@ -502,14 +516,14 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     }
     
     /* Play pressed- disable buttons and playback translation.  */
-    @IBAction func playPressed(sender: UIButton)
+    @IBAction func playPressed(_ sender: UIButton)
     {
-        recordButton.enabled = false
-        playButton.enabled = false
+        recordButton.isEnabled = false
+        playButton.isEnabled = false
         
         do
         {
-            let originalVoice = try AVAudioPlayer(contentsOfURL: self.translatedURL!)
+            let originalVoice = try AVAudioPlayer(contentsOf: self.translatedURL!)
             audioPlayer = originalVoice
             audioPlayer.delegate = self
             audioPlayer.play()
@@ -517,12 +531,12 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         catch
         {
             print("HumanToPet: Playback failed")
-            playButton.enabled = true
+            playButton.isEnabled = true
         }
     }
     
     // MARK: AVAudioRecorderDelegate
-    func audioRecorderDidFinishRecording(recorder: AVAudioRecorder, successfully flag: Bool)
+    func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool)
     {
         if !flag
         {
@@ -533,7 +547,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     }
     
     // MARK: AVAudioPlayerDelegate
-    func audioPlayerDidFinishPlaying(player: AVAudioPlayer, successfully flag: Bool)
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool)
     {
         if flag
         {
@@ -544,24 +558,24 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
             print("PetToHuman: ERROR - Issue with playback")
         }
         
-        recordButton.enabled = true
-        playButton.enabled = true
+        recordButton.isEnabled = true
+        playButton.isEnabled = true
 
     }
     
     // MARK: UIPickerViewDelegate
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int
+    func numberOfComponentsInPickerView(_ pickerView: UIPickerView) -> Int
     {
         return 1
     }
     
     // The number of rows of data
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int
     {
         return SpeakingStyle.count
     }
     
-    func pickerView(pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusingView view: UIView?) -> UIView
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView
     {
         var pickerLabel = view as? UILabel;
         
@@ -570,8 +584,8 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
             pickerLabel = UILabel()
             
             pickerLabel?.font = UIFont(name: "Futara", size: 16)
-            pickerLabel?.textColor = UIColor.whiteColor()
-            pickerLabel?.textAlignment = NSTextAlignment.Center
+            pickerLabel?.textColor = UIColor.white
+            pickerLabel?.textAlignment = NSTextAlignment.center
         }
         
         pickerLabel?.text = SpeakingStyle(rawValue: row)?.description
@@ -579,28 +593,28 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
 
     }
     
-    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
     {
         /* Checking to make sure premium is unlocked */
         if !MainMenuViewController.isPremiumPurchased && row != 0
         {
             let alertController = UIAlertController(title: "Unlock Premium Babel Pet",
                                                     message: MainMenuViewController.premiumMessage,
-                                                    preferredStyle: .Alert)
+                                                    preferredStyle: .alert)
             
             // Create the actions
             let okAction = UIAlertAction(title: "Upgrade",
-                                         style: UIAlertActionStyle.Default,
+                                         style: UIAlertActionStyle.default,
                                          handler: upgradeHandler)
             let cancelAction = UIAlertAction(title: "Cancel",
-                                             style: UIAlertActionStyle.Cancel,
+                                             style: UIAlertActionStyle.cancel,
                                              handler: downgradeHandler)
             
             // Add the actions
             alertController.addAction(okAction)
             alertController.addAction(cancelAction)
             
-            self.presentViewController(alertController,
+            self.present(alertController,
                                        animated: true,
                                        completion: nil)
             
@@ -611,15 +625,15 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         
         switch curStyle.rawValue
         {
-        case SpeakingStyle.Male.rawValue:
+        case SpeakingStyle.male.rawValue:
             pitch.rate = 0.5
-        case SpeakingStyle.Female.rawValue:
+        case SpeakingStyle.female.rawValue:
             pitch.rate = 0.6
-        case SpeakingStyle.Chipmunk.rawValue:
+        case SpeakingStyle.chipmunk.rawValue:
             pitch.rate = 2
-        case SpeakingStyle.Tuba.rawValue:
+        case SpeakingStyle.tuba.rawValue:
             pitch.rate = 0.125
-        case SpeakingStyle.Freak.rawValue:
+        case SpeakingStyle.freak.rawValue:
             pitch.rate = 0.06
         default:
             pitch.rate = 0.5

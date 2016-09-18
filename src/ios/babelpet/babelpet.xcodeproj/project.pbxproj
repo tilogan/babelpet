@@ -17,6 +17,10 @@
 		0C1F54E31D334D590022AC65 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0C1F54E11D334D590022AC65 /* LaunchScreen.storyboard */; };
 		0C1F54EE1D334D590022AC65 /* babelpetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C1F54ED1D334D590022AC65 /* babelpetTests.swift */; };
 		0C41CB2D1D43C1830001BEE9 /* HumanToPetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C41CB2C1D43C1830001BEE9 /* HumanToPetViewController.swift */; };
+		0C4BCF971D8EF60600A9CA5F /* bark.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 0C4BCF931D8EF60600A9CA5F /* bark.aiff */; };
+		0C4BCF981D8EF60600A9CA5F /* melody.mid in Resources */ = {isa = PBXBuildFile; fileRef = 0C4BCF941D8EF60600A9CA5F /* melody.mid */; };
+		0C4BCF991D8EF60600A9CA5F /* meow.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 0C4BCF951D8EF60600A9CA5F /* meow.aiff */; };
+		0C4BCF9A1D8EF60600A9CA5F /* squeak.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 0C4BCF961D8EF60600A9CA5F /* squeak.aiff */; };
 		0C69C7191D4AE98B00E331AF /* ImageShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C69C7181D4AE98B00E331AF /* ImageShareViewController.swift */; };
 		0C69C71B1D4AFF1000E331AF /* VideoPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C69C71A1D4AFF1000E331AF /* VideoPreviewViewController.swift */; };
 		0C8F62C01D5E7B6C009DBDBE /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C8F62BF1D5E7B6C009DBDBE /* AVFoundation.framework */; };
@@ -57,6 +61,10 @@
 		0C1F54ED1D334D590022AC65 /* babelpetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = babelpetTests.swift; sourceTree = "<group>"; };
 		0C1F54EF1D334D590022AC65 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0C41CB2C1D43C1830001BEE9 /* HumanToPetViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HumanToPetViewController.swift; sourceTree = "<group>"; };
+		0C4BCF931D8EF60600A9CA5F /* bark.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = bark.aiff; sourceTree = "<group>"; };
+		0C4BCF941D8EF60600A9CA5F /* melody.mid */ = {isa = PBXFileReference; lastKnownFileType = audio.midi; path = melody.mid; sourceTree = "<group>"; };
+		0C4BCF951D8EF60600A9CA5F /* meow.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = meow.aiff; sourceTree = "<group>"; };
+		0C4BCF961D8EF60600A9CA5F /* squeak.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = squeak.aiff; sourceTree = "<group>"; };
 		0C69C7181D4AE98B00E331AF /* ImageShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageShareViewController.swift; sourceTree = "<group>"; };
 		0C69C71A1D4AFF1000E331AF /* VideoPreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPreviewViewController.swift; sourceTree = "<group>"; };
 		0C8F62BF1D5E7B6C009DBDBE /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -122,6 +130,7 @@
 		0C1F54D71D334D590022AC65 /* babelpet */ = {
 			isa = PBXGroup;
 			children = (
+				0C4BCF921D8EF57800A9CA5F /* sounds */,
 				0C8F62D71D69EB01009DBDBE /* TranslationTableViewCell.swift */,
 				0C1F54D81D334D590022AC65 /* AppDelegate.swift */,
 				0C1F54DA1D334D590022AC65 /* BabelPetViewController.swift */,
@@ -146,6 +155,17 @@
 				0C1F54EF1D334D590022AC65 /* Info.plist */,
 			);
 			path = babelpetTests;
+			sourceTree = "<group>";
+		};
+		0C4BCF921D8EF57800A9CA5F /* sounds */ = {
+			isa = PBXGroup;
+			children = (
+				0C4BCF931D8EF60600A9CA5F /* bark.aiff */,
+				0C4BCF941D8EF60600A9CA5F /* melody.mid */,
+				0C4BCF951D8EF60600A9CA5F /* meow.aiff */,
+				0C4BCF961D8EF60600A9CA5F /* squeak.aiff */,
+			);
+			name = sounds;
 			sourceTree = "<group>";
 		};
 		0C8F62BE1D5E7B61009DBDBE /* Frameworks */ = {
@@ -210,15 +230,19 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Shintako LLC";
 				TargetAttributes = {
 					0C1F54D41D334D580022AC65 = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = H95N6X5X8Q;
+						LastSwiftMigration = 0800;
 					};
 					0C1F54E81D334D590022AC65 = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = H95N6X5X8Q;
+						LastSwiftMigration = 0800;
+						ProvisioningStyle = Automatic;
 						TestTargetID = 0C1F54D41D334D580022AC65;
 					};
 				};
@@ -247,7 +271,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0C4BCF981D8EF60600A9CA5F /* melody.mid in Resources */,
 				0C1F54E31D334D590022AC65 /* LaunchScreen.storyboard in Resources */,
+				0C4BCF971D8EF60600A9CA5F /* bark.aiff in Resources */,
+				0C4BCF991D8EF60600A9CA5F /* meow.aiff in Resources */,
+				0C4BCF9A1D8EF60600A9CA5F /* squeak.aiff in Resources */,
 				0C1F54E01D334D590022AC65 /* Assets.xcassets in Resources */,
 				0C1F54DE1D334D590022AC65 /* Main.storyboard in Resources */,
 			);
@@ -331,8 +359,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -377,8 +407,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -397,6 +429,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -408,16 +441,19 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = H95N6X5X8Q;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = babelpet/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ShintakoLLC.babelpet;
 				PRODUCT_NAME = "Babel Pet";
 				SWIFT_OBJC_BRIDGING_HEADER = "babelpet/babelpet-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -427,15 +463,18 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEVELOPMENT_TEAM = H95N6X5X8Q;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = babelpet/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ShintakoLLC.babelpet;
 				PRODUCT_NAME = "Babel Pet";
 				SWIFT_OBJC_BRIDGING_HEADER = "babelpet/babelpet-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -443,11 +482,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = H95N6X5X8Q;
 				INFOPLIST_FILE = babelpetTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ShintakoLLC.babelpetTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/babelpet.app/babelpet";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Babel Pet.app/Babel Pet";
 			};
 			name = Debug;
 		};
@@ -455,11 +497,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = H95N6X5X8Q;
 				INFOPLIST_FILE = babelpetTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ShintakoLLC.babelpetTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/babelpet.app/babelpet";
+				SWIFT_VERSION = 3.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Babel Pet.app/Babel Pet";
 			};
 			name = Release;
 		};

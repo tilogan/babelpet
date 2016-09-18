@@ -14,9 +14,9 @@ import StoreKit
 class MainMenuViewController: UIViewController, SKProductsRequestDelegate
 {
     // MARK: Actions
-    @IBAction func shintakoPressed(sender: UITapGestureRecognizer)
+    @IBAction func shintakoPressed(_ sender: UITapGestureRecognizer)
     {
-        UIApplication.sharedApplication().openURL(NSURL(string: "http://www.shintako.com")!)
+        UIApplication.shared.openURL(URL(string: "http://www.shintako.com")!)
     }
     
     // MARK: Static Variables
@@ -26,14 +26,12 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate
     static let premiumPurchased = "Upgrade to Babel Pet Premium successful! You may need to restart the application for changes to take full effect."
     
     // MARK: Variables for premium purchase
-    var productIDs: Array<String!> = []
-    var productsArray: Array<SKProduct!> = []
+    var productIDs: Array<String> = []
+    var productsArray: Array<SKProduct?> = []
     
     // MARK: Properties
     @IBOutlet weak var stackView: UIStackView!
     @IBOutlet weak var bottomMargin: NSLayoutConstraint!
-
-
     
     // MARK: Audio Engine
     var recordingSession: AVAudioSession!
@@ -42,8 +40,11 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate
             AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
             AVSampleRateKey: 48000.0,
             AVNumberOfChannelsKey: 1 as NSNumber,
-            AVEncoderAudioQualityKey: AVAudioQuality.High.rawValue
-    ]
+            AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
+    ] as [String : Any]
+    let barkSoundURL =  Bundle.main.url(forResource: "bark", withExtension: "aiff")!
+    let squeakSoundURL =  Bundle.main.url(forResource: "squeak", withExtension: "aiff")!
+    var buttonEffectPlayer = AVAudioPlayer()
     
     // MARK: Functions:
     override func viewDidLoad()
@@ -53,17 +54,20 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate
         productIDs.append("ShintakoLLC.BabelBet.premium")
         requestProductInfo()
         
-        let defaultSettings = NSUserDefaults.standardUserDefaults()
+        let defaultSettings = UserDefaults.standard
         MainMenuViewController.isPremiumPurchased =
-                defaultSettings.boolForKey(MainMenuViewController.premiumIdentifier)
+                defaultSettings.bool(forKey: MainMenuViewController.premiumIdentifier)
+        MainMenuViewController.isPremiumPurchased = false
+
+        FBAdSettings.addTestDevice("ebadf1868ee0b4c2eb364f912a7603e85824310a")
         
         if !MainMenuViewController.isPremiumPurchased
         {
             let adView = FBAdView(placementID: "556114377906938_559339737584402",
                                   adSize: kFBAdSizeHeight50Banner,
                                   rootViewController: self)
-            adView.frame = CGRectMake(0, self.view.frame.size.height-adView.frame.size.height,
-                                      adView.frame.size.width, adView.frame.size.height)
+            adView.frame = CGRect(x: 0, y: self.view.frame.size.height-adView.frame.size.height,
+                                      width: adView.frame.size.width, height: adView.frame.size.height)
             adView.loadAd()
             self.view.addSubview(adView)
         }
@@ -95,21 +99,21 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate
         // Dispose of any resources that can be recreated.
     }
 
-    override func viewWillAppear(animated: Bool)
+    override func viewWillAppear(_ animated: Bool)
     {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         super.viewWillAppear(animated)
     }
     
-    override func viewWillDisappear(animated: Bool)
+    override func viewWillDisappear(_ animated: Bool)
     {
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         super.viewWillDisappear(animated)
     }
     
     // MARK: SKProductsRequestDelegate
-    func productsRequest(request: SKProductsRequest,
-                         didReceiveResponse response: SKProductsResponse)
+    func productsRequest(_ request: SKProductsRequest,
+                         didReceive response: SKProductsResponse)
     {
         if response.products.count > 0
         {
@@ -126,7 +130,7 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate
     }
     
     // MARK: Navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?)
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
         /* We need the user to grant permission to use the microphone */
         recordingSession = AVAudioSession.sharedInstance()
@@ -134,10 +138,10 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate
         do
         {
             try recordingSession.setCategory(AVAudioSessionCategoryPlayAndRecord)
-            try recordingSession.overrideOutputAudioPort(AVAudioSessionPortOverride.Speaker)
+            try recordingSession.overrideOutputAudioPort(AVAudioSessionPortOverride.speaker)
             try recordingSession.setActive(true)
             recordingSession.requestRecordPermission() { (allowed: Bool) -> Void in
-                dispatch_async(dispatch_get_main_queue())
+                DispatchQueue.main.async
                 {
                     if allowed
                     {
@@ -155,14 +159,37 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate
         
         if segue.identifier == "petToHuman"
         {
-            let petToHuman:BabelPetViewController = segue.destinationViewController as! BabelPetViewController
+            let petToHuman:BabelPetViewController = segue.destination as! BabelPetViewController
             petToHuman.referencedController = self
+            
+            do
+            {
+                buttonEffectPlayer = try AVAudioPlayer(contentsOf: barkSoundURL)
+                buttonEffectPlayer.prepareToPlay()
+                buttonEffectPlayer.play()
+            }
+            catch
+            {
+                print("MainMenu: ERROR - Could not play effect")
+            }
         }
         else if(segue.identifier == "humanToPet")
         {
-            let humanToPet:HumanToPetViewController = segue.destinationViewController as! HumanToPetViewController
+            let humanToPet:HumanToPetViewController = segue.destination as! HumanToPetViewController
             humanToPet.referencedController = self
+            
+            do
+            {
+                buttonEffectPlayer = try AVAudioPlayer(contentsOf: squeakSoundURL)
+                buttonEffectPlayer.prepareToPlay()
+                buttonEffectPlayer.play()
+            }
+            catch
+            {
+                print("MainMenu: ERROR - Could not play effect")
+            }
         }
+        
     }
     
 }

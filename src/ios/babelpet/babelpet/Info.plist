@@ -18,6 +18,12 @@
 	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Records voice and translates voice into pet/human talk</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Uses camera to take picture to share pet translation on social media</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Choose picture to share pet translation on social media</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

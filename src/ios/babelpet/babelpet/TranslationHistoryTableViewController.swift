@@ -16,12 +16,6 @@ class TranslationHistoryTableViewController: UITableViewController
     override func viewDidLoad()
     {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
 
     override func didReceiveMemoryWarning()
@@ -31,23 +25,23 @@ class TranslationHistoryTableViewController: UITableViewController
     }
 
     // MARK: Table view data source
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int
+    override func numberOfSections(in tableView: UITableView) -> Int
     {
          return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
     {
         return referencedController.translations.count
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell
     {
         let cellIdentifier = "TranslationTableViewCell"
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier,
-                         forIndexPath: indexPath) as! TranslationTableViewCell
-        let translation = referencedController.translations[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier,
+                         for: indexPath) as! TranslationTableViewCell
+        let translation = referencedController.translations[(indexPath as NSIndexPath).row]
 
         cell.translationHeading.text = translation.description
 
@@ -55,18 +49,18 @@ class TranslationHistoryTableViewController: UITableViewController
     }
 
     /* Override to support conditional editing of the table view. */
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool
     {
         /* Return false if you do not want the specified item to be editable. */
         return true
     }
 
     /* Override to support editing the table view. */
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath)
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath)
     {
-        if editingStyle == .Delete
+        if editingStyle == .delete
         {
-            let translationToDelete: PetTranslation! = referencedController.translations[indexPath.row]
+            let translationToDelete: PetTranslation! = referencedController.translations[(indexPath as NSIndexPath).row]
             
             /* If they are deleting the current translation, we have to reset the
                 view */
@@ -74,26 +68,26 @@ class TranslationHistoryTableViewController: UITableViewController
                 referencedController.curTrans.isEqual(translationToDelete)
             {
                 referencedController.translationLabel.text = "Press Record to Start!"
-                referencedController.playBackButton.enabled = false
-                referencedController.shareButton.enabled = false
+                referencedController.playBackButton.isEnabled = false
+                referencedController.shareButton.isEnabled = false
             }
             
-            referencedController.translations.removeAtIndex(indexPath.row)
+            referencedController.translations.remove(at: (indexPath as NSIndexPath).row)
             referencedController.saveTranslations()
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
     {
-        referencedController.curTrans = referencedController.translations[indexPath.row]
+        referencedController.curTrans = referencedController.translations[(indexPath as NSIndexPath).row]
         referencedController.translationLabel.text = referencedController.curTrans.translatedText
-        referencedController.playBackButton.enabled = true
-        referencedController.shareButton.enabled = true
-        navigationController?.popViewControllerAnimated(true)
+        referencedController.playBackButton.isEnabled = true
+        referencedController.shareButton.isEnabled = true
+        _ = navigationController?.popViewController(animated: true)
     }
     
-    override func viewWillAppear(animated: Bool)
+    override func viewWillAppear(_ animated: Bool)
     {
         tableView.backgroundColor = UIColor(red: 87/255, green: 187/255, blue: 250/255, alpha: 1.0)
     }
