@@ -67,6 +67,7 @@ private let colorLabelTranslation =
 
 private let colorChoices =
 [
+    UIColor.yellow,
     UIColor.black,
     UIColor.blue,
     UIColor.green,
@@ -74,11 +75,11 @@ private let colorChoices =
     UIColor.purple,
     UIColor.red,
     UIColor.white,
-    UIColor.yellow
 ]
 
 private let colorStringEnglish =
 [
+    "Yellow",
     "Black",
     "Blue",
     "Green",
@@ -86,11 +87,11 @@ private let colorStringEnglish =
     "Purple",
     "Red",
     "White",
-    "Yellow"
 ]
 
 private let colorStringSpanish =
 [
+    "Amarillo",
     "Negro",
     "Azul",
     "Verde",
@@ -98,11 +99,11 @@ private let colorStringSpanish =
     "Púrpura",
     "Rojo",
     "Blanco",
-    "Amarillo"
 ]
 
 private let colorStringKorean =
 [
+    "노랑",
     "검은",
     "푸른",
     "녹색",
@@ -110,11 +111,11 @@ private let colorStringKorean =
     "보라색",
     "빨간",
     "화이트",
-    "노랑"
 ]
 
 private let colorStringChinese =
 [
+    "黃色",
     "黑色",
     "藍色",
     "綠色",
@@ -122,11 +123,11 @@ private let colorStringChinese =
     "紫色",
     "紅",
     "白色",
-    "黃色"
 ]
 
 private let colorStringJapanese =
 [
+    "きいろ",
     "くろ",
     "あお",
     "みどり",
@@ -134,7 +135,6 @@ private let colorStringJapanese =
     "むらさき",
     "あか",
     "しろ",
-    "きいろ"
 ]
 
 private let colorStringChoices =
@@ -194,12 +194,42 @@ class ImageShareViewController: UIViewController,
         present(imagePicker, animated: true, completion: nil)
     }
 
+    func keyboardNotification(notification: NSNotification)
+    {
+        if let userInfo = notification.userInfo
+        {
+            let endFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+            let duration:TimeInterval = (userInfo[UIKeyboardAnimationDurationUserInfoKey] as? NSNumber)?.doubleValue ?? 0
+            let animationCurveRawNSN = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? NSNumber
+            let animationCurveRaw = animationCurveRawNSN?.uintValue ?? UIViewAnimationOptions.curveEaseInOut.rawValue
+            let animationCurve:UIViewAnimationOptions = UIViewAnimationOptions(rawValue: animationCurveRaw)
+            if (endFrame?.origin.y)! >= UIScreen.main.bounds.size.height
+            {
+                self.bottomMargin?.constant = MainMenuViewController.bannerBuffer
+            }
+            else
+            {
+                self.bottomMargin?.constant = endFrame?.size.height ?? MainMenuViewController.bannerBuffer
+            }
+            UIView.animate(withDuration: duration,
+                            delay: TimeInterval(0),
+                            options: animationCurve,
+                            animations: { self.view.layoutIfNeeded() },
+                            completion: nil)
+        }
+    }
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
         
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.keyboardNotification),
+                                               name: NSNotification.Name.UIKeyboardWillChangeFrame,
+                                               object: nil)
+        
         /* Changing the default color to blue */
-        curColor = UIColor.blue
+        curColor = UIColor.yellow
         colorPicker.selectRow(1, inComponent: 0, animated: false)
         
         /* Adding the Facebook banner */
@@ -258,7 +288,8 @@ class ImageShareViewController: UIViewController,
     }
     
     // MARK: UIImagePickerControllerDelegate
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])
+    func imagePickerController(_ picker: UIImagePickerController,
+                               didFinishPickingMediaWithInfo info: [String : Any])
     {
         let selectedImage = info[UIImagePickerControllerOriginalImage] as! UIImage
         petImage.image = selectedImage
@@ -321,7 +352,8 @@ class ImageShareViewController: UIViewController,
         return colorChoices.count
     }
     
-    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int,
+                    forComponent component: Int, reusing view: UIView?) -> UIView
     {
         var pickerLabel = view as? UILabel;
         
@@ -329,7 +361,7 @@ class ImageShareViewController: UIViewController,
         {
             pickerLabel = UILabel()
             
-            pickerLabel?.font = UIFont(name: "Futara", size: 16)
+            pickerLabel?.font = UIFont(name: "Chalkboard SE", size: 16)
             pickerLabel?.textColor = UIColor.white
             pickerLabel?.textAlignment = NSTextAlignment.center
         }
@@ -339,7 +371,8 @@ class ImageShareViewController: UIViewController,
         
     }
     
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int,
+                    inComponent component: Int)
     {
         curColor = colorChoices[row]
         print("ImageShare: Color changed to \(colorStringEnglish[row])")

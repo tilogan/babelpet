@@ -44,40 +44,10 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
         }
     }
     
-    @IBAction func saveToPhonePressed(_ sender: UIButton)
-    {
-        if(self.assetURL.isEmpty)
-        {
-            saveVideoToLibrary()
-        }
-        
-        let alertController = UIAlertController(title: "Video saved",
-                                                message: "Video saved to phone library!!",
-                                                preferredStyle: .alert)
-        
-        alertController.addAction(UIAlertAction(title: "Ok",
-            style: .default,
-            handler:
-            { (action: UIAlertAction!) in
-                print("ImageShare: Video saved to phone.")
-        }))
-        
-        self.present(alertController,
-                                   animated: true,
-                                   completion: nil)
-    }
-    
-    
     /* Instagram is easier than Facebook. Just save the asset, and then
      construct/escape the string into the Instagram application */
     @IBAction func shareInstagram(_ sender: AnyObject)
     {
-        /* We need to save before we can share */
-        if self.assetURL.isEmpty
-        {
-            saveVideoToLibrary()
-        }
-        
         /* Making sure we saved */
         if self.assetURL.isEmpty
         {
@@ -102,7 +72,7 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
             /* Make the login manager and prompt the user for the login */
             let loginManager: FBSDKLoginManager = FBSDKLoginManager()
             loginManager.loginBehavior = FBSDKLoginBehavior.native
-            loginManager.logIn (withReadPermissions: ["public_profile"],
+            loginManager.logIn(withReadPermissions: ["public_profile"],
                                                       from:  self,
                                                       handler:
                 { (response:FBSDKLoginManagerLoginResult?, error: Error?) in
@@ -119,21 +89,28 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
                 else
                 {
                     print("PetShare: FACEBOOK: Login worked")
+                    self.presentFacebookDialog()
                 }
             })
+
         }
-        
-        /* The Facebook share dialog only accepts an asset link. To get this    
-            we have to first save it to the user's local library and then
-            convert the rsulting URL to an asset URL */
-        if(self.assetURL.isEmpty)
+        else
         {
-            saveVideoToLibrary()
+            presentFacebookDialog()
         }
-        
+
+    }
+    
+    // MARK: Functions
+    func presentFacebookDialog()
+    {
+        /* The Facebook share dialog only accepts an asset link. To get this
+         we have to first save it to the user's local library and then
+         convert the rsulting URL to an asset URL */
         if(self.assetURL.isEmpty)
         {
             print("PetShare: ERROR - Saving video to library!")
+            return
         }
         
         /* Now we need to share. Create the asset URL and open the dialog */
@@ -141,17 +118,15 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
         let fbShareVideo: FBSDKShareVideo = FBSDKShareVideo(videoURL: avURL.url)
         let fbShareContent: FBSDKShareVideoContent = FBSDKShareVideoContent()
         fbShareContent.video = fbShareVideo
-    
+        
         /* Displaying the dialog */
         myDialog = FBSDKShareDialog()
         myDialog.fromViewController = self
         myDialog.shareContent = fbShareContent
         myDialog.mode = FBSDKShareDialogMode.shareSheet
         myDialog.show()
-
     }
     
-    // MARK: Functions
     
     /* Takes the meme and saves it to the video library. This is needed to 
         share on the various media platforms */
@@ -159,6 +134,36 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
     {
         var videoAssetPlaceholder:PHObjectPlaceholder!
         var completionInt = 0
+        
+        PHPhotoLibrary.requestAuthorization
+            { status in
+            switch status
+            {
+            case .authorized:
+                print("ImageShare: Authorized")
+                completionInt = 1
+            case .restricted:
+                completionInt = 2
+                print("ImageShare: Restrictred")
+            case .denied:
+                completionInt = 2
+                print("ImageShare: Denied")
+            default:
+                print("ImageShare: Unknown")
+                completionInt = 2
+                break
+            }
+        }
+        
+        while(completionInt == 0)
+        {
+            
+        }
+        
+        if(completionInt != 1)
+        {
+            print("ImageShare: ERROR - Could not get photo permission")
+        }
         
         /* This class takes a local video file on the file system and saves
            it to the asset library. From there we parse the asset URL and
@@ -519,8 +524,6 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
                                                       videoPath: videoPath,
                                                       duration: curTrans.duration,
                                                       audioURL: curTrans.audioURL! as URL)
-        
-        
         if completeVideoURL == nil
         {
             return
@@ -528,6 +531,8 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
         
         self.savedVideo = completeVideoURL!
         activityIndicator.stopAnimating()
+        saveVideoToLibrary()
+        
         playVideoAction(playGesture)
         
     }

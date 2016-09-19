@@ -24,6 +24,7 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate
     static let premiumMessage = "Upgrade to premium to remove ads and unlock all languages! Be a pal, your furrry friend is worth the kibble!"
     static let premiumIdentifier = "ShintakoLLC.BabelBet.premium"
     static let premiumPurchased = "Upgrade to Babel Pet Premium successful! You may need to restart the application for changes to take full effect."
+    static var bannerBuffer: CGFloat!
     
     // MARK: Variables for premium purchase
     var productIDs: Array<String> = []
@@ -57,8 +58,16 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate
         let defaultSettings = UserDefaults.standard
         MainMenuViewController.isPremiumPurchased =
                 defaultSettings.bool(forKey: MainMenuViewController.premiumIdentifier)
-        MainMenuViewController.isPremiumPurchased = false
 
+        if(MainMenuViewController.isPremiumPurchased)
+        {
+            MainMenuViewController.bannerBuffer = 10.0
+        }
+        else
+        {
+            MainMenuViewController.bannerBuffer = 65.0
+        }
+        
         FBAdSettings.addTestDevice("ebadf1868ee0b4c2eb364f912a7603e85824310a")
         
         if !MainMenuViewController.isPremiumPurchased

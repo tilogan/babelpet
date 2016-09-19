@@ -6,6 +6,8 @@
 	<string>en</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleDisplayName</key>
+    <string>BabelPet</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -23,7 +25,7 @@
     <key>NSCameraUsageDescription</key>
     <string>Uses camera to take picture to share pet translation on social media</string>
     <key>NSPhotoLibraryUsageDescription</key>
-    <string>Choose picture to share pet translation on social media</string>
+    <string>Saves pictures to generate pet translation video</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

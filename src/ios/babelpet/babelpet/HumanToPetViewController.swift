@@ -583,7 +583,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         {
             pickerLabel = UILabel()
             
-            pickerLabel?.font = UIFont(name: "Futara", size: 16)
+            pickerLabel?.font = UIFont(name: "Chalkboard SE", size: 16)
             pickerLabel?.textColor = UIColor.white
             pickerLabel?.textAlignment = NSTextAlignment.center
         }

@@ -120,6 +120,10 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     var completionInterrupt = Int(0)
     let powerThreshold = Float(-20.0)
     let timeoutDuration = 10.0
+    let barkSoundURL =  Bundle.main.url(forResource: "bark", withExtension: "aiff")!
+    let squeakSoundURL =  Bundle.main.url(forResource: "squeak", withExtension: "aiff")!
+    let meowSoundURL =  Bundle.main.url(forResource: "meow", withExtension: "aiff")!
+    var buttonEffectPlayer = AVAudioPlayer()
     
     // MARK: Variables for premium purchase
     var transactionInProgress = false
@@ -610,9 +614,31 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
             let translationViewTable:TranslationHistoryTableViewController =
                 segue.destination as! TranslationHistoryTableViewController
             translationViewTable.referencedController = self
+            
+            do
+            {
+                buttonEffectPlayer = try AVAudioPlayer(contentsOf: meowSoundURL)
+                buttonEffectPlayer.prepareToPlay()
+                buttonEffectPlayer.play()
+            }
+            catch
+            {
+                print("BabelPet: ERROR - Could not play effect")
+            }
         }
         else if(segue.identifier == "shareImage")
         {
+            do
+            {
+                buttonEffectPlayer = try AVAudioPlayer(contentsOf: squeakSoundURL)
+                buttonEffectPlayer.prepareToPlay()
+                buttonEffectPlayer.play()
+            }
+            catch
+            {
+                print("BabelPet: ERROR - Could not play effect")
+            }
+            
             let imageViewController:ImageShareViewController =
                 segue.destination as! ImageShareViewController
             imageViewController.referencedController = self
