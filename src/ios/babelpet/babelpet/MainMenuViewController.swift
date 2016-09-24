@@ -48,6 +48,8 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate
     var buttonEffectPlayer = AVAudioPlayer()
     
     // MARK: Functions:
+
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()
@@ -131,6 +133,7 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate
                 productsArray.append(product)
             }
             print("MainMenu: Found \(response.products.count) products")
+            
         }
         else
         {

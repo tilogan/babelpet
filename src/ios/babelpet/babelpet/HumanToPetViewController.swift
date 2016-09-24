@@ -398,6 +398,12 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
 
     }
     
+    override func viewWillDisappear(_ animated:Bool)
+    {
+        SKPaymentQueue.default().remove(self)
+        super.viewWillDisappear(animated)
+    }
+    
     override func viewDidLoad()
     {
         super.viewDidLoad()

@@ -607,6 +607,12 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     }
     
     //MARK: Navigation
+    override func viewWillDisappear(_ animated:Bool)
+    {
+        SKPaymentQueue.default().remove(self)
+        super.viewWillDisappear(animated)
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
         if segue.identifier == "gotoTable"

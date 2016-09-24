@@ -318,21 +318,25 @@
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Izt-fD-mml">
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AF3-GC-O7X">
-                                        <frame key="frameInset" width="343" height="145"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AF3-GC-O7X">
+                                        <constraints>
+                                            <constraint firstAttribute="height" priority="750" constant="150" id="4G3-oF-YWj"/>
+                                        </constraints>
                                         <string key="text">Babel Pet allows you to take a photo of your furry friend, slap on the tranlsation/audio, and share with your friends on Facebook/Instagram! Simply choose/take a picture below, change the translation if you want, and generate your adorable video!</string>
                                         <fontDescription key="fontDescription" name="ChalkboardSE-Regular" family="Chalkboard SE" pointSize="17"/>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="upsideDownDog" translatesAutoresizingMaskIntoConstraints="NO" id="v5p-jz-EAf">
-                                        <frame key="frameInset" minY="155" width="343" height="115"/>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="upsideDownDog" translatesAutoresizingMaskIntoConstraints="NO" id="v5p-jz-EAf">
+                                        <constraints>
+                                            <constraint firstAttribute="height" priority="250" constant="40" id="s6S-AC-kyC"/>
+                                        </constraints>
                                     </imageView>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="IHx-uV-vSz">
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WRU-Xt-fvQ">
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="50" id="FQI-Is-Lli"/>
+                                                    <constraint firstAttribute="height" constant="35" id="FQI-Is-Lli"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="ChalkboardSE-Regular" family="Chalkboard SE" pointSize="17"/>
                                                 <state key="normal" title="Choose from Library" backgroundImage="redSmall">
@@ -361,7 +365,7 @@
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Translation:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2o3-Ia-KKF">
                                                 <constraints>
-                                                    <constraint firstAttribute="height" constant="30" id="c50-oW-3QF"/>
+                                                    <constraint firstAttribute="height" constant="35" id="c50-oW-3QF"/>
                                                 </constraints>
                                                 <fontDescription key="fontDescription" name="ChalkboardSE-Regular" family="Chalkboard SE" pointSize="16"/>
                                                 <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -370,6 +374,9 @@
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Wnv-j0-8fW">
                                                 <subviews>
                                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="FXY-xM-r49">
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="30" id="gz7-8P-FSX"/>
+                                                        </constraints>
                                                         <string key="text" base64-UTF8="YES">
 CQ
 </string>
@@ -411,7 +418,7 @@ CQ
                                     </stackView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zN9-11-PxX">
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="75" id="Koz-vN-yYC"/>
+                                            <constraint firstAttribute="height" constant="35" id="jzw-6P-ZBG"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="ChalkboardSE-Regular" family="Chalkboard SE" pointSize="15"/>
                                         <state key="normal" title=" Generate Video Translation" backgroundImage="purpleBig">
