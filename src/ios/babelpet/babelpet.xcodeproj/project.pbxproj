@@ -454,6 +454,7 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "babelpet/babelpet-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -475,6 +476,7 @@
 				PRODUCT_NAME = "Babel Pet";
 				SWIFT_OBJC_BRIDGING_HEADER = "babelpet/babelpet-Bridging-Header.h";
 				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -482,6 +484,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Timothy Logan (263NB5VB43)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = H95N6X5X8Q;
 				INFOPLIST_FILE = babelpetTests/Info.plist;
@@ -497,6 +500,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Timothy Logan (263NB5VB43)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = H95N6X5X8Q;
 				INFOPLIST_FILE = babelpetTests/Info.plist;

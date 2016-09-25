@@ -70,7 +70,6 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate
             MainMenuViewController.bannerBuffer = 65.0
         }
         
-        FBAdSettings.addTestDevice("ebadf1868ee0b4c2eb364f912a7603e85824310a")
         
         if !MainMenuViewController.isPremiumPurchased
         {
