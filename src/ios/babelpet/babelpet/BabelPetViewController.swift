@@ -103,7 +103,8 @@ private let defaultTranslationPhrase =
 
 
 class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
-    AVAudioPlayerDelegate, UIPickerViewDelegate, SKPaymentTransactionObserver
+    AVAudioPlayerDelegate, UIPickerViewDelegate, SKPaymentTransactionObserver,
+    FBAdViewDelegate
 {
     // MARK: Local Variables
     var translations = [PetTranslation]()
@@ -124,6 +125,8 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     let squeakSoundURL =  Bundle.main.url(forResource: "squeak", withExtension: "aiff")!
     let meowSoundURL =  Bundle.main.url(forResource: "meow", withExtension: "aiff")!
     var buttonEffectPlayer = AVAudioPlayer()
+    var adView: FBAdView!
+
     
     // MARK: Variables for premium purchase
     var transactionInProgress = false
@@ -427,20 +430,18 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         /* Adding the Facebook banner */
         if !MainMenuViewController.isPremiumPurchased
         {
-            let adView = FBAdView(placementID: "556114377906938_559339737584402",
-                                  adSize: kFBAdSizeHeight50Banner,
-                                  rootViewController: self)
-            adView.frame = CGRect(x: 0,
-                                    y: self.view.frame.size.height-adView.frame.size.height,
-                                    width: adView.frame.size.width,
-                                    height: adView.frame.size.height)
-            adView.loadAd()
+            /* Adding the Facebook banner */
+            adView = FBAdView(placementID: "556114377906938_559339737584402",
+                              adSize: kFBAdSizeHeight50Banner,
+                              rootViewController: self)
+            adView.frame = CGRect(x: 0, y: self.view.frame.size.height-adView.frame.size.height,
+                                  width: adView.frame.size.width, height: adView.frame.size.height)
+            adView.delegate = self
+            adView.isHidden = true
             self.view.addSubview(adView)
+            adView.loadAd()
         }
-        else
-        {
-            bottomMargin.constant = 10
-        }
+        
         
         if let savedTranslations = loadTranslations()
         {
@@ -649,6 +650,19 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
                 segue.destination as! ImageShareViewController
             imageViewController.referencedController = self
         }
+    }
+    
+    // MARK: FBAdViewDelegate
+    func adView(_ adView: FBAdView, didFailWithError error: Error)
+    {
+        bottomMargin.constant = 10.0
+        adView.isHidden = true
+    }
+    
+    func adViewDidLoad(_ adView: FBAdView)
+    {
+        adView.isHidden = false
+        bottomMargin.constant = 65.0
     }
 }
 

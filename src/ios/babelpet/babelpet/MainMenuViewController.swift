@@ -11,7 +11,8 @@ import iAd
 import FBAudienceNetwork
 import StoreKit
 
-class MainMenuViewController: UIViewController, SKProductsRequestDelegate
+class MainMenuViewController: UIViewController, SKProductsRequestDelegate,
+    FBAdViewDelegate
 {
     // MARK: Actions
     @IBAction func shintakoPressed(_ sender: UITapGestureRecognizer)
@@ -25,6 +26,7 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate
     static let premiumIdentifier = "ShintakoLLC.BabelBet.premium"
     static let premiumPurchased = "Upgrade to Babel Pet Premium successful! You may need to restart the application for changes to take full effect."
     static var bannerBuffer: CGFloat!
+    var adView: FBAdView!
     
     // MARK: Variables for premium purchase
     var productIDs: Array<String> = []
@@ -60,32 +62,24 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate
         let defaultSettings = UserDefaults.standard
         MainMenuViewController.isPremiumPurchased =
                 defaultSettings.bool(forKey: MainMenuViewController.premiumIdentifier)
-
-        if(MainMenuViewController.isPremiumPurchased)
-        {
-            MainMenuViewController.bannerBuffer = 10.0
-        }
-        else
-        {
-            MainMenuViewController.bannerBuffer = 65.0
-        }
         
+      //  FBAdSettings.addTestDevice("ebadf1868ee0b4c2eb364f912a7603e85824310a")
         
+        /* Adding the Facebook banner */
         if !MainMenuViewController.isPremiumPurchased
         {
-            let adView = FBAdView(placementID: "556114377906938_559339737584402",
-                                  adSize: kFBAdSizeHeight50Banner,
-                                  rootViewController: self)
+            /* Adding the Facebook banner */
+            adView = FBAdView(placementID: "556114377906938_559339737584402",
+                              adSize: kFBAdSizeHeight50Banner,
+                              rootViewController: self)
             adView.frame = CGRect(x: 0, y: self.view.frame.size.height-adView.frame.size.height,
-                                      width: adView.frame.size.width, height: adView.frame.size.height)
-            adView.loadAd()
+                                  width: adView.frame.size.width, height: adView.frame.size.height)
+            adView.delegate = self
+            adView.isHidden = true
             self.view.addSubview(adView)
+            adView.loadAd()
         }
-        else
-        {
-            bottomMargin.constant = 10
-        }
-
+        
     }
     
     func requestProductInfo()
@@ -120,6 +114,20 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         super.viewWillDisappear(animated)
     }
+    
+    // MARK: FBAdViewDelegate
+    func adView(_ adView: FBAdView, didFailWithError error: Error)
+    {
+        bottomMargin.constant = 10.0
+        adView.isHidden = true
+    }
+    
+    func adViewDidLoad(_ adView: FBAdView)
+    {
+        adView.isHidden = false
+        bottomMargin.constant = 65.0
+    }
+    
     
     // MARK: SKProductsRequestDelegate
     func productsRequest(_ request: SKProductsRequest,

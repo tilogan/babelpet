@@ -14,7 +14,8 @@ import FBSDKLoginKit
 import FBSDKShareKit
 import FBAudienceNetwork
 
-class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
+class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate,
+    FBAdViewDelegate
 {
     // MARK: Variables
     var referencedController: ImageShareViewController!
@@ -22,6 +23,9 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
     var assetURL: String!
     var myDialog: FBSDKShareDialog!
     var fullSiteAd: FBInterstitialAd!
+    var adView: FBAdView!
+    var assetCompletion = 0
+
     
     // MARK: Video generation
     var writer: AVAssetWriter!
@@ -135,36 +139,6 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
         var videoAssetPlaceholder:PHObjectPlaceholder!
         var completionInt = 0
         
-        PHPhotoLibrary.requestAuthorization
-            { status in
-            switch status
-            {
-            case .authorized:
-                print("ImageShare: Authorized")
-                completionInt = 1
-            case .restricted:
-                completionInt = 2
-                print("ImageShare: Restrictred")
-            case .denied:
-                completionInt = 2
-                print("ImageShare: Denied")
-            default:
-                print("ImageShare: Unknown")
-                completionInt = 2
-                break
-            }
-        }
-        
-        while(completionInt == 0)
-        {
-            
-        }
-        
-        if(completionInt != 1)
-        {
-            print("ImageShare: ERROR - Could not get photo permission")
-        }
-        
         /* This class takes a local video file on the file system and saves
            it to the asset library. From there we parse the asset URL and
            save it as a class object */
@@ -194,6 +168,8 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
         {
             
         }
+        
+        playVideoAction(playGesture)
     }
     
     /* Takes the image and the text and makes an overlayed movie out of it */
@@ -251,6 +227,7 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
         
         var frameDuration = kCMTimeZero
         var completionFlag = 0
+        self.assetCompletion = 0
 
         /* Writing a frame at the beginning to start the write */
         if !appendPixelBufferForImageAtURL(scaledImage, pixelBufferAdaptor: pixelBufferAdaptor,
@@ -270,13 +247,13 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
         }
         
         writerInput.markAsFinished()
-        assetWriter.finishWriting
-            {
-                print("PetShare: Recording finished!")
-                completionFlag = 1
-        }
         
-        while completionFlag != 1
+        assetWriter.finishWriting(completionHandler:
+        {() -> Void in
+            print("VideoGeneration: Finished recording")
+        })
+
+        while(assetWriter.status != .completed)
         {
             
         }
@@ -299,6 +276,8 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
         if audioTracks.count == 0 || videoTracks.count == 0
         {
             print("PetShare: ERROR - Could not compose video")
+            print("AudioPath: \(audioURL.absoluteString) VideoPath: \(videoURL.absoluteString) ")
+            print("AudioCount: \(audioTracks.count) VideoCount: \(videoTracks.count) ")
             return nil
         }
         
@@ -531,9 +510,23 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
         
         self.savedVideo = completeVideoURL!
         activityIndicator.stopAnimating()
-        saveVideoToLibrary()
         
-        playVideoAction(playGesture)
+        PHPhotoLibrary.requestAuthorization
+            { status in
+                switch status
+                {
+                case .authorized:
+                    print("ImageShare: Authorized")
+                    self.saveVideoToLibrary()
+                case .restricted:
+                    print("ImageShare: Restrictred")
+                case .denied:
+                    print("ImageShare: Denied")
+                default:
+                    print("ImageShare: Unknown")
+                    break
+                }
+        }
         
     }
 
@@ -545,16 +538,16 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
         /* Adding the Facebook banner */
         if !MainMenuViewController.isPremiumPurchased
         {
-            let adView = FBAdView(placementID: "556114377906938_559339737584402",
-                                adSize: kFBAdSizeHeight50Banner,
-                                rootViewController: self)
-            adView.frame = CGRect(x: 0,
-                                      y: self.view.frame.size.height-adView.frame.size.height,
-                                    width: adView.frame.size.width,
-                                    height: adView.frame.size.height)
-            adView.loadAd()
+            adView = FBAdView(placementID: "556114377906938_559339737584402",
+                              adSize: kFBAdSizeHeight50Banner,
+                              rootViewController: self)
+            adView.frame = CGRect(x: 0, y: self.view.frame.size.height-adView.frame.size.height,
+                                  width: adView.frame.size.width, height: adView.frame.size.height)
+            adView.delegate = self
+            adView.isHidden = true
             self.view.addSubview(adView)
-        
+            adView.loadAd()
+            
             /* Load the ad from Facebook */
             fullSiteAd = FBInterstitialAd(placementID: "556114377906938_559362917582084")
             fullSiteAd.delegate = self
@@ -562,17 +555,30 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
         }
         else
         {
-            bottomMargin.constant = 10
             createVideoFromImage(referencedController.petImage.image,
                                  translation: referencedController.translationTextField.text as NSString!)
         }
 
         self.assetURL = ""
+        self.title = "Preview"
     }
 
     override func didReceiveMemoryWarning()
     {
         super.didReceiveMemoryWarning()
+    }
+    
+    // MARK: FBAdViewDelegate
+    func adView(_ adView: FBAdView, didFailWithError error: Error)
+    {
+        bottomMargin.constant = 10.0
+        adView.isHidden = true
+    }
+    
+    func adViewDidLoad(_ adView: FBAdView)
+    {
+        adView.isHidden = false
+        bottomMargin.constant = 65.0
     }
     
     // MARK: Intersitital Ad
@@ -586,6 +592,8 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate
                         didFailWithError error: Error)
     {
         print("PetShare: Interstitial ad did not load")
+        createVideoFromImage(referencedController.petImage.image,
+                             translation: referencedController.translationTextField.text as NSString!)
     }
     
     func interstitialAdDidClose(_ interstitialAd: FBInterstitialAd)

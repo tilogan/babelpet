@@ -152,7 +152,8 @@ class ImageShareViewController: UIViewController,
                         UIImagePickerControllerDelegate,
                         UINavigationControllerDelegate,
                         UITextFieldDelegate,
-                        UIPickerViewDelegate
+                        UIPickerViewDelegate,
+                        FBAdViewDelegate
 {
     // MARK: Properties
     @IBOutlet weak var translationTextField: UITextField!
@@ -171,6 +172,8 @@ class ImageShareViewController: UIViewController,
     // MARK: Variables
     var referencedController: BabelPetViewController!
     var curColor: UIColor!
+    var adView: FBAdView!
+
 
     // MARK: Actions
     @IBAction func playTranslationOption(_ sender: UIButton)
@@ -235,21 +238,19 @@ class ImageShareViewController: UIViewController,
         /* Adding the Facebook banner */
         if !MainMenuViewController.isPremiumPurchased
         {
-            let adView = FBAdView(placementID: "556114377906938_559339737584402",
-                                adSize: kFBAdSizeHeight50Banner,
-                                rootViewController: self)
-            adView.frame = CGRect(x: 0,
-                                    y: self.view.frame.size.height-adView.frame.size.height,
-                                    width: adView.frame.size.width,
-                                    height: adView.frame.size.height)
-            adView.loadAd()
+            /* Adding the Facebook banner */
+            adView = FBAdView(placementID: "556114377906938_559339737584402",
+                              adSize: kFBAdSizeHeight50Banner,
+                              rootViewController: self)
+            adView.frame = CGRect(x: 0, y: self.view.frame.size.height-adView.frame.size.height,
+                                  width: adView.frame.size.width, height: adView.frame.size.height)
+            adView.delegate = self
+            adView.isHidden = true
             self.view.addSubview(adView)
-        }
-        else
-        {
-            bottomMargin.constant = 10
+            adView.loadAd()
         }
         
+        self.title = "Generation"
         
         let curLanguage = referencedController.curLanguage
         
@@ -376,6 +377,19 @@ class ImageShareViewController: UIViewController,
     {
         curColor = colorChoices[row]
         print("ImageShare: Color changed to \(colorStringEnglish[row])")
+    }
+    
+    // MARK: FBAdViewDelegate
+    func adView(_ adView: FBAdView, didFailWithError error: Error)
+    {
+        bottomMargin.constant = 10.0
+        adView.isHidden = true
+    }
+    
+    func adViewDidLoad(_ adView: FBAdView)
+    {
+        adView.isHidden = false
+        bottomMargin.constant = 65.0
     }
 
 }

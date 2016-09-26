@@ -42,7 +42,8 @@ enum SpeakingStyle: Int, CustomStringConvertible
 }
 
 class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
-    AVAudioPlayerDelegate, UIPickerViewDelegate, SKPaymentTransactionObserver
+    AVAudioPlayerDelegate, UIPickerViewDelegate, SKPaymentTransactionObserver,
+    FBAdViewDelegate
 {
 
     // MARK: Properties
@@ -79,6 +80,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     let timeoutDuration = 10.0
     let barkSoundURL =  Bundle.main.url(forResource: "bark", withExtension: "aiff")!
     var buttonEffectPlayer = AVAudioPlayer()
+    var adView: FBAdView!
     
     // MARK: IAPurchaseViewController
     func paymentQueue(_ queue: SKPaymentQueue,
@@ -410,25 +412,6 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         
         SKPaymentQueue.default().add(self)
         
-        /* Adding the Facebook banner */
-        if !MainMenuViewController.isPremiumPurchased
-        {
-            /* Adding the Facebook banner */
-            let adView = FBAdView(placementID: "556114377906938_559339737584402",
-                                  adSize: kFBAdSizeHeight50Banner,
-                                  rootViewController: self)
-            adView.frame = CGRect(x: 0,
-                                    y: self.view.frame.size.height-adView.frame.size.height,
-                                    width: adView.frame.size.width,
-                                    height: adView.frame.size.height)
-            adView.loadAd()
-            self.view.addSubview(adView)
-        }
-        else
-        {
-            bottomMargin.constant = 10
-        }
-        
         self.title = "Human to Pet"
         
         recordButton.setTitle("Press to Record", for: UIControlState())
@@ -446,11 +429,39 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         /* Config the buttons to auto-size */
         recordButton.titleLabel?.adjustsFontSizeToFitWidth = true
         statusLabel.adjustsFontSizeToFitWidth = true
+        
+        /* Adding the Facebook banner */
+        if !MainMenuViewController.isPremiumPurchased
+        {
+            /* Adding the Facebook banner */
+            adView = FBAdView(placementID: "556114377906938_559339737584402",
+                              adSize: kFBAdSizeHeight50Banner,
+                              rootViewController: self)
+            adView.frame = CGRect(x: 0, y: self.view.frame.size.height-adView.frame.size.height,
+                                  width: adView.frame.size.width, height: adView.frame.size.height)
+            adView.delegate = self
+            adView.isHidden = true
+            self.view.addSubview(adView)
+            adView.loadAd()
+        }
     }
 
     override func didReceiveMemoryWarning()
     {
         super.didReceiveMemoryWarning()
+    }
+    
+    // MARK: FBAdViewDelegate
+    func adView(_ adView: FBAdView, didFailWithError error: Error)
+    {
+        bottomMargin.constant = 10.0
+        adView.isHidden = true
+    }
+    
+    func adViewDidLoad(_ adView: FBAdView)
+    {
+        adView.isHidden = false
+        bottomMargin.constant = 65.0
     }
     
     //MARK: Actions

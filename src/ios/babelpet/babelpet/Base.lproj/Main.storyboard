@@ -21,7 +21,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" distribution="fillProportionally" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="ApS-qI-ieb">
-                                <frame key="frameInset" minX="20" minY="30" width="343" height="569"/>
+                                <frame key="frameInset" minX="20" minY="30" width="343" height="627"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Translation:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gWW-mE-jgY">
                                         <fontDescription key="fontDescription" name="ChalkboardSE-Bold" family="Chalkboard SE" pointSize="17"/>
@@ -131,7 +131,7 @@
                             <constraint firstItem="ApS-qI-ieb" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="10" id="MM1-Yf-ydX"/>
                             <constraint firstItem="ApS-qI-ieb" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="ciJ-k9-1lf"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ApS-qI-ieb" secondAttribute="trailing" id="gud-v3-xiN"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="ApS-qI-ieb" secondAttribute="bottom" constant="68" id="mLC-pk-QO5"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="ApS-qI-ieb" secondAttribute="bottom" constant="10" id="mLC-pk-QO5"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Pet to Human" id="pkV-Dp-71M">
@@ -175,7 +175,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Y03-zl-cdt">
-                                <frame key="frameInset" minX="20" minY="30" width="343" height="572"/>
+                                <frame key="frameInset" minX="20" minY="30" width="343" height="627"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Record your voice to translate into pet talk!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uIK-ZQ-vze">
                                         <constraints>
@@ -239,7 +239,7 @@
                         <constraints>
                             <constraint firstItem="Y03-zl-cdt" firstAttribute="leading" secondItem="DrD-vd-zS4" secondAttribute="leadingMargin" id="5yO-o4-viD"/>
                             <constraint firstItem="Y03-zl-cdt" firstAttribute="top" secondItem="JOw-u6-rqh" secondAttribute="bottom" constant="10" id="O4R-GZ-A6E"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="Y03-zl-cdt" secondAttribute="bottom" constant="65" id="Prj-TA-SWh"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="Y03-zl-cdt" secondAttribute="bottom" constant="10" id="Prj-TA-SWh"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Y03-zl-cdt" secondAttribute="trailing" id="c80-Mr-evk"/>
                         </constraints>
                     </view>
@@ -433,7 +433,7 @@ CQ
                         </subviews>
                         <color key="backgroundColor" red="0.33725490200000002" green="0.75294117650000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstAttribute="bottomMargin" secondItem="Izt-fD-mml" secondAttribute="bottom" constant="68" id="N9N-eW-a6E"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="Izt-fD-mml" secondAttribute="bottom" constant="10" id="N9N-eW-a6E"/>
                             <constraint firstItem="Izt-fD-mml" firstAttribute="leading" secondItem="5B4-1s-UO7" secondAttribute="leadingMargin" id="Xp4-v3-VEK"/>
                             <constraint firstItem="Izt-fD-mml" firstAttribute="top" secondItem="tEo-et-BPJ" secondAttribute="bottom" constant="10" id="cl5-Ih-3E6"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Izt-fD-mml" secondAttribute="trailing" id="zHD-bs-7re"/>
@@ -516,7 +516,7 @@ CQ
                         <color key="backgroundColor" red="0.28235294119999998" green="0.69411764710000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="EqA-gs-rjH" firstAttribute="top" secondItem="nIq-m0-xrE" secondAttribute="bottom" constant="10" id="CvR-ma-q9Q"/>
-                            <constraint firstItem="4dO-C9-GFN" firstAttribute="top" secondItem="EqA-gs-rjH" secondAttribute="bottom" constant="68" id="TJe-er-FkI"/>
+                            <constraint firstItem="4dO-C9-GFN" firstAttribute="top" secondItem="EqA-gs-rjH" secondAttribute="bottom" constant="10" id="TJe-er-FkI"/>
                             <constraint firstItem="EqA-gs-rjH" firstAttribute="trailing" secondItem="g4G-2P-Kn8" secondAttribute="trailingMargin" id="pWr-kZ-KDn"/>
                             <constraint firstItem="EqA-gs-rjH" firstAttribute="leading" secondItem="g4G-2P-Kn8" secondAttribute="leadingMargin" id="vAF-AK-zky"/>
                         </constraints>
@@ -550,7 +550,7 @@ CQ
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="tSF-sw-Mu9">
-                                <frame key="frameInset" minX="20" minY="32" width="343" height="570"/>
+                                <frame key="frameInset" minX="20" minY="32" width="343" height="625"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mainLogo" translatesAutoresizingMaskIntoConstraints="NO" id="HoU-tZ-Yeg">
                                         <constraints>
@@ -590,7 +590,7 @@ CQ
                             <constraint firstAttribute="trailingMargin" secondItem="tSF-sw-Mu9" secondAttribute="trailing" id="72S-ef-h1P"/>
                             <constraint firstItem="tSF-sw-Mu9" firstAttribute="leading" secondItem="2QF-Sg-fNk" secondAttribute="leadingMargin" id="Vjh-Ms-1pg"/>
                             <constraint firstItem="tSF-sw-Mu9" firstAttribute="top" secondItem="QcH-Fn-AWf" secondAttribute="bottom" constant="12" id="cU4-Fq-0Eo"/>
-                            <constraint firstAttribute="bottomMargin" secondItem="tSF-sw-Mu9" secondAttribute="bottom" constant="65" id="o7Z-lM-LVu"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="tSF-sw-Mu9" secondAttribute="bottom" constant="10" id="o7Z-lM-LVu"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="fF4-Ng-L8L"/>
