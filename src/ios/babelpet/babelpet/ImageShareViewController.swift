@@ -173,7 +173,7 @@ class ImageShareViewController: UIViewController,
     var referencedController: BabelPetViewController!
     var curColor: UIColor!
     var adView: FBAdView!
-
+    var curBanner: CGFloat = 10.0
 
     // MARK: Actions
     @IBAction func playTranslationOption(_ sender: UIButton)
@@ -199,6 +199,7 @@ class ImageShareViewController: UIViewController,
 
     func keyboardNotification(notification: NSNotification)
     {
+
         if let userInfo = notification.userInfo
         {
             let endFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
@@ -208,11 +209,11 @@ class ImageShareViewController: UIViewController,
             let animationCurve:UIViewAnimationOptions = UIViewAnimationOptions(rawValue: animationCurveRaw)
             if (endFrame?.origin.y)! >= UIScreen.main.bounds.size.height
             {
-                self.bottomMargin?.constant = MainMenuViewController.bannerBuffer
+                bottomMargin?.constant = curBanner
             }
             else
             {
-                self.bottomMargin?.constant = endFrame?.size.height ?? MainMenuViewController.bannerBuffer
+                bottomMargin?.constant = endFrame?.size.height ?? curBanner
             }
             UIView.animate(withDuration: duration,
                             delay: TimeInterval(0),
@@ -294,7 +295,6 @@ class ImageShareViewController: UIViewController,
     {
         let selectedImage = info[UIImagePickerControllerOriginalImage] as! UIImage
         petImage.image = selectedImage
-        
         dismiss(animated: true, completion: nil)
     }
     
@@ -383,12 +383,14 @@ class ImageShareViewController: UIViewController,
     func adView(_ adView: FBAdView, didFailWithError error: Error)
     {
         bottomMargin.constant = 10.0
+        curBanner = 10.0
         adView.isHidden = true
     }
     
     func adViewDidLoad(_ adView: FBAdView)
     {
         adView.isHidden = false
+        curBanner = 65.0
         bottomMargin.constant = 65.0
     }
 
