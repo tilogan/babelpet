@@ -24,8 +24,7 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate,
     var myDialog: FBSDKShareDialog!
     var fullSiteAd: FBInterstitialAd!
     var adView: FBAdView!
-    var assetCompletion = 0
-
+    var imageStill: UIImage!
     
     // MARK: Video generation
     var writer: AVAssetWriter!
@@ -35,6 +34,8 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate,
     @IBOutlet var playGesture: UITapGestureRecognizer!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var bottomMargin: NSLayoutConstraint!
+    @IBOutlet weak var facebookButton: UIButton!
+    @IBOutlet weak var instagramButton: UIButton!
     
     // MARK: Actions
     @IBAction func playVideoAction(_ sender: UITapGestureRecognizer)
@@ -137,7 +138,6 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate,
     func saveVideoToLibrary()
     {
         var videoAssetPlaceholder:PHObjectPlaceholder!
-        var completionInt = 0
         
         /* This class takes a local video file on the file system and saves
            it to the asset library. From there we parse the asset URL and
@@ -158,18 +158,25 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate,
                 self.assetURL =
                     "assets-library://asset/asset.\(ext)?id=\(assetID)&ext=\(ext)"
                 print("PetShare: Video saved to library")
+                self.imagePreview.image = self.imageStill
+                self.playVideoAction(self.playGesture)
+            }
+            else
+            {
+                
             }
             
-            completionInt = 1
+            self.activityIndicator.stopAnimating()
         }
         
-        /* Poll for completion */
-        while completionInt == 0
+        while(activityIndicator.isAnimating)
         {
             
         }
         
-        playVideoAction(playGesture)
+        facebookButton.isEnabled = true
+        instagramButton.isEnabled = true
+
     }
     
     /* Takes the image and the text and makes an overlayed movie out of it */
@@ -226,8 +233,6 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate,
         }
         
         var frameDuration = kCMTimeZero
-        var completionFlag = 0
-        self.assetCompletion = 0
 
         /* Writing a frame at the beginning to start the write */
         if !appendPixelBufferForImageAtURL(scaledImage, pixelBufferAdaptor: pixelBufferAdaptor,
@@ -297,7 +302,6 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate,
         }
         
         let completeMovie = getDocumentsDirectory() + "/PetBabelMerged.mov"
-        completionFlag = 0
         let completeMovieUrl = URL(fileURLWithPath: completeMovie)
         
         if FileManager.default.fileExists(atPath: completeMovie)
@@ -319,14 +323,14 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate,
         exporter.outputFileType = AVFileTypeMPEG4
         exporter.exportAsynchronously(
         completionHandler: {
-            completionFlag = 1
+            print("PetShare: Asset was exported")
         })
         
-        while completionFlag == 0
+        while(exporter.status != .completed)
         {
             
         }
-        
+
         switch exporter.status
         {
             case  AVAssetExportSessionStatus.failed:
@@ -479,7 +483,7 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate,
         translation.draw(in: rect, withAttributes: textFontAttributes)
         
         /* Create a new image out of the images we have created */
-        imagePreview.image =  UIGraphicsGetImageFromCurrentImageContext()
+        self.imageStill = UIGraphicsGetImageFromCurrentImageContext()
         
         /* End the context now that we have the image we need */
         UIGraphicsEndImageContext()
@@ -499,7 +503,7 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate,
             }
         }
         
-        let completeVideoURL = convertImagetoPetMovie(imagePreview.image!,
+        let completeVideoURL = convertImagetoPetMovie(self.imageStill!,
                                                       videoPath: videoPath,
                                                       duration: curTrans.duration,
                                                       audioURL: curTrans.audioURL! as URL)
@@ -509,7 +513,6 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate,
         }
         
         self.savedVideo = completeVideoURL!
-        activityIndicator.stopAnimating()
         
         PHPhotoLibrary.requestAuthorization
             { status in

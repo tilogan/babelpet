@@ -485,7 +485,7 @@ CQ
                                             <outletCollection property="gestureRecognizers" destination="3uq-AE-FAg" appends="YES" id="dia-vA-i0C"/>
                                         </connections>
                                     </imageView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fgw-I7-dhP">
+                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fgw-I7-dhP">
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="5IQ-9h-sy1"/>
                                         </constraints>
@@ -497,7 +497,7 @@ CQ
                                             <action selector="shareFacebookButton:" destination="ykV-RG-FdJ" eventType="touchUpInside" id="jFT-r4-Eoc"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bNW-vq-N5U">
+                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bNW-vq-N5U">
                                         <fontDescription key="fontDescription" name="ChalkboardSE-Regular" family="Chalkboard SE" pointSize="17"/>
                                         <state key="normal" title="Instagram" backgroundImage="redBig">
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -524,7 +524,9 @@ CQ
                     <connections>
                         <outlet property="activityIndicator" destination="MRq-qr-gN3" id="Uzp-ZS-pQX"/>
                         <outlet property="bottomMargin" destination="TJe-er-FkI" id="VqD-cx-dzK"/>
+                        <outlet property="facebookButton" destination="Fgw-I7-dhP" id="Icr-Xe-TTA"/>
                         <outlet property="imagePreview" destination="e79-Mt-2Hm" id="7CX-UO-lPi"/>
+                        <outlet property="instagramButton" destination="bNW-vq-N5U" id="qc8-5L-nMk"/>
                         <outlet property="playGesture" destination="3uq-AE-FAg" id="Rod-AY-2m6"/>
                     </connections>
                 </viewController>
