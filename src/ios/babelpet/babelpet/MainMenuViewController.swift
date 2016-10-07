@@ -12,7 +12,7 @@ import FBAudienceNetwork
 import StoreKit
 
 class MainMenuViewController: UIViewController, SKProductsRequestDelegate,
-    FBAdViewDelegate
+    FBAdViewDelegate, SKPaymentTransactionObserver
 {
     // MARK: Actions
     @IBAction func shintakoPressed(_ sender: UITapGestureRecognizer)
@@ -20,9 +20,18 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate,
         UIApplication.shared.openURL(URL(string: "http://www.shintako.com")!)
     }
     
+    @IBAction func restorePurchaseAction(_ sender: UIButton)
+    {
+        if (SKPaymentQueue.canMakePayments())
+        {
+            activityIndicator.startAnimating()
+            SKPaymentQueue.default().restoreCompletedTransactions()
+        }
+    }
+    
     // MARK: Static Variables
     static var isPremiumPurchased: Bool = false
-    static let premiumMessage = "Upgrade to premium to remove ads and unlock all languages! Be a pal, your furrry friend is worth the kibble!"
+    static let premiumMessage = "Upgrade to premium to remove ads and unlock all languages! Be a pal, your furrry friend is worth the kibble! (if you paid previously this will restore it for free)"
     static let premiumIdentifier = "ShintakoLLC.BabelBet.premium"
     static let premiumPurchased = "Upgrade to Babel Pet Premium successful! You may need to restart the application for changes to take full effect."
     static var bannerBuffer: CGFloat!
@@ -34,7 +43,9 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate,
     
     // MARK: Properties
     @IBOutlet weak var stackView: UIStackView!
+    @IBOutlet weak var restoreButton: UIButton!
     @IBOutlet weak var bottomMargin: NSLayoutConstraint!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     // MARK: Audio Engine
     var recordingSession: AVAudioSession!
@@ -48,9 +59,36 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate,
     let barkSoundURL =  Bundle.main.url(forResource: "bark", withExtension: "aiff")!
     let squeakSoundURL =  Bundle.main.url(forResource: "squeak", withExtension: "aiff")!
     var buttonEffectPlayer = AVAudioPlayer()
+    var transactionInProgress: Bool = false
     
     // MARK: Functions:
-
+    func downgradeHandler(_ alert: UIAlertAction!)
+    {
+        print("MainMenu: Premium upgrade declined")
+        activityIndicator.stopAnimating()
+    }
+    
+    func upgradeHandler(_ alert: UIAlertAction!)
+    {
+        /* Purchase premium here */
+        print("MainMenu: Premium upgrade initiated")
+        
+        if self.transactionInProgress == true
+        {
+            print("MainMenu: Transaction already in progress!")
+            return
+        }
+        
+        if productsArray.count == 0
+        {
+            print("MainMenu: Cannot retrieve products!")
+            return
+        }
+        
+        let payment = SKPayment(product: productsArray[0]!)
+        SKPaymentQueue.default().add(payment)
+        self.transactionInProgress = true
+    }
     
     override func viewDidLoad()
     {
@@ -63,7 +101,7 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate,
         MainMenuViewController.isPremiumPurchased =
                 defaultSettings.bool(forKey: MainMenuViewController.premiumIdentifier)
         
-      //  FBAdSettings.addTestDevice("ebadf1868ee0b4c2eb364f912a7603e85824310a")
+     //   FBAdSettings.addTestDevice("ebadf1868ee0b4c2eb364f912a7603e85824310a")
         
         /* Adding the Facebook banner */
         if !MainMenuViewController.isPremiumPurchased
@@ -79,6 +117,13 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate,
             self.view.addSubview(adView)
             adView.loadAd()
         }
+        
+        if(MainMenuViewController.isPremiumPurchased)
+        {
+            restoreButton.isHidden = true
+        }
+        
+        SKPaymentQueue.default().add(self)
         
     }
     
@@ -112,7 +157,55 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate,
     override func viewWillDisappear(_ animated: Bool)
     {
         self.navigationController?.setNavigationBarHidden(false, animated: false)
+        SKPaymentQueue.default().remove(self)
         super.viewWillDisappear(animated)
+    }
+    
+    func didPurchasePremiumSuccessfully()
+    {
+        MainMenuViewController.isPremiumPurchased = true
+        let defaultSettings = UserDefaults.standard
+        defaultSettings.set(true,
+                            forKey: MainMenuViewController.premiumIdentifier)
+        
+        let alertController = UIAlertController(title: "Babel Pet Premium",
+                                                message: MainMenuViewController.premiumPurchased,
+                                                preferredStyle: .alert)
+        
+        alertController.addAction(UIAlertAction(title: "Ok",
+                                                style: .default,
+                                                handler:
+            { (action: UIAlertAction!) in
+                print("MainMenu: Premium purchased dialog displayed.")
+        }))
+        
+        self.present(alertController,
+                     animated: true,
+                     completion: nil)
+        
+        
+    }
+    
+    func didPurchasePremiumFail()
+    {
+        
+        let alertController = UIAlertController(title: "Unlock Babel Pet Premium",
+                                                message: "Failed to complete transaction!",
+                                                preferredStyle: .alert)
+        
+        alertController.addAction(UIAlertAction(title: "Ok",
+                                                style: .default,
+                                                handler:
+            { (action: UIAlertAction!) in
+                print("MainMenu: Premium purchased dialog displayed.")
+        }))
+        
+        self.present(alertController,
+                     animated: true,
+                     completion: nil)
+        
+        activityIndicator.stopAnimating()
+        
     }
     
     // MARK: FBAdViewDelegate
@@ -209,6 +302,68 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate,
             }
         }
         
+    }
+    
+    func paymentQueue(_ queue: SKPaymentQueue,
+                      updatedTransactions transactions: [SKPaymentTransaction])
+    {
+        print("MainMenu: Received Payment Transaction Response from Apple");
+        for transaction:AnyObject in transactions
+        {
+            if let trans:SKPaymentTransaction = transaction as? SKPaymentTransaction
+            {
+                switch trans.transactionState
+                {
+                case .purchased, .restored:
+                    SKPaymentQueue.default().finishTransaction(transaction as! SKPaymentTransaction)
+                    print("MainMenu: Purchase Passed!")
+                    self.didPurchasePremiumSuccessfully()
+                    restoreButton.isHidden = true
+                    activityIndicator.stopAnimating()
+                    break
+                case .failed:
+                    print("MainMenu: Purchased Failed!")
+                    SKPaymentQueue.default().finishTransaction(transaction as! SKPaymentTransaction)
+                    self.didPurchasePremiumFail()
+                    break
+                default:
+                    print("MainMenu: default")
+                    break
+                }
+            }
+        }
+    }
+    
+    func paymentQueue(_ queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: Error)
+    {
+        activityIndicator.stopAnimating()
+    }
+    
+    func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue)
+    {
+        activityIndicator.stopAnimating()
+        if (SKPaymentQueue.default().transactions.count == 0)
+        {
+            let alertController = UIAlertController(title: "Unlock Premium Babel Pet",
+                                                    message: MainMenuViewController.premiumMessage,
+                                                    preferredStyle: .alert)
+            
+            // Create the actions
+            let okAction = UIAlertAction(title: "Upgrade",
+                                         style: UIAlertActionStyle.default,
+                                         handler: upgradeHandler)
+            let cancelAction = UIAlertAction(title: "Cancel",
+                                             style: UIAlertActionStyle.cancel,
+                                             handler: downgradeHandler)
+            
+            // Add the actions
+            alertController.addAction(okAction)
+            alertController.addAction(cancelAction)
+            
+            self.present(alertController,
+                         animated: true,
+                         completion: nil)
+        }
     }
     
 }

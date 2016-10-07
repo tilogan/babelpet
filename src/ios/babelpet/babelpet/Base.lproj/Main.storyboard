@@ -551,39 +551,58 @@ CQ
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="tSF-sw-Mu9">
-                                <frame key="frameInset" minX="20" minY="32" width="343" height="625"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="tSF-sw-Mu9">
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mainLogo" translatesAutoresizingMaskIntoConstraints="NO" id="HoU-tZ-Yeg">
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="HoU-tZ-Yeg" secondAttribute="height" multiplier="560:229" id="2M6-us-vg7"/>
                                         </constraints>
                                     </imageView>
-                                    <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="humanToPet" translatesAutoresizingMaskIntoConstraints="NO" id="P1L-Nj-Y2B">
+                                    <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="humanToPet" translatesAutoresizingMaskIntoConstraints="NO" id="P1L-Nj-Y2B">
+                                        <frame key="frameInset" minY="150" width="343" height="179"/>
                                         <gestureRecognizers/>
                                         <connections>
                                             <outletCollection property="gestureRecognizers" destination="9jv-3K-lUe" appends="YES" id="ncb-m5-nOo"/>
                                         </connections>
                                     </imageView>
-                                    <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="petToHuman" translatesAutoresizingMaskIntoConstraints="NO" id="MwZ-d8-UTt">
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="8w1-Nm-cUc">
+                                        <frame key="frameInset" minY="339" width="343" height="37"/>
+                                    </activityIndicatorView>
+                                    <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="petToHuman" translatesAutoresizingMaskIntoConstraints="NO" id="MwZ-d8-UTt">
+                                        <frame key="frameInset" minY="386" width="343" height="179"/>
                                         <gestureRecognizers/>
                                         <connections>
                                             <outletCollection property="gestureRecognizers" destination="Jx4-GG-TmW" appends="YES" id="j2B-uf-faf"/>
                                         </connections>
                                     </imageView>
-                                    <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="shintakoLogo" translatesAutoresizingMaskIntoConstraints="NO" id="kOR-ki-ytq">
-                                        <gestureRecognizers/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="50" id="2SG-8m-CTJ"/>
-                                        </constraints>
-                                        <connections>
-                                            <outletCollection property="gestureRecognizers" destination="EEg-xH-SZC" appends="YES" id="fkG-AT-Xom"/>
-                                        </connections>
-                                    </imageView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="iXv-fq-6PL">
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qx2-kw-ZhF">
+                                                <fontDescription key="fontDescription" name="ChalkboardSE-Regular" family="Chalkboard SE" pointSize="17"/>
+                                                <state key="normal" title="Restore Premium">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="restorePurchaseAction:" destination="FBr-Lq-1he" eventType="touchUpInside" id="v1z-gy-6fv"/>
+                                                </connections>
+                                            </button>
+                                            <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="shintakoLogo" translatesAutoresizingMaskIntoConstraints="NO" id="kOR-ki-ytq">
+                                                <gestureRecognizers/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="50" id="2SG-8m-CTJ"/>
+                                                </constraints>
+                                                <connections>
+                                                    <outletCollection property="gestureRecognizers" destination="EEg-xH-SZC" appends="YES" id="fkG-AT-Xom"/>
+                                                </connections>
+                                            </imageView>
+                                        </subviews>
+                                    </stackView>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="MwZ-d8-UTt" firstAttribute="width" secondItem="P1L-Nj-Y2B" secondAttribute="width" id="9em-h2-Vne"/>
                                     <constraint firstItem="MwZ-d8-UTt" firstAttribute="height" secondItem="P1L-Nj-Y2B" secondAttribute="height" id="HNa-tx-zpZ"/>
+                                    <constraint firstAttribute="trailing" secondItem="iXv-fq-6PL" secondAttribute="trailing" constant="20" id="dxe-x3-tbx"/>
+                                    <constraint firstItem="iXv-fq-6PL" firstAttribute="leading" secondItem="tSF-sw-Mu9" secondAttribute="leading" constant="20" id="gaY-mX-8Gr"/>
                                 </constraints>
                             </stackView>
                         </subviews>
@@ -597,7 +616,9 @@ CQ
                     </view>
                     <navigationItem key="navigationItem" id="fF4-Ng-L8L"/>
                     <connections>
-                        <outlet property="bottomMargin" destination="o7Z-lM-LVu" id="Xaw-Ny-rOo"/>
+                        <outlet property="activityIndicator" destination="8w1-Nm-cUc" id="LIe-3j-cVh"/>
+                        <outlet property="bottomMargin" destination="o7Z-lM-LVu" id="pdp-W1-avG"/>
+                        <outlet property="restoreButton" destination="qx2-kw-ZhF" id="Kq3-jL-ZxW"/>
                         <outlet property="stackView" destination="tSF-sw-Mu9" id="SBs-gQ-zI7"/>
                     </connections>
                 </viewController>

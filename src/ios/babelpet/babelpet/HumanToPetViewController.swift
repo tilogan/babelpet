@@ -196,7 +196,8 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     /* Gets the document directory to save the transalted file in */
     func getDocumentsDirectory() -> String
     {
-        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory,
+                                                        .userDomainMask, true)
         let documentsDirectory = paths[0]
         return documentsDirectory
     }
@@ -216,7 +217,8 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
             }
             
             let curIndex = Int(arc4random_uniform(UInt32(bufferList.count)))
-            playerNode.scheduleBuffer(bufferList[curIndex], completionHandler: audioBufferCallBack)
+            playerNode.scheduleBuffer(bufferList[curIndex],
+                                      completionHandler: audioBufferCallBack)
             bufferList.remove(at: curIndex)
             playerNode.play()
         }

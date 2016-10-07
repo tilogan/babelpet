@@ -199,6 +199,7 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         self.transactionInProgress = true
     }
     
+    
     func cleanUpRecording(success: Bool)
     {
         recordButton.setTitle(recordButtonTranslationStopped[curLanguage],
