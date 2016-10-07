@@ -124,6 +124,7 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate,
         }
         
         SKPaymentQueue.default().add(self)
+        restoreButton.titleLabel?.adjustsFontSizeToFitWidth = true
         
     }
     
