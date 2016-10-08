@@ -168,15 +168,6 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate,
             
             self.activityIndicator.stopAnimating()
         }
-        
-        while(activityIndicator.isAnimating)
-        {
-            
-        }
-        
-        facebookButton.isEnabled = true
-        instagramButton.isEnabled = true
-
     }
     
     /* Takes the image and the text and makes an overlayed movie out of it */
@@ -529,7 +520,17 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate,
                     print("ImageShare: Unknown")
                     break
                 }
+                self.activityIndicator.stopAnimating()
         }
+        
+        while(activityIndicator.isAnimating)
+        {
+            
+        }
+        
+        facebookButton.isEnabled = true
+        instagramButton.isEnabled = true
+
         
     }
 

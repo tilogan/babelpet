@@ -258,10 +258,17 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate,
                 {
                     if allowed
                     {
-                        print("Recording granted")
+                        print("MainMenu: Recording granted")
                     } else
                     {
-                        print("Permisison for microphone denied")
+                        print("MainMenu: Permisison for microphone denied")
+                        let alert = UIAlertController(title: "Microphone Usage Denied",
+                          message: "This application requires microphone usage. Please enable in Settings/Privacy/Microphone.",
+                          preferredStyle: UIAlertControllerStyle.alert)
+                        alert.addAction(UIAlertAction(title: "Ok",
+                                                      style: UIAlertActionStyle.default,
+                                                      handler: nil))
+                        self.present(alert, animated: true, completion: nil)
                     }
                 }
             }
@@ -269,6 +276,8 @@ class MainMenuViewController: UIViewController, SKProductsRequestDelegate,
         {
             print("Failed to get permissions for recording")
         }
+        
+        
         
         if segue.identifier == "petToHuman"
         {

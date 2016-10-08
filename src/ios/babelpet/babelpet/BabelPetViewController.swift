@@ -353,22 +353,30 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     {
         for transaction in transactions
         {
+            
             switch transaction.transactionState
             {
+            case SKPaymentTransactionState.restored:
+                print("PetToHuman: Transaction restored. ")
+                self.didPurchasePremiumSuccessfully()
+                SKPaymentQueue.default().finishTransaction(transaction)
+                transactionInProgress = false
             case SKPaymentTransactionState.purchased:
                 print("PetToHuman: Transaction completed successfully.")
-                SKPaymentQueue.default().finishTransaction(transaction)
                 self.didPurchasePremiumSuccessfully()
+                SKPaymentQueue.default().finishTransaction(transaction)
                 transactionInProgress = false
             case SKPaymentTransactionState.failed:
                 print("PetToHuman: ERROR - Transaction Failed");
-                SKPaymentQueue.default().finishTransaction(transaction)
                 transactionInProgress = false
+                SKPaymentQueue.default().finishTransaction(transaction)
                 curLanguage = Language.english
                 self.didPurchasePremiumFail()
             default:
                 print("PetToHuman: Status Code \(transaction.transactionState.rawValue)")
             }
+            
+
         }
     }
     

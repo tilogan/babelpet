@@ -551,6 +551,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         {
             print("HumanToPet: Playback failed")
             playButton.isEnabled = true
+            recordButton.isEnabled = true
         }
     }
     
@@ -594,7 +595,8 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         return SpeakingStyle.count
     }
     
-    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView
+    func pickerView(_ pickerView: UIPickerView, viewForRow row: Int,
+                    forComponent component: Int, reusing view: UIView?) -> UIView
     {
         var pickerLabel = view as? UILabel;
         
