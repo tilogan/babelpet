@@ -12,19 +12,18 @@ import AVKit
 import Photos
 import FBSDKLoginKit
 import FBSDKShareKit
-import FBAudienceNetwork
+import GoogleMobileAds
 
-class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate,
-    FBAdViewDelegate
+class VideoPreviewViewController: UIViewController, GADBannerViewDelegate,
+    GADInterstitialDelegate
 {
     // MARK: Variables
     var referencedController: ImageShareViewController!
     var savedVideo: URL!
     var assetURL: String!
     var myDialog: FBSDKShareDialog!
-    var fullSiteAd: FBInterstitialAd!
-    var adView: FBAdView!
     var imageStill: UIImage!
+    var interstitial: GADInterstitial!
     
     // MARK: Video generation
     var writer: AVAssetWriter!
@@ -36,6 +35,7 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate,
     @IBOutlet weak var bottomMargin: NSLayoutConstraint!
     @IBOutlet weak var facebookButton: UIButton!
     @IBOutlet weak var instagramButton: UIButton!
+    @IBOutlet weak var bannerView: GADBannerView!
     
     // MARK: Actions
     @IBAction func playVideoAction(_ sender: UITapGestureRecognizer)
@@ -539,26 +539,22 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate,
         super.viewDidLoad()
         activityIndicator.startAnimating()
         
-        /* Adding the Facebook banner */
+        /* Adding the Google banner */
         if !MainMenuViewController.isPremiumPurchased
         {
-            adView = FBAdView(placementID: "556114377906938_559339737584402",
-                              adSize: kFBAdSizeHeight50Banner,
-                              rootViewController: self)
-            adView.frame = CGRect(x: 0, y: self.view.frame.size.height-adView.frame.size.height,
-                                  width: adView.frame.size.width, height: adView.frame.size.height)
-            adView.delegate = self
-            adView.isHidden = true
-            self.view.addSubview(adView)
-            adView.loadAd()
-            
-            /* Load the ad from Facebook */
-            fullSiteAd = FBInterstitialAd(placementID: "556114377906938_559362917582084")
-            fullSiteAd.delegate = self
-            fullSiteAd.load()
+            bannerView.adUnitID = "ca-app-pub-8253941476253631/5357369905"
+            bannerView.adSize = kGADAdSizeSmartBannerPortrait
+            bannerView.rootViewController = self
+            bannerView.delegate = self
+            bannerView.frame.size.width = self.view.frame.size.width
+            bannerView.load(GADRequest())
+            interstitial = GADInterstitial(adUnitID: "ca-app-pub-8253941476253631/8310836308")
+            interstitial.delegate = self
+            interstitial.load(GADRequest())
         }
         else
         {
+            bannerView.isHidden = true
             createVideoFromImage(referencedController.petImage.image,
                                  translation: referencedController.translationTextField.text as NSString!)
         }
@@ -572,38 +568,62 @@ class VideoPreviewViewController: UIViewController, FBInterstitialAdDelegate,
         super.didReceiveMemoryWarning()
     }
     
-    // MARK: FBAdViewDelegate
-    func adView(_ adView: FBAdView, didFailWithError error: Error)
-    {
-        bottomMargin.constant = 10.0
-        adView.isHidden = true
-    }
-    
-    func adViewDidLoad(_ adView: FBAdView)
-    {
-        adView.isHidden = false
-        bottomMargin.constant = 65.0
-    }
-    
     // MARK: Intersitital Ad
-    func interstitialAdDidLoad(_ interstitialAd: FBInterstitialAd)
-    {
-        print("PetShare: Interstitial ad did load")
-        fullSiteAd.show(fromRootViewController: self)
-    }
-    
-    func interstitialAd(_ interstitialAd: FBInterstitialAd,
-                        didFailWithError error: Error)
+
+    func interstitialAd()
     {
         print("PetShare: Interstitial ad did not load")
         createVideoFromImage(referencedController.petImage.image,
                              translation: referencedController.translationTextField.text as NSString!)
     }
     
-    func interstitialAdDidClose(_ interstitialAd: FBInterstitialAd)
+    func interstitialAdDidClose()
     {
         createVideoFromImage(referencedController.petImage.image,
                              translation: referencedController.translationTextField.text as NSString!)
     }
+    
+    // MARK: GADAdDelegate
+    func adView(_ bannerView: GADBannerView!,
+                didFailToReceiveAdWithError error: GADRequestError!)
+    {
+        print("ImageShare: Error loading ad: \(error.localizedDescription)")
+        bottomMargin.constant = 10
+        bannerView.isHidden = true
+    }
+    
+    func adViewDidReceiveAd(_ bannerView: GADBannerView!)
+    {
+        print("ImageShare: Ad Loaded")
+        bannerView.isHidden = false
+        bottomMargin.constant = bannerView.adSize.size.height + 10
+        bannerView.alpha = 0
+        UIView.animate(withDuration: 1, animations: {
+            bannerView.alpha = 1
+        })
+    }
+    
+    // MARK: GADInterstitialDelegate
+    
+    func interstitialDidReceiveAd(_ ad: GADInterstitial!)
+    {
+        print("ImageShare: Intersite ad loaded")
+        interstitial.present(fromRootViewController: self)
+    }
+    
+    func interstitial(_ ad: GADInterstitial!, didFailToReceiveAdWithError error: GADRequestError!)
+    {
+        print("ImageShare: No intersite ad to load")
+        createVideoFromImage(referencedController.petImage.image,
+                             translation: referencedController.translationTextField.text as NSString!)
+    }
+    
+    func interstitialDidDismissScreen(_ ad: GADInterstitial!)
+    {
+        print("ImageShare: Intersite ad closed")
+        createVideoFromImage(referencedController.petImage.image,
+                             translation: referencedController.translationTextField.text as NSString!)
+    }
+    
     
 }

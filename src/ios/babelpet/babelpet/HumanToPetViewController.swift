@@ -9,7 +9,7 @@
 import UIKit
 import StoreKit
 import AVFoundation
-import FBAudienceNetwork
+import GoogleMobileAds
 
 /* Various Pitches for premium content */
 private var maleDogPitches: [Float] = [-1700, 1000, 1700]
@@ -43,7 +43,7 @@ enum SpeakingStyle: Int, CustomStringConvertible
 
 class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     AVAudioPlayerDelegate, UIPickerViewDelegate, SKPaymentTransactionObserver,
-    FBAdViewDelegate
+    GADBannerViewDelegate
 {
 
     // MARK: Properties
@@ -52,6 +52,7 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var recordButton: UIButton!
     @IBOutlet weak var bottomMargin: NSLayoutConstraint!
+    @IBOutlet weak var bannerView: GADBannerView!
     
     // MARK: Variables for premium purchase
     var transactionInProgress = false
@@ -80,7 +81,6 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
     let timeoutDuration = 10.0
     let barkSoundURL =  Bundle.main.url(forResource: "bark", withExtension: "aiff")!
     var buttonEffectPlayer = AVAudioPlayer()
-    var adView: FBAdView!
     
     // MARK: IAPurchaseViewController
     func paymentQueue(_ queue: SKPaymentQueue,
@@ -432,38 +432,25 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         recordButton.titleLabel?.adjustsFontSizeToFitWidth = true
         statusLabel.adjustsFontSizeToFitWidth = true
         
-        /* Adding the Facebook banner */
+        /* Adding the Google banner */
         if !MainMenuViewController.isPremiumPurchased
         {
-            /* Adding the Facebook banner */
-            adView = FBAdView(placementID: "556114377906938_559339737584402",
-                              adSize: kFBAdSizeHeight50Banner,
-                              rootViewController: self)
-            adView.frame = CGRect(x: 0, y: self.view.frame.size.height-adView.frame.size.height,
-                                  width: adView.frame.size.width, height: adView.frame.size.height)
-            adView.delegate = self
-            adView.isHidden = true
-            self.view.addSubview(adView)
-            adView.loadAd()
+            bannerView.adUnitID = "ca-app-pub-8253941476253631/5357369905"
+            bannerView.adSize = kGADAdSizeSmartBannerPortrait
+            bannerView.rootViewController = self
+            bannerView.delegate = self
+            bannerView.frame.size.width = self.view.frame.size.width
+            bannerView.load(GADRequest())
+        }
+        else
+        {
+            bannerView.isHidden = true
         }
     }
 
     override func didReceiveMemoryWarning()
     {
         super.didReceiveMemoryWarning()
-    }
-    
-    // MARK: FBAdViewDelegate
-    func adView(_ adView: FBAdView, didFailWithError error: Error)
-    {
-        bottomMargin.constant = 10.0
-        adView.isHidden = true
-    }
-    
-    func adViewDidLoad(_ adView: FBAdView)
-    {
-        adView.isHidden = false
-        bottomMargin.constant = 65.0
     }
     
     //MARK: Actions
@@ -659,5 +646,25 @@ class HumanToPetViewController: UIViewController, AVAudioRecorderDelegate,
         default:
             pitch.rate = 0.5
         }
+    }
+    
+    // MARK: GADAdDelegate
+    func adView(_ bannerView: GADBannerView!,
+                didFailToReceiveAdWithError error: GADRequestError!)
+    {
+        bannerView.isHidden = true
+        print("HumanToPet: Error loading ad: \(error.localizedDescription)")
+        bottomMargin.constant = 10
+    }
+    
+    func adViewDidReceiveAd(_ bannerView: GADBannerView!)
+    {
+        print("HumanToPet: Ad Loaded")
+        bannerView.isHidden = false
+        bottomMargin.constant = bannerView.adSize.size.height + 10
+        bannerView.alpha = 0
+        UIView.animate(withDuration: 1, animations: {
+            bannerView.alpha = 1
+        })
     }
 }

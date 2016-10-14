@@ -24,16 +24,20 @@
 		0C69C7191D4AE98B00E331AF /* ImageShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C69C7181D4AE98B00E331AF /* ImageShareViewController.swift */; };
 		0C69C71B1D4AFF1000E331AF /* VideoPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C69C71A1D4AFF1000E331AF /* VideoPreviewViewController.swift */; };
 		0C8F62C01D5E7B6C009DBDBE /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C8F62BF1D5E7B6C009DBDBE /* AVFoundation.framework */; };
-		0C8F62C21D5E7B7A009DBDBE /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C8F62C11D5E7B7A009DBDBE /* iAd.framework */; };
 		0C8F62C91D5E7D73009DBDBE /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C8F62C51D5E7D72009DBDBE /* Bolts.framework */; };
 		0C8F62CA1D5E7D73009DBDBE /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C8F62C61D5E7D72009DBDBE /* FBSDKCoreKit.framework */; };
 		0C8F62CB1D5E7D73009DBDBE /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C8F62C71D5E7D72009DBDBE /* FBSDKLoginKit.framework */; };
 		0C8F62CC1D5E7D73009DBDBE /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C8F62C81D5E7D72009DBDBE /* FBSDKShareKit.framework */; };
-		0C8F62D01D68B864009DBDBE /* FBAudienceNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C8F62CF1D68B863009DBDBE /* FBAudienceNetwork.framework */; };
-		0C8F62D21D68B887009DBDBE /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C8F62D11D68B887009DBDBE /* AdSupport.framework */; };
 		0C8F62D41D68B88F009DBDBE /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C8F62D31D68B88F009DBDBE /* CoreMotion.framework */; };
 		0C8F62D61D68B89B009DBDBE /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C8F62D51D68B89B009DBDBE /* StoreKit.framework */; };
 		0C8F62D81D69EB01009DBDBE /* TranslationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C8F62D71D69EB01009DBDBE /* TranslationTableViewCell.swift */; };
+		0C9573A61DB06F62005AB496 /* GoogleMobileAds.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C95739F1DB06F62005AB496 /* GoogleMobileAds.framework */; };
+		0C9573A71DB06F62005AB496 /* FirebaseAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9573A01DB06F62005AB496 /* FirebaseAnalytics.framework */; };
+		0C9573A81DB06F62005AB496 /* FirebaseCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9573A11DB06F62005AB496 /* FirebaseCore.framework */; };
+		0C9573A91DB06F62005AB496 /* FirebaseInstanceID.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9573A21DB06F62005AB496 /* FirebaseInstanceID.framework */; };
+		0C9573AA1DB06F62005AB496 /* GoogleInterchangeUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9573A31DB06F62005AB496 /* GoogleInterchangeUtilities.framework */; };
+		0C9573AB1DB06F62005AB496 /* GoogleSymbolUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9573A41DB06F62005AB496 /* GoogleSymbolUtilities.framework */; };
+		0C9573AC1DB06F62005AB496 /* GoogleUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C9573A51DB06F62005AB496 /* GoogleUtilities.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,16 +72,20 @@
 		0C69C7181D4AE98B00E331AF /* ImageShareViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageShareViewController.swift; sourceTree = "<group>"; };
 		0C69C71A1D4AFF1000E331AF /* VideoPreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoPreviewViewController.swift; sourceTree = "<group>"; };
 		0C8F62BF1D5E7B6C009DBDBE /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		0C8F62C11D5E7B7A009DBDBE /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 		0C8F62C51D5E7D72009DBDBE /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		0C8F62C61D5E7D72009DBDBE /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		0C8F62C71D5E7D72009DBDBE /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKLoginKit.framework; sourceTree = "<group>"; };
 		0C8F62C81D5E7D72009DBDBE /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = "<group>"; };
-		0C8F62CF1D68B863009DBDBE /* FBAudienceNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBAudienceNetwork.framework; sourceTree = "<group>"; };
-		0C8F62D11D68B887009DBDBE /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		0C8F62D31D68B88F009DBDBE /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = System/Library/Frameworks/CoreMotion.framework; sourceTree = SDKROOT; };
 		0C8F62D51D68B89B009DBDBE /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		0C8F62D71D69EB01009DBDBE /* TranslationTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TranslationTableViewCell.swift; sourceTree = "<group>"; };
+		0C95739F1DB06F62005AB496 /* GoogleMobileAds.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleMobileAds.framework; sourceTree = "<group>"; };
+		0C9573A01DB06F62005AB496 /* FirebaseAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseAnalytics.framework; sourceTree = "<group>"; };
+		0C9573A11DB06F62005AB496 /* FirebaseCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseCore.framework; sourceTree = "<group>"; };
+		0C9573A21DB06F62005AB496 /* FirebaseInstanceID.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FirebaseInstanceID.framework; sourceTree = "<group>"; };
+		0C9573A31DB06F62005AB496 /* GoogleInterchangeUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleInterchangeUtilities.framework; sourceTree = "<group>"; };
+		0C9573A41DB06F62005AB496 /* GoogleSymbolUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleSymbolUtilities.framework; sourceTree = "<group>"; };
+		0C9573A51DB06F62005AB496 /* GoogleUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = GoogleUtilities.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,13 +95,17 @@
 			files = (
 				0C8F62D61D68B89B009DBDBE /* StoreKit.framework in Frameworks */,
 				0C8F62D41D68B88F009DBDBE /* CoreMotion.framework in Frameworks */,
-				0C8F62D21D68B887009DBDBE /* AdSupport.framework in Frameworks */,
+				0C9573A71DB06F62005AB496 /* FirebaseAnalytics.framework in Frameworks */,
+				0C9573A61DB06F62005AB496 /* GoogleMobileAds.framework in Frameworks */,
+				0C9573AB1DB06F62005AB496 /* GoogleSymbolUtilities.framework in Frameworks */,
+				0C9573A91DB06F62005AB496 /* FirebaseInstanceID.framework in Frameworks */,
+				0C9573AC1DB06F62005AB496 /* GoogleUtilities.framework in Frameworks */,
 				0C8F62C91D5E7D73009DBDBE /* Bolts.framework in Frameworks */,
 				0C8F62CA1D5E7D73009DBDBE /* FBSDKCoreKit.framework in Frameworks */,
+				0C9573A81DB06F62005AB496 /* FirebaseCore.framework in Frameworks */,
 				0C8F62CC1D5E7D73009DBDBE /* FBSDKShareKit.framework in Frameworks */,
+				0C9573AA1DB06F62005AB496 /* GoogleInterchangeUtilities.framework in Frameworks */,
 				0C8F62CB1D5E7D73009DBDBE /* FBSDKLoginKit.framework in Frameworks */,
-				0C8F62C21D5E7B7A009DBDBE /* iAd.framework in Frameworks */,
-				0C8F62D01D68B864009DBDBE /* FBAudienceNetwork.framework in Frameworks */,
 				0C8F62C01D5E7B6C009DBDBE /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -171,15 +183,19 @@
 		0C8F62BE1D5E7B61009DBDBE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0C95739F1DB06F62005AB496 /* GoogleMobileAds.framework */,
+				0C9573A01DB06F62005AB496 /* FirebaseAnalytics.framework */,
+				0C9573A11DB06F62005AB496 /* FirebaseCore.framework */,
+				0C9573A21DB06F62005AB496 /* FirebaseInstanceID.framework */,
+				0C9573A31DB06F62005AB496 /* GoogleInterchangeUtilities.framework */,
+				0C9573A41DB06F62005AB496 /* GoogleSymbolUtilities.framework */,
+				0C9573A51DB06F62005AB496 /* GoogleUtilities.framework */,
 				0C8F62D51D68B89B009DBDBE /* StoreKit.framework */,
 				0C8F62D31D68B88F009DBDBE /* CoreMotion.framework */,
-				0C8F62D11D68B887009DBDBE /* AdSupport.framework */,
-				0C8F62CF1D68B863009DBDBE /* FBAudienceNetwork.framework */,
 				0C8F62C51D5E7D72009DBDBE /* Bolts.framework */,
 				0C8F62C61D5E7D72009DBDBE /* FBSDKCoreKit.framework */,
 				0C8F62C71D5E7D72009DBDBE /* FBSDKLoginKit.framework */,
 				0C8F62C81D5E7D72009DBDBE /* FBSDKShareKit.framework */,
-				0C8F62C11D5E7B7A009DBDBE /* iAd.framework */,
 				0C8F62BF1D5E7B6C009DBDBE /* AVFoundation.framework */,
 			);
 			name = Frameworks;

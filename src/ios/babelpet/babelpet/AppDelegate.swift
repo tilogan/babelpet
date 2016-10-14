@@ -8,6 +8,7 @@
 
 import UIKit
 import FBSDKCoreKit
+import GoogleMobileAds
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate
@@ -16,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool
     {
-        // Override point for customization after application launch.
+        GADMobileAds.configure(withApplicationID: "a-app-pub-8253941476253631~3880636702")
         return FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     

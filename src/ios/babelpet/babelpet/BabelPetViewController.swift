@@ -8,8 +8,8 @@
 
 import UIKit
 import AVFoundation
-import FBAudienceNetwork
-
+import GoogleMobileAds
+import StoreKit
 
 private let recordButtonTranslationStopped =
 [
@@ -104,7 +104,7 @@ private let defaultTranslationPhrase =
 
 class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     AVAudioPlayerDelegate, UIPickerViewDelegate, SKPaymentTransactionObserver,
-    FBAdViewDelegate
+    GADBannerViewDelegate
 {
     // MARK: Local Variables
     var translations = [PetTranslation]()
@@ -125,7 +125,6 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     let squeakSoundURL =  Bundle.main.url(forResource: "squeak", withExtension: "aiff")!
     let meowSoundURL =  Bundle.main.url(forResource: "meow", withExtension: "aiff")!
     var buttonEffectPlayer = AVAudioPlayer()
-    var adView: FBAdView!
 
     
     // MARK: Variables for premium purchase
@@ -141,6 +140,7 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
     @IBOutlet weak var recordButton: UIButton!
     @IBOutlet weak var languageLabel: UILabel!
     @IBOutlet weak var bottomMargin: NSLayoutConstraint!
+    @IBOutlet weak var bannerView: GADBannerView!
     
     // MARK: NSCoding
     func saveTranslations()
@@ -436,20 +436,21 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         
         SKPaymentQueue.default().add(self)
         
-        /* Adding the Facebook banner */
+        /* Adding the Google banner */
         if !MainMenuViewController.isPremiumPurchased
         {
-            /* Adding the Facebook banner */
-            adView = FBAdView(placementID: "556114377906938_559339737584402",
-                              adSize: kFBAdSizeHeight50Banner,
-                              rootViewController: self)
-            adView.frame = CGRect(x: 0, y: self.view.frame.size.height-adView.frame.size.height,
-                                  width: adView.frame.size.width, height: adView.frame.size.height)
-            adView.delegate = self
-            adView.isHidden = true
-            self.view.addSubview(adView)
-            adView.loadAd()
+            bannerView.adUnitID = "ca-app-pub-8253941476253631/5357369905"
+            bannerView.adSize = kGADAdSizeSmartBannerPortrait
+            bannerView.rootViewController = self
+            bannerView.delegate = self
+            bannerView.frame.size.width = self.view.frame.size.width
+            bannerView.load(GADRequest())
         }
+        else
+        {
+            bannerView.isHidden = true
+        }
+        
         
         
         if let savedTranslations = loadTranslations()
@@ -661,17 +662,23 @@ class BabelPetViewController: UIViewController, AVAudioRecorderDelegate,
         }
     }
     
-    // MARK: FBAdViewDelegate
-    func adView(_ adView: FBAdView, didFailWithError error: Error)
+    // MARK: GADAdDelegate
+    func adView(_ bannerView: GADBannerView!,
+                didFailToReceiveAdWithError error: GADRequestError!)
     {
-        bottomMargin.constant = 10.0
-        adView.isHidden = true
+        print("BabelPet: Error loading ad: \(error.localizedDescription)")
+        bottomMargin.constant = 10
     }
     
-    func adViewDidLoad(_ adView: FBAdView)
+    func adViewDidReceiveAd(_ bannerView: GADBannerView!)
     {
-        adView.isHidden = false
-        bottomMargin.constant = 65.0
+        print("BabelPet: Ad Loaded")
+        bottomMargin.constant = bannerView.adSize.size.height + 10
+        bannerView.alpha = 0
+        UIView.animate(withDuration: 1, animations: {
+            bannerView.alpha = 1
+        })
     }
+    
 }
 

@@ -20,8 +20,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" distribution="fillProportionally" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="ApS-qI-ieb">
-                                <frame key="frameInset" minX="20" minY="30" width="343" height="627"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillProportionally" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="ApS-qI-ieb">
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Translation:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gWW-mE-jgY">
                                         <fontDescription key="fontDescription" name="ChalkboardSE-Bold" family="Chalkboard SE" pointSize="17"/>
@@ -37,11 +36,8 @@
                                             </imageView>
                                             <view opaque="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="sa6-sP-r9w">
                                                 <subviews>
-                                                    <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="speechBubble" translatesAutoresizingMaskIntoConstraints="NO" id="UvD-Uz-EXF">
-                                                        <frame key="frameInset" width="414" height="193"/>
-                                                    </imageView>
-                                                    <label userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Record your voice and the translation will go here!" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G2N-TL-XYp">
-                                                        <frame key="frameInset" minX="10" width="394" height="193"/>
+                                                    <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="speechBubble" translatesAutoresizingMaskIntoConstraints="NO" id="UvD-Uz-EXF"/>
+                                                    <label userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Record your voice and the translation will go here!" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G2N-TL-XYp">
                                                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <fontDescription key="fontDescription" name="ChalkboardSE-Regular" family="Chalkboard SE" pointSize="17"/>
@@ -125,13 +121,23 @@
                                     </button>
                                 </subviews>
                             </stackView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tj2-oE-8xB" customClass="GADBannerView">
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="QvE-Ja-RHZ"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.33725490196078434" green="0.75294117647058822" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="tj2-oE-8xB" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="AEc-ok-zdr"/>
+                            <constraint firstItem="tj2-oE-8xB" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="BbJ-Eu-lZP"/>
                             <constraint firstItem="ApS-qI-ieb" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="10" id="MM1-Yf-ydX"/>
+                            <constraint firstItem="tj2-oE-8xB" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="T4w-pB-gAk"/>
                             <constraint firstItem="ApS-qI-ieb" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="ciJ-k9-1lf"/>
                             <constraint firstAttribute="trailingMargin" secondItem="ApS-qI-ieb" secondAttribute="trailing" id="gud-v3-xiN"/>
                             <constraint firstAttribute="bottomMargin" secondItem="ApS-qI-ieb" secondAttribute="bottom" constant="10" id="mLC-pk-QO5"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="tj2-oE-8xB" secondAttribute="bottom" id="p2T-gC-d9t"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Pet to Human" id="pkV-Dp-71M">
@@ -142,6 +148,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="bannerView" destination="tj2-oE-8xB" id="5dm-VO-ZDh"/>
                         <outlet property="bottomMargin" destination="mLC-pk-QO5" id="WOi-Ye-2MY"/>
                         <outlet property="historyButton" destination="lG6-Aa-fJb" id="TJm-bG-3qL"/>
                         <outlet property="languageLabel" destination="fhJ-h3-OFa" id="EgQ-cc-hxc"/>
@@ -174,8 +181,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" misplaced="YES" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Y03-zl-cdt">
-                                <frame key="frameInset" minX="20" minY="30" width="343" height="627"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="Y03-zl-cdt">
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Record your voice to translate into pet talk!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uIK-ZQ-vze">
                                         <constraints>
@@ -234,16 +240,26 @@
                                     <constraint firstAttribute="trailing" secondItem="2il-p9-TLz" secondAttribute="trailing" id="wen-cn-k7F"/>
                                 </constraints>
                             </stackView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zlw-1B-GYU" customClass="GADBannerView">
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="7jj-En-3FJ"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.33725490200000002" green="0.75294117650000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="Y03-zl-cdt" firstAttribute="leading" secondItem="DrD-vd-zS4" secondAttribute="leadingMargin" id="5yO-o4-viD"/>
+                            <constraint firstItem="Zlw-1B-GYU" firstAttribute="leading" secondItem="DrD-vd-zS4" secondAttribute="leadingMargin" id="DI8-Aa-1iX"/>
+                            <constraint firstItem="1d1-KK-hwr" firstAttribute="top" secondItem="Zlw-1B-GYU" secondAttribute="bottom" id="NMo-Ne-SFu"/>
                             <constraint firstItem="Y03-zl-cdt" firstAttribute="top" secondItem="JOw-u6-rqh" secondAttribute="bottom" constant="10" id="O4R-GZ-A6E"/>
                             <constraint firstAttribute="bottomMargin" secondItem="Y03-zl-cdt" secondAttribute="bottom" constant="10" id="Prj-TA-SWh"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Y03-zl-cdt" secondAttribute="trailing" id="c80-Mr-evk"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Zlw-1B-GYU" secondAttribute="trailing" id="kGw-X6-efG"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="bannerView" destination="Zlw-1B-GYU" id="679-TT-AtH"/>
                         <outlet property="bottomMargin" destination="Prj-TA-SWh" id="BQp-IX-gBp"/>
                         <outlet property="genderPicker" destination="NT9-Yq-c8x" id="4om-hL-3d1"/>
                         <outlet property="playButton" destination="3i0-m8-8tG" id="1W8-RO-9cx"/>
@@ -269,7 +285,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="60"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5G1-AS-VPV" id="lpq-4F-rof">
-                                    <frame key="frameInset" width="375" height="60"/>
+                                    <frame key="frameInset" width="375" height="59"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VJI-vP-uae">
@@ -430,16 +446,27 @@ CQ
                                     </button>
                                 </subviews>
                             </stackView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cGN-nW-sMW" customClass="GADBannerView">
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="tTN-QJ-qeD"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.33725490200000002" green="0.75294117650000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="cGN-nW-sMW" secondAttribute="trailing" id="3Ub-Pc-bFu"/>
                             <constraint firstAttribute="bottomMargin" secondItem="Izt-fD-mml" secondAttribute="bottom" constant="10" id="N9N-eW-a6E"/>
                             <constraint firstItem="Izt-fD-mml" firstAttribute="leading" secondItem="5B4-1s-UO7" secondAttribute="leadingMargin" id="Xp4-v3-VEK"/>
                             <constraint firstItem="Izt-fD-mml" firstAttribute="top" secondItem="tEo-et-BPJ" secondAttribute="bottom" constant="10" id="cl5-Ih-3E6"/>
+                            <constraint firstItem="cGN-nW-sMW" firstAttribute="leading" secondItem="5B4-1s-UO7" secondAttribute="leadingMargin" id="jDF-dN-hsc"/>
+                            <constraint firstItem="IFv-PQ-g7Z" firstAttribute="top" secondItem="cGN-nW-sMW" secondAttribute="bottom" id="kHb-qh-z07"/>
+                            <constraint firstItem="cGN-nW-sMW" firstAttribute="centerX" secondItem="5B4-1s-UO7" secondAttribute="centerX" id="vaa-7U-ctG"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Izt-fD-mml" secondAttribute="trailing" id="zHD-bs-7re"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="bannerView" destination="cGN-nW-sMW" id="68b-qR-9Ek"/>
                         <outlet property="bottomMargin" destination="N9N-eW-a6E" id="mLy-Ec-x2b"/>
                         <outlet property="colorLabel" destination="VPj-5Y-S3C" id="22Q-Eg-jkG"/>
                         <outlet property="colorPicker" destination="gwj-PS-wKQ" id="X2e-y9-dcU"/>
@@ -512,17 +539,28 @@ CQ
                                     <constraint firstItem="bNW-vq-N5U" firstAttribute="width" secondItem="Fgw-I7-dhP" secondAttribute="width" id="x0f-FE-ujQ"/>
                                 </constraints>
                             </stackView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bh5-kh-aWc" customClass="GADBannerView">
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="zUf-vf-8Eg"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.28235294119999998" green="0.69411764710000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="4dO-C9-GFN" firstAttribute="top" secondItem="Bh5-kh-aWc" secondAttribute="bottom" id="83q-PC-Y1d"/>
                             <constraint firstItem="EqA-gs-rjH" firstAttribute="top" secondItem="nIq-m0-xrE" secondAttribute="bottom" constant="10" id="CvR-ma-q9Q"/>
                             <constraint firstItem="4dO-C9-GFN" firstAttribute="top" secondItem="EqA-gs-rjH" secondAttribute="bottom" constant="10" id="TJe-er-FkI"/>
+                            <constraint firstItem="Bh5-kh-aWc" firstAttribute="centerX" secondItem="g4G-2P-Kn8" secondAttribute="centerX" id="X2M-wz-m8q"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Bh5-kh-aWc" secondAttribute="trailing" id="d67-kP-KD3"/>
                             <constraint firstItem="EqA-gs-rjH" firstAttribute="trailing" secondItem="g4G-2P-Kn8" secondAttribute="trailingMargin" id="pWr-kZ-KDn"/>
+                            <constraint firstItem="Bh5-kh-aWc" firstAttribute="leading" secondItem="g4G-2P-Kn8" secondAttribute="leadingMargin" id="teX-Vf-Lv0"/>
                             <constraint firstItem="EqA-gs-rjH" firstAttribute="leading" secondItem="g4G-2P-Kn8" secondAttribute="leadingMargin" id="vAF-AK-zky"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="MRq-qr-gN3" id="Uzp-ZS-pQX"/>
+                        <outlet property="bannerView" destination="Bh5-kh-aWc" id="Blj-ru-d5X"/>
                         <outlet property="bottomMargin" destination="TJe-er-FkI" id="VqD-cx-dzK"/>
                         <outlet property="facebookButton" destination="Fgw-I7-dhP" id="Icr-Xe-TTA"/>
                         <outlet property="imagePreview" destination="e79-Mt-2Hm" id="7CX-UO-lPi"/>
@@ -558,14 +596,18 @@ CQ
                                             <constraint firstAttribute="width" secondItem="HoU-tZ-Yeg" secondAttribute="height" multiplier="560:229" id="2M6-us-vg7"/>
                                         </constraints>
                                     </imageView>
-                                    <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="humanToPet" translatesAutoresizingMaskIntoConstraints="NO" id="P1L-Nj-Y2B">
+                                    <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="humanToPet" translatesAutoresizingMaskIntoConstraints="NO" id="P1L-Nj-Y2B">
+                                        <frame key="frameInset" minY="150" width="343" height="179"/>
                                         <gestureRecognizers/>
                                         <connections>
                                             <outletCollection property="gestureRecognizers" destination="9jv-3K-lUe" appends="YES" id="ncb-m5-nOo"/>
                                         </connections>
                                     </imageView>
-                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="8w1-Nm-cUc"/>
-                                    <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="petToHuman" translatesAutoresizingMaskIntoConstraints="NO" id="MwZ-d8-UTt">
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="8w1-Nm-cUc">
+                                        <frame key="frameInset" minY="339" width="343" height="37"/>
+                                    </activityIndicatorView>
+                                    <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="petToHuman" translatesAutoresizingMaskIntoConstraints="NO" id="MwZ-d8-UTt">
+                                        <frame key="frameInset" minY="386" width="343" height="179"/>
                                         <gestureRecognizers/>
                                         <connections>
                                             <outletCollection property="gestureRecognizers" destination="Jx4-GG-TmW" appends="YES" id="j2B-uf-faf"/>
@@ -601,18 +643,28 @@ CQ
                                     <constraint firstItem="iXv-fq-6PL" firstAttribute="leading" secondItem="tSF-sw-Mu9" secondAttribute="leading" constant="20" id="gaY-mX-8Gr"/>
                                 </constraints>
                             </stackView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uCU-Za-fkQ" customClass="GADBannerView">
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="lsH-ez-gRe"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="0.40000000600000002" green="0.80000001190000003" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="tSF-sw-Mu9" secondAttribute="trailing" id="72S-ef-h1P"/>
+                            <constraint firstItem="uCU-Za-fkQ" firstAttribute="trailing" secondItem="2QF-Sg-fNk" secondAttribute="trailingMargin" id="9lI-rD-tL3"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="uCU-Za-fkQ" secondAttribute="bottom" id="DDh-Gc-WFU"/>
                             <constraint firstItem="tSF-sw-Mu9" firstAttribute="leading" secondItem="2QF-Sg-fNk" secondAttribute="leadingMargin" id="Vjh-Ms-1pg"/>
                             <constraint firstItem="tSF-sw-Mu9" firstAttribute="top" secondItem="QcH-Fn-AWf" secondAttribute="bottom" constant="12" id="cU4-Fq-0Eo"/>
+                            <constraint firstItem="uCU-Za-fkQ" firstAttribute="leading" secondItem="2QF-Sg-fNk" secondAttribute="leadingMargin" id="cXv-Ug-Uqa"/>
                             <constraint firstAttribute="bottomMargin" secondItem="tSF-sw-Mu9" secondAttribute="bottom" constant="10" id="o7Z-lM-LVu"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="fF4-Ng-L8L"/>
                     <connections>
                         <outlet property="activityIndicator" destination="8w1-Nm-cUc" id="LIe-3j-cVh"/>
+                        <outlet property="bannerView" destination="uCU-Za-fkQ" id="GcM-LH-B6g"/>
                         <outlet property="bottomMargin" destination="o7Z-lM-LVu" id="pdp-W1-avG"/>
                         <outlet property="restoreButton" destination="qx2-kw-ZhF" id="Kq3-jL-ZxW"/>
                         <outlet property="stackView" destination="tSF-sw-Mu9" id="SBs-gQ-zI7"/>

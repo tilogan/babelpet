@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import FBAudienceNetwork
+import GoogleMobileAds
 
 private let shareDescriptionTranslation =
 [
@@ -153,7 +153,7 @@ class ImageShareViewController: UIViewController,
                         UINavigationControllerDelegate,
                         UITextFieldDelegate,
                         UIPickerViewDelegate,
-                        FBAdViewDelegate
+                        GADBannerViewDelegate
 {
     // MARK: Properties
     @IBOutlet weak var translationTextField: UITextField!
@@ -168,11 +168,11 @@ class ImageShareViewController: UIViewController,
     @IBOutlet weak var colorLabel: UILabel!
     @IBOutlet weak var colorPicker: UIPickerView!
     @IBOutlet weak var bottomMargin: NSLayoutConstraint!
+    @IBOutlet weak var bannerView: GADBannerView!
     
     // MARK: Variables
     var referencedController: BabelPetViewController!
     var curColor: UIColor!
-    var adView: FBAdView!
     var curBanner: CGFloat = 10.0
 
     // MARK: Actions
@@ -236,19 +236,19 @@ class ImageShareViewController: UIViewController,
         curColor = UIColor.yellow
         colorPicker.selectRow(1, inComponent: 0, animated: false)
         
-        /* Adding the Facebook banner */
+        /* Adding the Google banner */
         if !MainMenuViewController.isPremiumPurchased
         {
-            /* Adding the Facebook banner */
-            adView = FBAdView(placementID: "556114377906938_559339737584402",
-                              adSize: kFBAdSizeHeight50Banner,
-                              rootViewController: self)
-            adView.frame = CGRect(x: 0, y: self.view.frame.size.height-adView.frame.size.height,
-                                  width: adView.frame.size.width, height: adView.frame.size.height)
-            adView.delegate = self
-            adView.isHidden = true
-            self.view.addSubview(adView)
-            adView.loadAd()
+            bannerView.adUnitID = "ca-app-pub-8253941476253631/5357369905"
+            bannerView.adSize = kGADAdSizeSmartBannerPortrait
+            bannerView.rootViewController = self
+            bannerView.delegate = self
+            bannerView.frame.size.width = self.view.frame.size.width
+            bannerView.load(GADRequest())
+        }
+        else
+        {
+            bannerView.isHidden = true
         }
         
         self.title = "Generation"
@@ -379,19 +379,24 @@ class ImageShareViewController: UIViewController,
         print("ImageShare: Color changed to \(colorStringEnglish[row])")
     }
     
-    // MARK: FBAdViewDelegate
-    func adView(_ adView: FBAdView, didFailWithError error: Error)
+    // MARK: GADAdDelegate
+    func adView(_ bannerView: GADBannerView!,
+                didFailToReceiveAdWithError error: GADRequestError!)
     {
-        bottomMargin.constant = 10.0
-        curBanner = 10.0
-        adView.isHidden = true
+        print("ImageShare: Error loading ad: \(error.localizedDescription)")
+        bannerView.isHidden = true
+        bottomMargin.constant = 10
     }
     
-    func adViewDidLoad(_ adView: FBAdView)
+    func adViewDidReceiveAd(_ bannerView: GADBannerView!)
     {
-        adView.isHidden = false
-        curBanner = 65.0
-        bottomMargin.constant = 65.0
+        print("ImageShare: Ad Loaded")
+        bannerView.isHidden = false
+        bottomMargin.constant = bannerView.adSize.size.height + 10
+        bannerView.alpha = 0
+        UIView.animate(withDuration: 1, animations: {
+            bannerView.alpha = 1
+        })
+        
     }
-
 }
